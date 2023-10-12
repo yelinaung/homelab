@@ -1,0 +1,12 @@
+---
+- name: Install Zsh on Proxmox servers
+  hosts: 'proxmox'
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: install zsh
+      become: true # become a superuser
+      apt:
+        name: zsh
+        state: present
+        update_cache: true
