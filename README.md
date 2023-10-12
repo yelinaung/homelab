@@ -13,3 +13,7 @@ $ ansible-playbook ./playbooks/install_zsh.yaml --ask-pass --ask-become-pass -i 
 ```bash
 $ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml --ask-become-pass -i ./inventory/hosts
 ```
+
+#### Configuring the Proxmox VMs
+
+- https://forum.proxmox.com/threads/provision-vm-from-template-using-ansible.130596/#post-574285
