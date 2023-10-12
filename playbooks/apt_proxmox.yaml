@@ -1,0 +1,10 @@
+---
+- name: Update Proxmox servers (apt)
+  hosts: 'proxmox'
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: apt
+      apt:
+        update_cache: yes
+        upgrade: yes
