@@ -1,6 +1,6 @@
 ---
+# The VMs running on top of Proxmox
 - name: Update Other Ubuntu VMs (apt)
-
   hosts: 'other_vms'
   become: yes
   gather_facts: false
