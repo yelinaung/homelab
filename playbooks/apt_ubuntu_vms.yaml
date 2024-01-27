@@ -9,14 +9,4 @@
       apt:
         update_cache: yes
         upgrade: yes
-
-## to be figured out
-# - name: Update Mac Mini (brew)
-#   hosts: 'mac'
-#   become: yes
-#   gather_facts: false
-#   tasks:
-#     - name: apt
-#       apt:
-#         update_cache: yes
-#         upgrade: yes
+        autoremove: yes

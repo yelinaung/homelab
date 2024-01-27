@@ -6,12 +6,12 @@
 
 - Installing zsh on Proxmox servers
 ```bash
-$ ansible-playbook ./playbooks/install_zsh.yaml --ask-pass --ask-become-pass -i ./inventory/hosts
+$ ansible-playbook ./playbooks/install_zsh.yaml  -i ./inventory/hosts
 ```
 
 - Updating apt on Ubuntu VMs
 ```bash
-$ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml --ask-become-pass -i ./inventory/hosts
+$ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml  -i ./inventory/hosts
 ```
 
 #### Configuring the Proxmox VMs

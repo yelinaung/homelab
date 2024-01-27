@@ -1,13 +1,19 @@
 [proxmox]
-192.168.1.206 	ansible_user=root 
-192.168.1.207 	ansible_user=root
+# 2 Proxmox VMs
+192.168.1.206 	ansible_user=root 	ansible_connection=ssh
+192.168.1.207 	ansible_user=root	ansible_connection=ssh
 
 [other_vms]
+# raspberry pis
 raspberrypi	ansible_user=pi		ansible_connection=ssh
 pi5 		ansible_user=pi5	ansible_connection=ssh
+
+# DigitalOcean VM
 do-4gb-sgp1-01	ansible_user=yla	ansible_connection=ssh
+
 # proxmox vm
 192.168.1.229	ansible_user=ubuntu	ansible_connection=ssh
+100.65.132.156 	ansible_user=yelin	ansible_connection=ssh
 
 [mac]
 ninetyninesmini ansible_user=ninetynine	ansible_connection=ssh
