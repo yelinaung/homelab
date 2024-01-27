@@ -11,6 +11,7 @@ pi5 		ansible_user=pi5	ansible_connection=ssh
 # DigitalOcean VM
 do-4gb-sgp1-01	ansible_user=yla	ansible_connection=ssh
 
+[vms_on_proxmox]
 # VMs running on top of Proxmox
 192.168.1.229	ansible_user=ubuntu	ansible_connection=ssh
 100.65.132.156 	ansible_user=yelin	ansible_connection=ssh
