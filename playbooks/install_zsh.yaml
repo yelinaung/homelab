@@ -1,12 +1,12 @@
 ---
 - name: Install Zsh on Proxmox servers
   hosts: 'proxmox'
-  become: yes
+  become: true
   gather_facts: false
   tasks:
-    - name: install zsh
-      become: true # become a superuser
-      apt:
+    - name: Install zsh
+      become: true  # become a superuser
+      ansible.builtin.apt:
         name: zsh
         state: present
         update_cache: true

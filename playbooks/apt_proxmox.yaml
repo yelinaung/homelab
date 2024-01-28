@@ -1,12 +1,13 @@
 ---
 # The Proxmox Cluster VMs
+# TODO can be combined with the other one
 - name: Update Proxmox servers (apt)
   hosts: 'proxmox'
-  become: yes
+  become: true
   gather_facts: false
   tasks:
-    - name: apt
-      apt:
-        update_cache: yes
-        upgrade: yes
-        autoremove: yes
+    - name: 'Run apt update/upgrade/autoremove (Proxmox)'
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
+        autoremove: true

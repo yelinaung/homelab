@@ -2,11 +2,11 @@
 # The VMs running on top of Proxmox
 - name: Update Other Ubuntu VMs (apt)
   hosts: 'other_vms'
-  become: yes
+  become: true
   gather_facts: false
   tasks:
-    - name: apt
-      apt:
-        update_cache: yes
-        upgrade: yes
-        autoremove: yes
+    - name: Run apt update/upgrade/autoremove
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
+        autoremove: true
