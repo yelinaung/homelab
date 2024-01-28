@@ -1,5 +1,7 @@
 ### Anisble Configs and Playbook for the Homelab
 
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/yelinaung/ansible-configs/master.svg)](https://results.pre-commit.ci/latest/github/yelinaung/ansible-configs/master)
+
 - [Playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
 
 #### Running the Playbooks
