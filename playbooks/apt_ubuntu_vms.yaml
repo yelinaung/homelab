@@ -1,7 +1,7 @@
 ---
 # The VMs running on top of Proxmox
-- name: Update Other Ubuntu VMs (apt)
-  hosts: 'other_vms'
+- name: Run apt update/upgrade/autoremove on the Ubuntu VMs
+  hosts: "{{ hosts | default([])}}"
   become: true
   gather_facts: false
   tasks:

@@ -19,3 +19,11 @@ $ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml  -i ./inventory/hosts
 #### Configuring the Proxmox VMs
 
 - https://forum.proxmox.com/threads/provision-vm-from-template-using-ansible.130596/#post-574285
+
+### Role Used
+
+- Jeff Geerling's [node exporter role](https://github.com/geerlingguy/ansible-role-node_exporter)
+    - Make sure to install first by
+    ```bash
+    $ ansible-galaxy install geerlingguy.node_exporter
+    ```

@@ -1,6 +1,6 @@
 ---
 - name: Install qemu-guest-agent package
-  hosts: vms_on_proxmox
+  hosts: "{{ hosts | default([]) }}"
   become: true
   tasks:
     - name: Install qemu-guest-agent

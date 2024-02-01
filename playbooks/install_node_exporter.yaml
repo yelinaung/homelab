@@ -1,0 +1,8 @@
+---
+# Using this role
+# https://github.com/geerlingguy/ansible-role-node_exporter
+- name: Install Node Exporter
+  hosts: "{{ hosts | default([])}}"
+  become: yes
+  roles:
+    - geerlingguy.node_exporter
