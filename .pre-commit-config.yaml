@@ -1,12 +1,12 @@
 ---
 repos:
   - repo: https://github.com/ansible/ansible-lint.git
-    rev: v6.22.2
+    rev: v24.2.0
     hooks:
       - id: ansible-lint
         files: \.(yaml|yml)$
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.33.0
+    rev: v1.34.0
     hooks:
       - id: yamllint
   - repo: https://github.com/gitleaks/gitleaks
