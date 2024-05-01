@@ -1,24 +1,19 @@
 ---
-# .github/workflows/ansible-lint.yml
 name: ansible-lint
 on: push
 jobs:
   lint:
-    name: Ansible Lint
+    name: Linting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install test dependencies.
+      - name: Install yamllint
         run: pip3 install yamllint
       - name: Lint code.
         run: |
           yamllint .
 
-      - name: Set up Python 3.
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
       - name: Install Ansible.
         run: pip3 install ansible-core
       - name: Install necessary dependencies
