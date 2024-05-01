@@ -27,3 +27,7 @@ $ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml  -i ./inventory/hosts
     ```bash
     $ ansible-galaxy install geerlingguy.node_exporter
     ```
+
+#### Documenetation
+
+- [apt](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html)

@@ -1,0 +1,8 @@
+---
+- name: Upgrade OS (Mainly for Proxmox)
+  hosts: "{{ hosts | default([]) }}"
+  become: true
+  tasks:
+    - name: Upgrade the OS (apt-get dist-upgrade)
+      ansible.builtin.apt:
+        upgrade: dist

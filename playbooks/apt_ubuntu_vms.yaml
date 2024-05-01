@@ -1,5 +1,5 @@
 ---
-# The VMs running on top of Proxmox
+# Works for any VM with Ubuntu (apt)
 - name: Run apt update/upgrade/autoremove on the Ubuntu VMs
   hosts: "{{ hosts | default([])}}"
   become: true
