@@ -1,8 +1,6 @@
 ### Anisble Configs and Playbook for the Homelab
 
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/yelinaung/ansible-configs/master.svg)](https://results.pre-commit.ci/latest/github/yelinaung/ansible-configs/master)
-
-[![lint](https://github.com/yelinaung/ansible-configs/actions/workflows/lint.yaml/badge.svg)](https://github.com/yelinaung/ansible-configs/actions/workflows/lint.yaml)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/yelinaung/ansible-configs/master.svg)](https://results.pre-commit.ci/latest/github/yelinaung/ansible-configs/master) [![lint](https://github.com/yelinaung/ansible-configs/actions/workflows/lint.yaml/badge.svg)](https://github.com/yelinaung/ansible-configs/actions/workflows/lint.yaml)
 
 - [Playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
 
