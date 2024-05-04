@@ -6,14 +6,9 @@
 
 #### Running the Playbooks
 
-- Installing zsh on Proxmox servers
+- Updating packages with `apt` on the VMs on top of Proxmox
 ```bash
-$ ansible-playbook ./playbooks/install_zsh.yaml  -i ./inventory/hosts
-```
-
-- Updating apt on Ubuntu VMs
-```bash
-$ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml  -i ./inventory/hosts
+$ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml -i ./inventory/hosts --extra-vars "hosts=vms_on_proxmox"
 ```
 
 #### Configuring the Proxmox VMs
@@ -30,4 +25,4 @@ $ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml  -i ./inventory/hosts
 
 #### Documenetation
 
-- [apt](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html)
+- Proxmox [apt](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html) module
