@@ -2,14 +2,18 @@
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/yelinaung/ansible-configs/master.svg)](https://results.pre-commit.ci/latest/github/yelinaung/ansible-configs/master) [![lint](https://github.com/yelinaung/ansible-configs/actions/workflows/lint.yaml/badge.svg)](https://github.com/yelinaung/ansible-configs/actions/workflows/lint.yaml)
 
-- [Playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
-
 #### Running the Playbooks
 
 - Updating packages with `apt` on the VMs on top of Proxmox
 ```bash
-$ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml -i ./inventory/hosts --extra-vars "hosts=vms_on_proxmox"
+$ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml -i ./inventory/linux_hosts
 ```
+
+- Updating dist (apt dist upgrade)
+```bash
+$ ansible-playbook ./playbooks/apt_dist_upgrade.yaml -i ./inventory/linux_hosts --extra-vars "vm_hosts=proxmox"
+```
+
 
 #### Configuring the Proxmox VMs
 
@@ -25,4 +29,5 @@ $ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml -i ./inventory/hosts --extra-
 
 #### Documenetation
 
-- Proxmox [apt](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html) module
+- [Ansible Playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
+- [Ansible apt module](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html)

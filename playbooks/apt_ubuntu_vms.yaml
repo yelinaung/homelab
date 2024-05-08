@@ -1,12 +1,13 @@
 ---
 # Works for any VM with Ubuntu (apt)
 - name: Run apt update/upgrade/autoremove on the Ubuntu VMs
-  hosts: "{{ hosts | default([])}}"
+  hosts: all
   become: true
-  gather_facts: false
+  gather_facts: true
   tasks:
     - name: Run apt update/upgrade/autoremove
       ansible.builtin.apt:
         update_cache: true
         upgrade: true
         autoremove: true
+        autoclean: true

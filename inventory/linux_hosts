@@ -16,6 +16,3 @@ do-4gb-sgp1-01	ansible_user=yla	ansible_connection=ssh
 192.168.1.229	ansible_user=ubuntu	ansible_connection=ssh
 192.168.1.158	ansible_user=ubuntu	ansible_connection=ssh
 100.65.132.156 	ansible_user=yelin	ansible_connection=ssh
-
-[mac]
-ninetyninesmini ansible_user=ninetynine	ansible_connection=ssh
