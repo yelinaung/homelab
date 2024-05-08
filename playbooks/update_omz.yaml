@@ -8,11 +8,8 @@
         path: "{{ ansible_env.HOME }}/.oh-my-zsh"
       register: omz_installed
 
-    - name: Print Oh My Zsh installation status
-      ansible.builtin.debug:
-        msg: "Oh My Zsh is not installed."
-      when: not omz_installed.stat.exists
-
     - name: "Run omz update"
       ansible.builtin.command: /bin/zsh -i -c 'omz update'
-      changed_when: omz_installed.stat.exists
+      when: omz_installed.stat.exists
+      register: omz_update_result
+      changed_when: "'Example update string' in omz_update_result.stdout"
