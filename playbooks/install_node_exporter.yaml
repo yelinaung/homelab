@@ -2,7 +2,7 @@
 # Using this role
 # https://github.com/geerlingguy/ansible-role-node_exporter
 - name: Install Node Exporter
-  hosts: "{{ hosts | default([])}}"
+  hosts: "{{ vm_hosts | default([])}}"
   become: true
   roles:
     - geerlingguy.node_exporter

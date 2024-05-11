@@ -1,0 +1,2 @@
+[desktop]
+100.108.224.32 ansible_user=yelinaung	ansible_connection=ssh
