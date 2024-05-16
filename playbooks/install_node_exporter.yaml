@@ -4,5 +4,8 @@
 - name: Install Node Exporter
   hosts: "{{ vm_hosts | default([])}}"
   become: true
+  vars:
+    # yamllint disable-line rule:line-length
+    node_exporter_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ('arm64' if ansible_architecture == 'aarch64' else ansible_architecture) }}"
   roles:
     - geerlingguy.node_exporter
