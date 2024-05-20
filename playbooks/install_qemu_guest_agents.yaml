@@ -1,7 +1,8 @@
 ---
 - name: Install qemu-guest-agent package
-  hosts: "{{ hosts | default([]) }}"
+  hosts: "{{ vm_hosts | default([]) }}"
   become: true
+  gather_facts: true
   tasks:
     - name: Install qemu-guest-agent
       ansible.builtin.apt:
