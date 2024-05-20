@@ -1,2 +1,2 @@
 [desktop]
-yelinaung.tail6b1ef.ts.net	ansible_user=yelinaung	ansible_connection=ssh
+yelinaung	ansible_user=yelinaung	ansible_connection=ssh

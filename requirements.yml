@@ -1,0 +1,9 @@
+---
+roles:
+  - name: geerlingguy.node_exporter
+    version: 2.1.0
+  - name: artis3n.tailscale
+    version: v4.5.0
+
+collections:
+  - community.general

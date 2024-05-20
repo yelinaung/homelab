@@ -1,6 +1,6 @@
 ---
 - name: Add ssh key
-  hosts: "{{ hosts | default([])}}"
+  hosts: "{{ vm_hosts | default([])}}"
   become: true
   tasks:
     # - name: install public keys
