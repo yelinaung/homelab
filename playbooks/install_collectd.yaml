@@ -1,0 +1,24 @@
+---
+- name: Install collectd and set up
+  hosts: "{{ vm_hosts | default([]) }}"
+  become: true
+  gather_facts: true
+  vars:
+    collectd_plugin_logging: logfile
+    collectd_basic_plugins:
+      - cpu
+      - interface
+      - load
+      - memory
+      - processes
+      - network
+    collectd_plugins:
+      - name: write_http
+        config: |
+          <Node "collectd_exporter">
+            URL "http://localhost:9103/collectd-post"
+            Format "JSON"
+            StoreRates false
+          </Node>
+  roles:
+    - robertdebock.collectd
