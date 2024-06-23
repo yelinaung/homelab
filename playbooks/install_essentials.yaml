@@ -1,0 +1,18 @@
+---
+- name: Install Essential packages on the given servers
+  hosts: "{{ vm_hosts | default([]) }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Install zsh
+      become: true  # become a superuser
+      ansible.builtin.apt:
+        name:
+          - htop
+          - build-essential
+          - net-tools
+          - git
+          - vim
+          - curl
+        state: present
+        update_cache: true
