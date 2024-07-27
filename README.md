@@ -5,15 +5,18 @@
 #### Running the Playbooks
 
 - Updating packages with `apt` on the VMs on top of Proxmox
-```bash
-$ ansible-playbook ./playbooks/apt_ubuntu_vms.yaml -i ./inventory/linux_hosts
+```shell
+$ make run playbook=apt_update_upgrade inventory=linux_hosts
+```
+- Upgrade a VM that requires sudo password
+```shell
+$ make run playbook=apt_update_upgrade inventory=desktop become=true vm_hosts=desktop
 ```
 
 - Updating dist (apt dist upgrade)
-```bash
-$ ansible-playbook ./playbooks/apt_dist_upgrade.yaml -i ./inventory/linux_hosts --extra-vars "vm_hosts=proxmox"
-```
+```shell
 
+```
 
 #### Configuring the Proxmox VMs
 
