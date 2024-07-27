@@ -15,7 +15,7 @@ $ make run playbook=apt_update_upgrade inventory=desktop become=true vm_hosts=de
 
 - Updating dist (apt dist upgrade)
 ```shell
-
+$ make run playbook=apt_dist_upgrade inventory=linux_hosts
 ```
 
 #### Configuring the Proxmox VMs
