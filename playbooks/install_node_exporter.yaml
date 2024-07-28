@@ -2,7 +2,7 @@
 # Using this role
 # https://github.com/geerlingguy/ansible-role-node_exporter
 - name: Install Node Exporter
-  hosts: "{{ vm_hosts | default([])}}"
+  hosts: '{{ vm_hosts | default("all")}}'
   become: true
   vars:
     # yamllint disable-line rule:line-length

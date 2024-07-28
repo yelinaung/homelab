@@ -1,6 +1,6 @@
 ---
 - name: "Install Tailscale (but skip authentication)"
-  hosts: '{{ vm_hosts | default([]) }}'
+  hosts: '{{ vm_hosts | default("all")}}'
   gather_facts: true
   become: true
   roles:

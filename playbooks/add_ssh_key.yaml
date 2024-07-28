@@ -1,7 +1,8 @@
 ---
 - name: Add ssh key
-  hosts: "{{ vm_hosts | default([])}}"
+  hosts: '{{ vm_hosts | default("all")}}'
   become: true
+  gather_facts: true
   tasks:
     # - name: install public keys
     #   ansible.posix.authorized_key:

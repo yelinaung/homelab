@@ -1,6 +1,6 @@
 ---
 - name: Install qemu-guest-agent package
-  hosts: "{{ vm_hosts | default([]) }}"
+  hosts: '{{ vm_hosts | default("all")}}'
   become: true
   gather_facts: true
   tasks:
