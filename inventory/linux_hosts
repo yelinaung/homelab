@@ -13,6 +13,7 @@ do-4gb-sgp1-01	ansible_user=yla	ansible_connection=ssh
 
 [vms_on_proxmox]
 # VMs running on top of Proxmox
+ubuntu-alpha 		ansible_user=ubuntu	ansible_connection=ssh
 yankee 			ansible_user=ubuntu	ansible_connection=ssh
 playground-bravo	ansible_user=ubuntu	ansible_connection=ssh
 kr-playground-hotel 	ansible_user=ubuntu	ansible_connection=ssh
