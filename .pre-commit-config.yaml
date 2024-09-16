@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/ansible/ansible-lint.git
-    rev: v24.7.0
+    rev: v24.9.0
     hooks:
       - id: ansible-lint
         files: \.(yaml|yml)$
@@ -10,6 +10,6 @@ repos:
     hooks:
       - id: yamllint
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.18.4
+    rev: v8.19.2
     hooks:
       - id: gitleaks
