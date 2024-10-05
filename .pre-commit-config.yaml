@@ -10,6 +10,6 @@ repos:
     hooks:
       - id: yamllint
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.19.3
+    rev: v8.20.0
     hooks:
       - id: gitleaks
