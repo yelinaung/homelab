@@ -1,4 +1,3 @@
----
 # Works for any VM with Ubuntu (apt)
 - name: Run apt update/upgrade/autoremove on the Ubuntu VMs
   hosts: '{{ vm_hosts | default("all")}}'

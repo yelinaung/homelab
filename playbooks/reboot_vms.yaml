@@ -1,8 +1,7 @@
----
 - name: Reboot machine
-  hosts: "{{ vm_hosts | default([]) }}"
+  hosts: '{{ vm_hosts | default("all")}}'
   become: true
   tasks:
-    - name: "Reboot machine"
+    - name: Reboot machine
       ansible.builtin.reboot:
         reboot_timeout: 3600

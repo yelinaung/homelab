@@ -1,5 +1,4 @@
-[proxmox]
-# 2 Proxmox VMs
+[proxmox] # 2 Proxmox VMs
 homelab 	ansible_user=root 	ansible_connection=ssh
 homelab2 	ansible_user=root 	ansible_connection=ssh
 
@@ -10,16 +9,15 @@ pi5 		ansible_user=pi5	ansible_connection=ssh
 # DigitalOcean VM
 do-4gb-sgp1-01	ansible_user=yla	ansible_connection=ssh
 
-[vms_on_proxmox]
-# VMs running on top of Proxmox
+[vms_on_proxmox] # VMs running on top of Proxmox
 ubuntu-alpha 		ansible_user=ubuntu	ansible_connection=ssh
 yankee 			ansible_user=ubuntu	ansible_connection=ssh
 playground-bravo	ansible_user=ubuntu	ansible_connection=ssh
 kr-playground-hotel 	ansible_user=ubuntu	ansible_connection=ssh
+grafana 		ansible_user=ubuntu	ansible_connection=ssh
 nat-golf-proxmox 	ansible_user=yelin	ansible_connection=ssh
 
-[k8s_vms_on_proxmox]
-# Also VMs running on top of Proxmox but for K8s
+[k8s_vms_on_proxmox] # VMs running on top of Proxmox but for K8s
 k8s-vm1		ansible_user=ubuntu	ansible_connection=ssh
 k8s-vm2		ansible_user=ubuntu	ansible_connection=ssh
 k8s-vm3		ansible_user=ubuntu	ansible_connection=ssh

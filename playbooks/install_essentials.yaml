@@ -1,11 +1,10 @@
----
 - name: Install Essential packages on the given servers
   hosts: '{{ vm_hosts | default("all")}}'
   become: true
   gather_facts: true
   tasks:
     - name: Install essential packages
-      become: true  # become a superuser
+      become: true # become a superuser
       ansible.builtin.apt:
         name:
           - htop

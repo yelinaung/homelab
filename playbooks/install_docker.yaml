@@ -1,5 +1,4 @@
----
 - name: Install docker
-  hosts: "{{ vm_hosts | default([]) }}"
+  hosts: '{{ vm_hosts | default([]) }}'
   become: true
   gather_facts: true
