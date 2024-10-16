@@ -9,10 +9,10 @@ repos:
     hooks:
       - id: yamllint
   - repo: https://github.com/google/yamlfmt
-    rev: v0.10.0
+    rev: v0.13.0
     hooks:
       - id: yamlfmt
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.20.0
+    rev: v8.21.0
     hooks:
       - id: gitleaks
