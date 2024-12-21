@@ -4,7 +4,7 @@
   tasks:
     - name: Check if Oh My Zsh is installed
       ansible.builtin.stat:
-        path: '{{ ansible_env.HOME }}/.oh-my-zsh'
+        path: "{{ ansible_env.HOME }}/.oh-my-zsh"
       register: omz_installed
     - name: Run omz update
       ansible.builtin.command: /bin/zsh -i -c 'omz update'

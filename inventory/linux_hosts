@@ -18,6 +18,7 @@ grafana 		ansible_user=ubuntu	ansible_connection=ssh
 nat-golf-proxmox 	ansible_user=yelin	ansible_connection=ssh
 umami 			ansible_user=ubuntu	ansible_connection=ssh
 vicky			ansible_user=ubuntu	ansible_connection=ssh
+juliet			ansible_user=juliet	ansible_connection=ssh
 
 [k8s_vms_on_proxmox] # VMs running on top of Proxmox but for K8s
 k8s-vm1		ansible_user=ubuntu	ansible_connection=ssh
