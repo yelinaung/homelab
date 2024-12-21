@@ -6,7 +6,6 @@
   roles:
     - victoriametrics.cluster
   vars:
-    victoriametrics_version: "v1.108.1"
     victoriametrics_service_args:
       selfScrapeInterval: 30s
       maxConcurrentInserts: 2048
