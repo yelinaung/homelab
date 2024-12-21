@@ -4,8 +4,10 @@
   gather_facts: true
   become: true
   roles:
-    - victoriametrics.cluster
+    - victoriametrics.cluster.vmsingle
   vars:
+    victoriametrics_system_user: victoriametrics
+    victoriametrics_data_dir: /var/lib/victoria-metrics/
     victoriametrics_service_args:
       selfScrapeInterval: 30s
       maxConcurrentInserts: 2048
