@@ -1,9 +1,10 @@
+---
 - name: Install VictoriaMetrics (Vicky) Single
   hosts: '{{ vm_hosts | default("vicky")}}'
   gather_facts: true
   become: true
-  collections:
-    - victoriametrics.vmsingle
+  roles:
+    - victoriametrics.cluster
   vars:
     victoriametrics_version: "v1.108.1"
     victoriametrics_service_args:

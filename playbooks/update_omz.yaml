@@ -1,3 +1,4 @@
+---
 - name: Update Oh My Zsh on all hosts
   hosts: all
   gather_facts: true

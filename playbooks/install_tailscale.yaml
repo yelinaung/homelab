@@ -1,3 +1,4 @@
+---
 - name: Install Tailscale
   hosts: '{{ vm_hosts | default("all")}}'
   gather_facts: true

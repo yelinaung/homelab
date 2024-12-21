@@ -1,3 +1,4 @@
+---
 - name: Install Essential packages on the given servers
   hosts: '{{ vm_hosts | default("all")}}'
   become: true
