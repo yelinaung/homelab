@@ -7,9 +7,9 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - name: Lint code.
+      - name: Lint code with yamllint
         run: uv run --python 3.12 --with yamllint yamllint . || exit 1
-      - name: Install Ansible.
+      - name: Install Ansible and requirements
         run: |
           uv run --python 3.12 --with ansible-core \
             ansible-galaxy install -r requirements.yml
