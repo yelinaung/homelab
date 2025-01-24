@@ -10,8 +10,6 @@ jobs:
       - name: Lint code.
         run: uv run --python 3.12 --with yamllint yamllint . || exit 1
       - name: Install Ansible.
-        run: pip3 install ansible-core
-      - name: Install necessary dependencies
         run: |
           uv run --python 3.12 --with ansible-core \
             ansible-galaxy install -r requirements.yml
