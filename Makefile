@@ -4,7 +4,7 @@ ANSIBLE_CMD = ansible-playbook ./playbooks/$(playbook).yaml -i ./inventory/$(inv
 
 # Optional flags
 # EXTRA_VARS ?= --extra-vars "vm_hosts=desktop"
-vm_hosts ?= "" 
+vm_hosts ?= ""
 extra_vars ?= --extra-vars "vm_hosts=$(vm_hosts)"
 become ?= false
 
