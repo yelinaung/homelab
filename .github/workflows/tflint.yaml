@@ -22,4 +22,4 @@ jobs:
     - name: Show version
       run: tflint --version
     - name: Run TFLint
-      run: tflint -f compact
+      run: tflint -f compact --recursive
