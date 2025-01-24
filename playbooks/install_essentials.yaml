@@ -5,7 +5,7 @@
   gather_facts: true
   tasks:
     - name: Install essential packages
-      become: true # become a superuser
+      become: true
       ansible.builtin.apt:
         name:
           - htop

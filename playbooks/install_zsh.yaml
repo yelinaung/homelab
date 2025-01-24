@@ -5,7 +5,7 @@
   gather_facts: false
   tasks:
     - name: Install zsh
-      become: true # become a superuser
+      become: true
       ansible.builtin.apt:
         name: zsh
         state: present
