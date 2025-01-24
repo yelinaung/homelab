@@ -1,6 +1,6 @@
 ---
 - name: Create database using custom credentials
-  hosts: '{{ vm_hosts | default("influxdb")}}'
+  hosts: '{{ vm_hosts | default("influx")}}'
   become: true
   gather_facts: true
   tasks:

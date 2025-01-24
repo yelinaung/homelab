@@ -5,9 +5,7 @@ homelab2 	ansible_user=root 	ansible_connection=ssh
 [other_vms]
 # raspberry pis
 pi5 		ansible_user=pi5	ansible_connection=ssh
-
-# DigitalOcean VM
-do-4gb-sgp1-01	ansible_user=yla	ansible_connection=ssh
+vultr		ansible_user=yla	ansible_connection=ssh
 
 [vms_on_proxmox] # VMs running on top of Proxmox
 ubuntu-alpha 		ansible_user=ubuntu	ansible_connection=ssh
@@ -19,6 +17,8 @@ nat-golf-proxmox 	ansible_user=yelin	ansible_connection=ssh
 umami 			ansible_user=ubuntu	ansible_connection=ssh
 vicky			ansible_user=ubuntu	ansible_connection=ssh
 juliet			ansible_user=juliet	ansible_connection=ssh
+influx			ansible_user=ubuntu	ansible_connection=ssh
+marco 			ansible_user=ubuntu	ansible_connection=ssh
 
 [k8s_vms_on_proxmox] # VMs running on top of Proxmox but for K8s
 k8s-vm1		ansible_user=ubuntu	ansible_connection=ssh
