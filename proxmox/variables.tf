@@ -7,6 +7,3 @@ variable "username" {
 variable "password" {
   type = string
 }
-variable "unused" {
-  type = string
-}
