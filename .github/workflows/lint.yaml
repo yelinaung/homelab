@@ -4,7 +4,7 @@ on: push
 jobs:
   lint:
     name: Linting
-    runs-on: ubuntu-latest
+    runs-on: playground-bravo
     steps:
       - uses: actions/checkout@v4
       - name: Install yamllint
