@@ -25,21 +25,8 @@ provider "proxmox" {
     username = "root"
   }
 }
-# import {
-#   to = proxmox_virtual_environment_vm.alpha_ubuntu
-#   id = "homelab/100"
-# }
 
-# resource "proxmox_virtual_environment_vm" "alpha_ubuntu" {
-#   name      = "alpha-ubuntu-24-04"
-#   node_name = "homelab"
-#   vm_id     = 100
-#   agent {
-#     enabled = true
-#   }
-#   tags = [
-#     "24.04",
-#     "linux",
-#     "ubuntu",
-#   ]
-# }
+import {
+  to = proxmox_virtual_environment_vm.alpha_ubuntu
+  id = "homelab/100"
+}
