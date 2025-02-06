@@ -1,7 +1,3 @@
-# __generated__ by Terraform
-# Please review these resources and move them into your main configuration files.
-
-# __generated__ by Terraform
 resource "proxmox_virtual_environment_vm" "alpha_ubuntu" {
   vm_id         = 100
   acpi          = true

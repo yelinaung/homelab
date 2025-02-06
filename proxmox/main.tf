@@ -25,8 +25,3 @@ provider "proxmox" {
     username = "root"
   }
 }
-
-import {
-  to = proxmox_virtual_environment_vm.alpha_ubuntu
-  id = "homelab/100"
-}
