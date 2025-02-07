@@ -1,4 +1,4 @@
-resource "proxmox_virtual_environment_vm" "bravo_ubuntu" {
+resource "proxmox_virtual_environment_vm" "grafana_ubuntu" {
   acpi                = true
   bios                = "seabios"
   boot_order          = null
@@ -8,7 +8,7 @@ resource "proxmox_virtual_environment_vm" "bravo_ubuntu" {
   kvm_arguments       = null
   machine             = null
   migrate             = null
-  name                = "bravo-ubuntu-server-22.04"
+  name                = "grafana"
   node_name           = "homelab2"
   on_boot             = null
   pool_id             = null
@@ -18,9 +18,16 @@ resource "proxmox_virtual_environment_vm" "bravo_ubuntu" {
   started             = true
   stop_on_destroy     = null
   tablet_device       = true
-  tags                = ["linux", "ubuntu", "terraform"]
+  tags                = ["24.04", "linux", "ubuntu", "terraform"]
   template            = false
-  vm_id               = 101
+  timeout_clone       = null
+  timeout_create      = null
+  timeout_migrate     = null
+  timeout_reboot      = null
+  timeout_shutdown_vm = null
+  timeout_start_vm    = null
+  timeout_stop_vm     = null
+  vm_id               = 104
   agent {
     enabled = true
     timeout = "15m"
@@ -43,44 +50,31 @@ resource "proxmox_virtual_environment_vm" "bravo_ubuntu" {
     aio               = "io_uring"
     backup            = true
     cache             = "none"
-    datastore_id      = "local"
-    discard           = "ignore"
-    file_id           = null
-    interface         = "ide2"
-    iothread          = false
-    path_in_datastore = "iso/ubuntu-22.04.3-live-server-amd64.iso"
-    replicate         = true
-    serial            = null
-    size              = 1
-    ssd               = false
-  }
-  disk {
-    aio               = "io_uring"
-    backup            = true
-    cache             = "none"
     datastore_id      = "local-lvm"
     discard           = "ignore"
     file_format       = "raw"
     file_id           = null
     interface         = "scsi0"
     iothread          = true
-    path_in_datastore = "vm-101-disk-0"
+    path_in_datastore = "vm-104-disk-0"
     replicate         = true
     serial            = null
-    size              = 100
+    size              = 32
     ssd               = false
   }
   memory {
-    dedicated = 4096
-    floating  = 0
-    shared    = 0
+    dedicated      = 4096
+    floating       = 0
+    hugepages      = null
+    keep_hugepages = false
+    shared         = 0
   }
   network_device {
     bridge       = "vmbr0"
     disconnected = false
     enabled      = true
     firewall     = true
-    mac_address  = "0A:B1:37:E1:7C:26"
+    mac_address  = "BC:24:11:B0:B9:05"
     model        = "virtio"
     mtu          = 0
     queues       = 0
@@ -94,5 +88,6 @@ resource "proxmox_virtual_environment_vm" "bravo_ubuntu" {
   vga {
     clipboard = null
     memory    = 16
+    type      = null
   }
 }
