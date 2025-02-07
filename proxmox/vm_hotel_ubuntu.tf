@@ -1,15 +1,15 @@
-resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
+resource "proxmox_virtual_environment_vm" "hotel_ubuntu" {
+  vm_id         = 106
   acpi          = true
   bios          = "seabios"
-  name          = "delta-ubuntu-server-22.04"
+  name          = "hotel-ubuntu-22.04-kr"
   node_name     = "homelab"
   protection    = false
   scsi_hardware = "virtio-scsi-single"
-  started       = false
+  started       = true
   tablet_device = true
   tags          = ["linux", "ubuntu", "terraform"]
   template      = false
-  vm_id         = 103
   agent {
     enabled = true
     timeout = "15m"
@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
   cpu {
     affinity     = null
     architecture = null
-    cores        = 2
+    cores        = 1
     flags        = []
     hotplugged   = 0
     limit        = 0
@@ -53,14 +53,14 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
     file_id           = null
     interface         = "scsi0"
     iothread          = true
-    path_in_datastore = "vm-103-disk-0"
+    path_in_datastore = "vm-106-disk-0"
     replicate         = true
     serial            = null
     size              = 40
     ssd               = false
   }
   memory {
-    dedicated      = 8192
+    dedicated      = 1024
     floating       = 0
     hugepages      = null
     keep_hugepages = false
@@ -71,7 +71,7 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
     disconnected = false
     enabled      = true
     firewall     = true
-    mac_address  = "BC:24:11:63:3E:62"
+    mac_address  = "BC:24:11:E2:EA:B2"
     model        = "virtio"
     mtu          = 0
     queues       = 0
@@ -81,9 +81,5 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
   }
   operating_system {
     type = "l26"
-  }
-  vga {
-    clipboard = null
-    type      = null
   }
 }

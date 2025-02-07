@@ -1,32 +1,29 @@
-resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
+resource "proxmox_virtual_environment_vm" "k8s_vm2" {
+  vm_id         = 109
   acpi          = true
   bios          = "seabios"
-  name          = "delta-ubuntu-server-22.04"
-  node_name     = "homelab"
+  name          = "k8s-vm2"
+  node_name     = "homelab2"
   protection    = false
   scsi_hardware = "virtio-scsi-single"
-  started       = false
+  started       = true
   tablet_device = true
-  tags          = ["linux", "ubuntu", "terraform"]
+  tags          = ["20.04", "k8s", "linux", "ubuntu", "terraform"]
   template      = false
-  vm_id         = 103
   agent {
     enabled = true
     timeout = "15m"
     trim    = false
-    type    = null
   }
   cpu {
-    affinity     = null
-    architecture = null
-    cores        = 2
-    flags        = []
-    hotplugged   = 0
-    limit        = 0
-    numa         = false
-    sockets      = 1
-    type         = "x86-64-v2-AES"
-    units        = 1024
+    cores      = 2
+    flags      = []
+    hotplugged = 0
+    limit      = 0
+    numa       = false
+    sockets    = 1
+    type       = "x86-64-v2-AES"
+    units      = 1024
   }
   disk {
     aio               = "io_uring"
@@ -34,12 +31,10 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
     cache             = "none"
     datastore_id      = "local"
     discard           = "ignore"
-    file_id           = null
     interface         = "ide2"
     iothread          = false
-    path_in_datastore = "iso/ubuntu-22.04.3-live-server-amd64.iso"
+    path_in_datastore = "iso/ubuntu-20.04.6-live-server-amd64.iso"
     replicate         = true
-    serial            = null
     size              = 1
     ssd               = false
   }
@@ -50,13 +45,11 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
     datastore_id      = "local-lvm"
     discard           = "ignore"
     file_format       = "raw"
-    file_id           = null
     interface         = "scsi0"
     iothread          = true
-    path_in_datastore = "vm-103-disk-0"
+    path_in_datastore = "vm-109-disk-0"
     replicate         = true
-    serial            = null
-    size              = 40
+    size              = 50
     ssd               = false
   }
   memory {
@@ -71,7 +64,7 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
     disconnected = false
     enabled      = true
     firewall     = true
-    mac_address  = "BC:24:11:63:3E:62"
+    mac_address  = "BC:24:11:25:DC:9C"
     model        = "virtio"
     mtu          = 0
     queues       = 0
@@ -81,9 +74,5 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
   }
   operating_system {
     type = "l26"
-  }
-  vga {
-    clipboard = null
-    type      = null
   }
 }

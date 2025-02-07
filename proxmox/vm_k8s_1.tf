@@ -1,15 +1,19 @@
-resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
-  acpi          = true
-  bios          = "seabios"
-  name          = "delta-ubuntu-server-22.04"
-  node_name     = "homelab"
-  protection    = false
-  scsi_hardware = "virtio-scsi-single"
-  started       = false
-  tablet_device = true
-  tags          = ["linux", "ubuntu", "terraform"]
-  template      = false
-  vm_id         = 103
+resource "proxmox_virtual_environment_vm" "k8s_vm1" {
+  vm_id           = 108
+  acpi            = true
+  bios            = "seabios"
+  name            = "k8s-vm1"
+  node_name       = "homelab"
+  on_boot         = null
+  pool_id         = null
+  protection      = false
+  reboot          = null
+  scsi_hardware   = "virtio-scsi-single"
+  started         = true
+  stop_on_destroy = null
+  tablet_device   = true
+  tags            = ["20.04", "k8s", "linux", "ubuntu", "terraform"]
+  template        = false
   agent {
     enabled = true
     timeout = "15m"
@@ -37,7 +41,7 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
     file_id           = null
     interface         = "ide2"
     iothread          = false
-    path_in_datastore = "iso/ubuntu-22.04.3-live-server-amd64.iso"
+    path_in_datastore = "iso/ubuntu-20.04.6-live-server-amd64.iso"
     replicate         = true
     serial            = null
     size              = 1
@@ -53,10 +57,10 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
     file_id           = null
     interface         = "scsi0"
     iothread          = true
-    path_in_datastore = "vm-103-disk-0"
+    path_in_datastore = "vm-108-disk-0"
     replicate         = true
     serial            = null
-    size              = 40
+    size              = 50
     ssd               = false
   }
   memory {
@@ -71,7 +75,7 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
     disconnected = false
     enabled      = true
     firewall     = true
-    mac_address  = "BC:24:11:63:3E:62"
+    mac_address  = "BC:24:11:AD:D7:BF"
     model        = "virtio"
     mtu          = 0
     queues       = 0
@@ -81,9 +85,5 @@ resource "proxmox_virtual_environment_vm" "delta_ubuntu" {
   }
   operating_system {
     type = "l26"
-  }
-  vga {
-    clipboard = null
-    type      = null
   }
 }

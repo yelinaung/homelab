@@ -6,3 +6,5 @@ plan_and_generate:
 	cd proxmox && terraform plan -var-file=values.tfvars -generate-config-out=generated.tf
 apply:
 	cd proxmox && terraform apply output.out
+fmt:
+	cd proxmox && terraform fmt *.tf
