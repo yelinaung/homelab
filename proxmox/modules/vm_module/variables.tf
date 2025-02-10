@@ -44,7 +44,8 @@ variable "cpu_cores" {
   description = "The number of CPU cores for the VM"
 }
 
-variable "started" {
-  type        = bool
-  description = "Whether the VM should be started"
+variable "tags" {
+  default     = ["terraform"]
+  type        = list(string)
+  description = "The tags for the VM"
 }

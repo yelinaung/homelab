@@ -7,7 +7,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   scsi_hardware = "virtio-scsi-single"
   started       = true
   tablet_device = true
-  tags          = ["linux", "ubuntu", "terraform"]
+  tags          = var.tags
   template      = false
   vm_id         = var.vm_id
 
@@ -83,10 +83,5 @@ resource "proxmox_virtual_environment_vm" "vm" {
 
   operating_system {
     type = "l26"
-  }
-
-  vga {
-    clipboard = null
-    memory    = 16
   }
 }
