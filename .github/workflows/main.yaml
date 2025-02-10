@@ -1,24 +1,42 @@
 name: Main
-"on":
-  push:
-  pull_request:
+
+on: [push, pull_request]
 
 jobs:
-  main:
+  checkout:
     runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v4
-    - uses: hashicorp/setup-terraform@v3
+      - uses: actions/checkout@v4
+    outputs:
+      working-directory: ${{ github.workspace }}
 
-    - name: Terraform fmt
-      id: fmt
-      run: terraform fmt -check
-      continue-on-error: true
+  fmt_and_validate:
+    needs: checkout
+    runs-on: self-hosted
+    steps:
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform fmt
+        run: terraform fmt -check
+        continue-on-error: true
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Validate
+        run: terraform validate -no-color
 
-    - name: Terraform Init
-      id: init
-      run: terraform init
+  tflint:
+    needs: checkout
+    runs-on: self-hosted
+    steps:
+      - uses: actions/cache@v4
+        with:
+          path: ~/.tflint.d/plugins
+          key: tflint-${{ hashFiles('.tflint.hcl') }}
+      - uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.52.0
 
-    - name: Terraform Validate
-      id: validate
-      run: terraform validate -no-color
+      - name: Show TFLint version
+        run: tflint --version
+
+      - name: Run TFLint
+        run: tflint -f compact --recursive
