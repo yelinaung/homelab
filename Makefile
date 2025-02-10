@@ -8,4 +8,4 @@ plan_and_generate:
 apply:
 	cd $(TERRAFORM_DIR) && terraform apply output.out
 fmt:
-	cd $(TERRAFORM_DIR) && terraform fmt *.tf
+	cd $(TERRAFORM_DIR) && terraform fmt -recursive
