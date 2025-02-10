@@ -9,5 +9,5 @@ module "alpha_ubuntu" {
   disk_datastore_id = "local-lvm"
   iso_path          = "iso/ubuntu-24.04.1-live-server-amd64.iso"
   cpu_cores         = 2
-  started           = true
+  tags              = ["24.04", "linux", "terraform", "ubuntu"]
 }
