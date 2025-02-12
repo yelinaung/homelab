@@ -53,3 +53,9 @@ variable "tags" {
   type        = list(string)
   description = "The tags for the VM"
 }
+
+variable "iso_disk_size" {
+  type        = number
+  default     = 2
+  description = "The size of the ISO disk in GB (default: 2)"
+}
