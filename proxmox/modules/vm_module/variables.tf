@@ -22,6 +22,10 @@ variable "disk_size" {
   type        = number
   description = "The size of the disk (in GB)"
 }
+variable "disk_datastore_id_disk" {
+  type        = string
+  description = "The datastore ID for the disk"
+}
 
 variable "disk_datastore_id" {
   type        = string
