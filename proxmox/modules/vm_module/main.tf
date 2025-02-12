@@ -40,7 +40,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     path_in_datastore = var.iso_path
     replicate         = true
     serial            = null
-    size              = 2
+    size              = var.iso_disk_size
     ssd               = false
   }
 
