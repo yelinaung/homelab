@@ -22,14 +22,14 @@ variable "disk_size" {
   type        = number
   description = "The size of the disk (in GB)"
 }
-variable "disk_datastore_id_disk" {
+variable "vm_disk_datastore_id" {
   type        = string
-  description = "The datastore ID for the disk"
+  description = "The datastore ID where the main VM disk will be stored (e.g., local-lvm)"
 }
 
 variable "disk_datastore_id" {
   type        = string
-  description = "The datastore ID for the disk"
+  description = "The datastore ID where the ISO installation media is stored (e.g., homelab1-data)"
 }
 
 variable "iso_path" {
