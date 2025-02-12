@@ -48,7 +48,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     aio               = "io_uring"
     backup            = true
     cache             = "none"
-    datastore_id      = var.disk_datastore_id_disk
+    datastore_id      = var.vm_disk_datastore_id
     discard           = "ignore"
     file_format       = "raw"
     file_id           = null
