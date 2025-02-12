@@ -9,3 +9,7 @@ apply:
 	cd $(TERRAFORM_DIR) && terraform apply output.out
 fmt:
 	cd $(TERRAFORM_DIR) && terraform fmt -recursive
+init:
+	cd $(TERRAFORM_DIR) && terraform init
+init-and-upgrade:
+	cd $(TERRAFORM_DIR) && terraform init -upgrade
