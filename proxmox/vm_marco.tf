@@ -40,7 +40,6 @@ resource "proxmox_virtual_environment_vm" "marco_ubuntu_vm" {
   }
 
   cdrom {
-    enabled = true
     file_id = "homelab2-data2:iso/ubuntu-24.04.1-live-server-amd64.iso"
   }
 
