@@ -152,3 +152,15 @@ variable "disk_path_prefix" {
   default     = ""
   description = "Optional prefix for the disk path (e.g., '115/' for 'vm-115-disk-0.qcow2')"
 }
+
+variable "enable_serial_device" {
+  type        = bool
+  default     = false
+  description = "Toggle to enable serial device"
+}
+
+variable "enable_vga" {
+  type        = bool
+  default     = false
+  description = "Toggle to enable VGA device"
+}
