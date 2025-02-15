@@ -13,4 +13,6 @@ module "influxdb" {
   mac_address          = "BC:24:11:19:47:DE"
   tags                 = ["linux", "ubuntu", "db", "terraform"]
   iso_disk_size        = 2
+  disk_file_format     = "qcow2"
+  disk_path_prefix     = "115/"
 }
