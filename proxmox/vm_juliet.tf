@@ -1,78 +1,23 @@
-resource "proxmox_virtual_environment_vm" "juliet_ubuntu_arm" {
-  vm_id         = 114
-  acpi          = true
-  bios          = "ovmf"
-  name          = "juliet-ubuntu-arm"
-  node_name     = "homelab"
-  protection    = false
-  scsi_hardware = "virtio-scsi-pci"
-  started       = true
-  tablet_device = true
-  tags          = ["linux", "debian", "terraform"]
-  template      = false
-  agent {
-    type    = "virtio"
-    enabled = true
-    timeout = "15m"
-    trim    = false
-  }
-  cpu {
-    architecture = "aarch64"
-    cores        = 4
-    flags        = []
-    hotplugged   = 0
-    limit        = 0
-    numa         = false
-    sockets      = 1
-    type         = "qemu64"
-    units        = 1024
-  }
-  disk {
-    aio               = "io_uring"
-    backup            = true
-    cache             = "none"
-    datastore_id      = "homelab1-data"
-    discard           = "ignore"
-    file_format       = "qcow2"
-    interface         = "scsi0"
-    iothread          = true
-    path_in_datastore = "114/vm-114-disk-0.qcow2"
-    replicate         = true
-    size              = 42
-    ssd               = false
-  }
-  efi_disk {
-    datastore_id      = "local-lvm"
-    file_format       = "raw"
-    pre_enrolled_keys = false
-    type              = "4m"
-  }
-  memory {
-    dedicated      = 8196
-    floating       = 0
-    keep_hugepages = false
-    shared         = 0
-  }
-  network_device {
-    bridge       = "vmbr0"
-    disconnected = false
-    enabled      = true
-    firewall     = true
-    mac_address  = "BC:24:11:4F:08:80"
-    model        = "virtio"
-    mtu          = 0
-    queues       = 0
-    rate_limit   = 0
-    vlan_id      = 0
-  }
-  operating_system {
-    type = "l26"
-  }
-  serial_device {
-    device = "socket"
-  }
-  vga {
-    memory = 16
-    type   = "serial0"
-  }
+module "juliet_ubuntu" {
+  source = "./modules/vm_module"
+
+  name                  = "juliet-ubuntu-arm"
+  node_name             = "homelab"
+  vm_id                 = 114
+  memory_dedicated      = 8196
+  cpu_cores             = 4
+  disk_size             = 42
+  tags                  = ["debian", "linux", "terraform"]
+  vm_disk_datastore_id  = "homelab1-data"
+  disk_datastore_id     = "homelab1-data"
+  iso_path              = "" # No ISO needed as it's using existing disk
+  enable_iso_disk       = false
+  mac_address           = "BC:24:11:4F:08:80"
+  cpu_type              = "qemu64"
+  bios                  = "ovmf"
+  enable_efi_disk       = true
+  efi_disk_datastore_id = "local-lvm"
+  efi_disk_file_format  = "raw"
+  efi_disk_type         = "4m"
+  efi_pre_enrolled_keys = false
 }

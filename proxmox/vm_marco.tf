@@ -2,58 +2,30 @@ data "local_file" "ubuntu_ssh_public_key" {
   filename = "./data/ubuntu.pub"
 }
 
-# TODO abstract these into a module
-resource "proxmox_virtual_environment_vm" "marco_ubuntu_vm" {
-  name        = "marco-ubuntu"
-  node_name   = "homelab2"
-  description = "Managed by Terraform"
-  tags        = ["terraform", "ubuntu"]
-  vm_id       = 116
-
-  agent {
-    enabled = true
-  }
-
-  initialization {
-    user_account {
-      username = "ubuntu"
-      password = random_password.ubuntu_vm_password.result
-      keys     = [trimspace(data.local_file.ubuntu_ssh_public_key.content)]
-    }
-  }
-
-  cpu {
-    cores = 2
-    type  = "x86-64-v2-AES" # recommended for modern CPUs
-  }
-
-  memory {
-    dedicated = 2048
-    floating  = 2048 # set equal to dedicated to enable ballooning
-  }
-
-  disk {
-    datastore_id = "local-lvm"
-    file_id      = "homelab2-data2:iso/ubuntu-24.04.1-live-server-amd64.iso"
-    interface    = "virtio0"
-    size         = 30
-  }
-
-  cdrom {
-    file_id = "homelab2-data2:iso/ubuntu-24.04.1-live-server-amd64.iso"
-  }
-
-  network_device {
-    bridge = "vmbr0"
-  }
-
-  operating_system {
-    type = "l26" # Linux Kernel 2.6 - 5.X
-  }
-}
-
 resource "random_password" "ubuntu_vm_password" {
   length           = 16
   override_special = "_%@"
   special          = true
+}
+
+module "marco_ubuntu" {
+  source = "./modules/vm_module"
+
+  name                 = "marco-ubuntu"
+  node_name            = "homelab2"
+  vm_id                = 116
+  memory_dedicated     = 2048
+  cpu_cores            = 2
+  disk_size            = 30
+  tags                 = ["terraform", "ubuntu"]
+  vm_disk_datastore_id = "local-lvm"
+  disk_datastore_id    = "homelab2-data2"
+  iso_path             = "iso/ubuntu-24.04.1-live-server-amd64.iso"
+
+  # Initialization configuration
+  enable_initialization   = true
+  initialization_username = "ubuntu"
+  initialization_password = random_password.ubuntu_vm_password.result
+  initialization_ssh_keys = [trimspace(data.local_file.ubuntu_ssh_public_key.content)]
+  initialization_upgrade  = false
 }

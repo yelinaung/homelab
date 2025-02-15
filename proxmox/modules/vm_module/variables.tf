@@ -19,6 +19,7 @@ variable "memory_dedicated" {
 }
 
 variable "disk_size" {
+  default     = 1
   type        = number
   description = "The size of the disk (in GB)"
 }
@@ -58,4 +59,83 @@ variable "iso_disk_size" {
   type        = number
   default     = 2
   description = "The size of the ISO disk in GB (default: 2)"
+}
+
+variable "enable_iso_disk" {
+  type        = bool
+  default     = true
+  description = "Whether to enable the ISO disk block (default: true)"
+}
+
+variable "cpu_type" {
+  type        = string
+  default     = "x86-64-v2-AES"
+  description = "The CPU type for the VM (default: x86-64-v2-AES)"
+}
+
+variable "enable_efi_disk" {
+  type        = bool
+  default     = false
+  description = "Whether to enable EFI disk block (default: false)"
+}
+
+variable "efi_disk_type" {
+  type        = string
+  default     = "4m"
+  description = "The EFI disk type (default: 4m)"
+}
+
+variable "efi_disk_datastore_id" {
+  type        = string
+  default     = "local-lvm"
+  description = "The datastore ID for the EFI disk (default: local-lvm)"
+}
+
+variable "efi_disk_file_format" {
+  type        = string
+  default     = "raw"
+  description = "The file format for the EFI disk (default: raw)"
+}
+
+variable "efi_pre_enrolled_keys" {
+  type        = bool
+  default     = false
+  description = "Whether to pre-enroll keys for the EFI disk (default: false)"
+}
+
+variable "bios" {
+  type        = string
+  default     = "seabios"
+  description = "The BIOS type for the VM (default: seabios)"
+}
+
+variable "enable_initialization" {
+  type        = bool
+  default     = false
+  description = "Whether to enable initialization block (default: false)"
+}
+
+variable "initialization_username" {
+  type        = string
+  default     = ""
+  description = "The username for the initialization user account"
+}
+
+variable "initialization_password" {
+  type        = string
+  default     = ""
+  description = "The password for the initialization user account"
+  sensitive   = true
+}
+
+variable "initialization_ssh_keys" {
+  type        = list(string)
+  default     = []
+  description = "List of SSH public keys for the initialization user account"
+}
+
+variable "initialization_upgrade" {
+  type        = bool
+  default     = false
+  description = "Whether to upgrade packages during initialization (default: false)"
 }

@@ -1,6 +1,6 @@
 resource "proxmox_virtual_environment_vm" "vm" {
   acpi          = true
-  bios          = "seabios"
+  bios          = var.bios
   name          = var.name
   node_name     = var.node_name
   protection    = false
@@ -24,24 +24,27 @@ resource "proxmox_virtual_environment_vm" "vm" {
     hotplugged = 0
     limit      = 0
     sockets    = 1
-    type       = "x86-64-v2-AES"
+    type       = var.cpu_type
     units      = 1024
   }
 
-  disk {
-    aio               = "io_uring"
-    backup            = true
-    cache             = "none"
-    datastore_id      = var.disk_datastore_id
-    discard           = "ignore"
-    file_id           = null
-    interface         = "ide2"
-    iothread          = false
-    path_in_datastore = var.iso_path
-    replicate         = true
-    serial            = null
-    size              = var.iso_disk_size
-    ssd               = false
+  dynamic "disk" {
+    for_each = var.enable_iso_disk ? [1] : []
+    content {
+      aio               = "io_uring"
+      backup            = true
+      cache             = "none"
+      datastore_id      = var.disk_datastore_id
+      discard           = "ignore"
+      file_id           = null
+      interface         = "ide2"
+      iothread          = false
+      path_in_datastore = var.iso_path
+      replicate         = true
+      serial            = null
+      size              = var.iso_disk_size
+      ssd               = false
+    }
   }
 
   disk {
@@ -83,5 +86,29 @@ resource "proxmox_virtual_environment_vm" "vm" {
 
   operating_system {
     type = "l26"
+  }
+
+  dynamic "initialization" {
+    for_each = var.enable_initialization ? [1] : []
+    content {
+      dynamic "user_account" {
+        for_each = var.initialization_username != "" ? [1] : []
+        content {
+          username = var.initialization_username
+          password = var.initialization_password
+          keys     = var.initialization_ssh_keys
+        }
+      }
+    }
+  }
+
+  dynamic "efi_disk" {
+    for_each = var.enable_efi_disk ? [1] : []
+    content {
+      datastore_id      = var.efi_disk_datastore_id
+      file_format       = var.efi_disk_file_format
+      type              = var.efi_disk_type
+      pre_enrolled_keys = var.efi_pre_enrolled_keys
+    }
   }
 }
