@@ -13,4 +13,6 @@ module "umami" {
   mac_address          = "BC:24:11:5A:AC:60"
   tags                 = ["24.04", "linux", "ubuntu", "terraform"]
   iso_disk_size        = 2
+  disk_file_format     = "qcow2"
+  disk_path_prefix     = "112/"
 }

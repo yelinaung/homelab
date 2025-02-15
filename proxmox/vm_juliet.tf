@@ -20,4 +20,6 @@ module "juliet_ubuntu" {
   efi_disk_file_format  = "raw"
   efi_disk_type         = "4m"
   efi_pre_enrolled_keys = false
+  disk_file_format      = "qcow2"
+  disk_path_prefix      = "114/"
 }

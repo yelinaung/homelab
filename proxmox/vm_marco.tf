@@ -15,6 +15,7 @@ module "marco_ubuntu" {
   node_name            = "homelab2"
   vm_id                = 116
   memory_dedicated     = 2048
+  memory_floating      = 2048
   cpu_cores            = 2
   disk_size            = 30
   tags                 = ["terraform", "ubuntu"]
@@ -27,5 +28,4 @@ module "marco_ubuntu" {
   initialization_username = "ubuntu"
   initialization_password = random_password.ubuntu_vm_password.result
   initialization_ssh_keys = [trimspace(data.local_file.ubuntu_ssh_public_key.content)]
-  initialization_upgrade  = false
 }

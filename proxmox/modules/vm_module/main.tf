@@ -53,11 +53,11 @@ resource "proxmox_virtual_environment_vm" "vm" {
     cache             = "none"
     datastore_id      = var.vm_disk_datastore_id
     discard           = "ignore"
-    file_format       = "raw"
+    file_format       = var.disk_file_format
     file_id           = null
     interface         = "scsi0"
     iothread          = true
-    path_in_datastore = "vm-${var.vm_id}-disk-0"
+    path_in_datastore = "${var.disk_path_prefix}vm-${var.vm_id}-disk-0${var.disk_file_format == "qcow2" ? ".qcow2" : ""}"
     replicate         = true
     serial            = null
     size              = var.disk_size
@@ -66,7 +66,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
 
   memory {
     dedicated = var.memory_dedicated
-    floating  = 0
+    floating  = var.memory_floating
     shared    = 0
   }
 
