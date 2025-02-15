@@ -130,4 +130,12 @@ resource "proxmox_virtual_environment_vm" "vm" {
     }
 
   }
+  lifecycle {
+    ignore_changes = [
+      ipv6_addresses,
+      network_interface_names,
+      network_device,
+      vga
+    ]
+  }
 }
