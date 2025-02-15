@@ -6,7 +6,6 @@ module "grafana_ubuntu" {
   vm_id                = 104
   memory_dedicated     = 4096
   disk_size            = 32
-  disk_datastore_id    = "local-lvm"
   vm_disk_datastore_id = "local-lvm"
   iso_path             = "iso/ubuntu-24.04.1-live-server-amd64.iso" # Set proper path even though not used
   cpu_cores            = 2

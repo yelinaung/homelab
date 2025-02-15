@@ -6,7 +6,6 @@ module "vicky" {
   vm_id                = 113
   memory_dedicated     = 8192
   disk_size            = 100
-  disk_datastore_id    = "local-lvm"
   vm_disk_datastore_id = "local-lvm"
   iso_path             = ""
   cpu_cores            = 4

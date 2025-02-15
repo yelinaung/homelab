@@ -5,7 +5,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   node_name     = var.node_name
   protection    = false
   scsi_hardware = "virtio-scsi-single"
-  started       = true
+  started       = var.has_started
   tablet_device = true
   tags          = var.tags
   template      = false
@@ -19,22 +19,24 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 
   cpu {
-    cores      = var.cpu_cores
-    flags      = []
-    hotplugged = 0
-    limit      = 0
-    sockets    = 1
-    type       = var.cpu_type
-    units      = 1024
+    cores        = var.cpu_cores
+    architecture = var.cpu_architecture
+    flags        = []
+    hotplugged   = 0
+    limit        = 0
+    sockets      = 1
+    type         = var.cpu_type
+    units        = 1024
   }
 
   dynamic "disk" {
     for_each = var.enable_iso_disk ? [1] : []
     content {
+
       aio               = "io_uring"
       backup            = true
       cache             = "none"
-      datastore_id      = var.disk_datastore_id
+      datastore_id      = var.iso_datastore_id
       discard           = "ignore"
       file_id           = null
       interface         = "ide2"

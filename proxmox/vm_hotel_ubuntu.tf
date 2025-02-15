@@ -6,7 +6,6 @@ module "hotel_ubuntu" {
   vm_id                = 106
   memory_dedicated     = 1024
   disk_size            = 40
-  disk_datastore_id    = "local"
   vm_disk_datastore_id = "local-lvm"
   iso_path             = "iso/ubuntu-22.04.3-live-server-amd64.iso"
   cpu_cores            = 1

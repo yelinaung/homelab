@@ -3,10 +3,18 @@ TERRAFORM_DIR = proxmox
 
 plan:
 	cd $(TERRAFORM_DIR) && terraform plan -var-file=values.tfvars -out=output.out
+plan-module:
+	cd $(TERRAFORM_DIR) && terraform plan -var-file=values.tfvars -out=$(module)_output.out -target=$(module)
 plan_and_generate:
 	cd $(TERRAFORM_DIR) && terraform plan -var-file=values.tfvars -generate-config-out=generated.tf
 apply:
 	cd $(TERRAFORM_DIR) && terraform apply output.out
+apply-module:
+	cd $(TERRAFORM_DIR) && terraform apply $(module)_output.out
+plan-and-apply-module:
+	cd $(TERRAFORM_DIR) && \
+		terraform plan -var-file=values.tfvars -out=$(module)_output.out -target=$(module) && \
+		terraform apply $(module)_output.out
 fmt:
 	cd $(TERRAFORM_DIR) && terraform fmt -recursive
 init:

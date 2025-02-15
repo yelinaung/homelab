@@ -6,7 +6,6 @@ module "delta_ubuntu" {
   vm_id                = 103
   memory_dedicated     = 8192
   disk_size            = 40
-  disk_datastore_id    = "local"
   vm_disk_datastore_id = "local-lvm"
   iso_path             = "iso/ubuntu-22.04.3-live-server-amd64.iso"
   cpu_cores            = 2
