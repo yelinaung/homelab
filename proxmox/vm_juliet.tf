@@ -6,10 +6,10 @@ module "juliet_ubuntu" {
   vm_id                 = 114
   memory_dedicated      = 8196
   cpu_cores             = 4
+  cpu_architecture      = "aarch64"
   disk_size             = 42
   tags                  = ["debian", "linux", "terraform"]
   vm_disk_datastore_id  = "homelab1-data"
-  disk_datastore_id     = "homelab1-data"
   iso_path              = "" # No ISO needed as it's using existing disk
   enable_iso_disk       = false
   mac_address           = "BC:24:11:4F:08:80"
@@ -24,4 +24,5 @@ module "juliet_ubuntu" {
   disk_path_prefix      = "114/"
   enable_serial_device  = true
   enable_vga            = true
+  has_started           = false
 }

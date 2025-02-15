@@ -6,7 +6,6 @@ module "bravo_ubuntu" {
   vm_id                = 101
   memory_dedicated     = 4096
   disk_size            = 100
-  disk_datastore_id    = "local"
   vm_disk_datastore_id = "local-lvm"
   iso_path             = "iso/ubuntu-22.04.3-live-server-amd64.iso"
   cpu_cores            = 2

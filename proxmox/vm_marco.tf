@@ -20,7 +20,7 @@ module "marco_ubuntu" {
   disk_size            = 30
   tags                 = ["terraform", "ubuntu"]
   vm_disk_datastore_id = "local-lvm"
-  disk_datastore_id    = "homelab2-data2"
+  iso_datastore_id     = "local-lvm"
   iso_path             = "iso/ubuntu-24.04.1-live-server-amd64.iso"
 
   # Initialization configuration

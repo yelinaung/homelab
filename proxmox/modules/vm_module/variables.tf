@@ -3,6 +3,11 @@ variable "name" {
   description = "The name of the VM"
 }
 
+variable "has_started" {
+  type    = bool
+  default = true
+}
+
 variable "node_name" {
   type        = string
   description = "The name of the Proxmox node"
@@ -35,14 +40,17 @@ variable "vm_disk_datastore_id" {
   description = "The datastore ID where the main VM disk will be stored (e.g., local-lvm)"
 }
 
-variable "disk_datastore_id" {
-  type        = string
-  description = "The datastore ID where the ISO installation media is stored (e.g., homelab1-data)"
-}
-
 variable "iso_path" {
+  default     = null
   type        = string
   description = "The path to the ISO file"
+}
+
+variable "iso_datastore_id" {
+  default     = "local"
+  type        = string
+  description = "ISO datastore Id"
+
 }
 
 variable "mac_address" {
@@ -54,6 +62,11 @@ variable "mac_address" {
 variable "cpu_cores" {
   type        = number
   description = "The number of CPU cores for the VM"
+}
+
+variable "cpu_architecture" {
+  default = ""
+  type    = string
 }
 
 variable "tags" {

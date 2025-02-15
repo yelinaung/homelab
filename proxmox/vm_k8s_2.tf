@@ -6,7 +6,6 @@ module "k8s_vm2" {
   vm_id                = 109
   memory_dedicated     = 8192
   disk_size            = 50
-  disk_datastore_id    = "local"
   vm_disk_datastore_id = "local-lvm"
   iso_path             = "iso/ubuntu-20.04.6-live-server-amd64.iso"
   cpu_cores            = 2
