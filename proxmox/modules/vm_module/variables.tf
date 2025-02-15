@@ -133,9 +133,3 @@ variable "initialization_ssh_keys" {
   default     = []
   description = "List of SSH public keys for the initialization user account"
 }
-
-variable "initialization_upgrade" {
-  type        = bool
-  default     = false
-  description = "Whether to upgrade packages during initialization (default: false)"
-}

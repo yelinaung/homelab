@@ -19,3 +19,5 @@ rm-state:
 	cd $(TERRAFORM_DIR) && terraform state rm $(module)
 ls-state:
 	cd $(TERRAFORM_DIR) && terraform state list
+lint:
+	cd $(TERRAFORM_DIR) && tflint --recursive -f compact --color
