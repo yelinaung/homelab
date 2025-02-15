@@ -1,5 +1,5 @@
 TERRAFORM_DIR = proxmox
-.PHONY: plan apply plan_and_generate output clean
+.PHONY: plan apply plan_and_generate fmt init init-and-upgrade import
 
 plan:
 	cd $(TERRAFORM_DIR) && terraform plan -var-file=values.tfvars -out=output.out
@@ -13,3 +13,9 @@ init:
 	cd $(TERRAFORM_DIR) && terraform init
 init-and-upgrade:
 	cd $(TERRAFORM_DIR) && terraform init -upgrade
+import:
+	cd $(TERRAFORM_DIR) && terraform import -var-file=values.tfvars $(module) $(id)
+rm-state:
+	cd $(TERRAFORM_DIR) && terraform state rm $(module)
+ls-state:
+	cd $(TERRAFORM_DIR) && terraform state list
