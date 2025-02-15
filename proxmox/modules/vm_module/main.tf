@@ -111,4 +111,21 @@ resource "proxmox_virtual_environment_vm" "vm" {
       pre_enrolled_keys = var.efi_pre_enrolled_keys
     }
   }
+
+  dynamic "serial_device" {
+    for_each = var.enable_serial_device ? [1] : []
+    content {
+      device = "socket"
+    }
+
+  }
+
+  dynamic "vga" {
+    for_each = var.enable_vga ? [1] : []
+    content {
+      memory = 16
+      type   = "serial0"
+    }
+
+  }
 }

@@ -22,4 +22,6 @@ module "juliet_ubuntu" {
   efi_pre_enrolled_keys = false
   disk_file_format      = "qcow2"
   disk_path_prefix      = "114/"
+  enable_serial_device  = true
+  enable_vga            = true
 }
