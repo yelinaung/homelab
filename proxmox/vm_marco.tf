@@ -22,6 +22,7 @@ module "marco_ubuntu" {
   vm_disk_datastore_id = "local-lvm"
   iso_datastore_id     = "local-lvm"
   iso_path             = "iso/ubuntu-24.04.1-live-server-amd64.iso"
+  enable_iso_disk      = false
 
   # Initialization configuration
   enable_initialization   = true
