@@ -29,6 +29,23 @@ resource "proxmox_virtual_environment_vm" "vm" {
     units        = 1024
   }
 
+  disk {
+    aio               = "io_uring"
+    backup            = true
+    cache             = "none"
+    datastore_id      = var.vm_disk_datastore_id
+    discard           = "ignore"
+    file_format       = var.disk_file_format
+    file_id           = null
+    interface         = "scsi0"
+    iothread          = true
+    path_in_datastore = "${var.disk_path_prefix}vm-${var.vm_id}-disk-0${var.disk_file_format == "qcow2" ? ".qcow2" : ""}"
+    replicate         = true
+    serial            = null
+    size              = var.disk_size
+    ssd               = false
+  }
+
   dynamic "disk" {
     for_each = var.enable_iso_disk ? [1] : []
     content {
@@ -47,23 +64,6 @@ resource "proxmox_virtual_environment_vm" "vm" {
       size              = var.iso_disk_size
       ssd               = false
     }
-  }
-
-  disk {
-    aio               = "io_uring"
-    backup            = true
-    cache             = "none"
-    datastore_id      = var.vm_disk_datastore_id
-    discard           = "ignore"
-    file_format       = var.disk_file_format
-    file_id           = null
-    interface         = "scsi0"
-    iothread          = true
-    path_in_datastore = "${var.disk_path_prefix}vm-${var.vm_id}-disk-0${var.disk_file_format == "qcow2" ? ".qcow2" : ""}"
-    replicate         = true
-    serial            = null
-    size              = var.disk_size
-    ssd               = false
   }
 
   memory {
@@ -132,6 +132,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
   lifecycle {
     ignore_changes = [
+      disk,
       network_device,
       vga
     ]
