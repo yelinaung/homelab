@@ -22,6 +22,7 @@
         dest: /tmp/starship-install.sh
         mode: '0755'
     - name: Run starship installer
+      become: false
       ansible.builtin.command:
         cmd: /tmp/starship-install.sh -y
       args:
@@ -34,7 +35,7 @@
         depth: 1
     - name: Install fzf for the user
       become: false
-      ansible.builtin.command:
+      ansible.builtin.shell:
         cmd: "{{ ansible_user_dir }}/.fzf/install --all"
       args:
         creates: "{{ ansible_user_dir }}/.fzf/bin/fzf"
