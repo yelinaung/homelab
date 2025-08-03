@@ -2,7 +2,7 @@ module "delta_ubuntu" {
   source = "./modules/vm_module"
 
   name                 = "delta-ubuntu-server-22.04"
-  node_name            = "homelab"
+  node_name            = "homelab1"
   vm_id                = 103
   memory_dedicated     = 8192
   disk_size            = 40

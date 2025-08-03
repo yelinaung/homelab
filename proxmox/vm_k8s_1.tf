@@ -2,7 +2,7 @@ module "k8s_vm1" {
   source = "./modules/vm_module"
 
   name                 = "k8s-vm1"
-  node_name            = "homelab"
+  node_name            = "homelab1"
   vm_id                = 108
   memory_dedicated     = 8192
   disk_size            = 50

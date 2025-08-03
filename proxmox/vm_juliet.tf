@@ -2,7 +2,7 @@ module "juliet_ubuntu" {
   source = "./modules/vm_module"
 
   name                  = "juliet-ubuntu-arm"
-  node_name             = "homelab"
+  node_name             = "homelab1"
   vm_id                 = 114
   memory_dedicated      = 8196
   cpu_cores             = 4

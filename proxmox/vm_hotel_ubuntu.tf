@@ -2,7 +2,7 @@ module "hotel_ubuntu" {
   source = "./modules/vm_module"
 
   name                 = "hotel-ubuntu-22.04-kr"
-  node_name            = "homelab"
+  node_name            = "homelab1"
   vm_id                = 106
   memory_dedicated     = 1024
   disk_size            = 40
