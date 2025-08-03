@@ -4,7 +4,7 @@ name: lint
 jobs:
   lint:
     name: Linting
-    # runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Lint code with yamllint
