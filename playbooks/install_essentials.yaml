@@ -32,10 +32,10 @@
       ansible.builtin.git:
         repo: https://github.com/junegunn/fzf.git
         dest: "{{ ansible_user_dir }}/.fzf"
-        depth: 1
+        version: 0.61.2
     - name: Install fzf for the user
       become: false
-      ansible.builtin.shell:
+      ansible.builtin.command:
         cmd: "{{ ansible_user_dir }}/.fzf/install --all"
       args:
         creates: "{{ ansible_user_dir }}/.fzf/bin/fzf"
