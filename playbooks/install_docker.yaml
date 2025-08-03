@@ -1,0 +1,14 @@
+---
+# Using https://github.com/geerlingguy/ansible-role-docker
+- name: Install docker
+  hosts: '{{ vm_hosts | default("all")}}'
+  become: true
+  gather_facts: true
+  vars:
+    # This install compose as the docker plugin
+    # instead of standalone docker-compose
+    docker_install_compose_plugin: true
+    docker_compose_package: docker-compose-plugin
+    docker_compose_package_state: present
+  roles:
+    - geerlingguy.docker

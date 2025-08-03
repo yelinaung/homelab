@@ -1,0 +1,8 @@
+---
+- name: Shutdown machine
+  hosts: "{{ vm_hosts | default([]) }}"
+  become: true
+  tasks:
+    - name: Unconditionally shut down the machine with all defaults
+      community.general.shutdown:
+        delay: 10

@@ -1,0 +1,18 @@
+---
+- name: Install VictoriaMetrics (Vicky) Single
+  hosts: '{{ vm_hosts | default("vicky")}}'
+  gather_facts: true
+  become: true
+  roles:
+    - victoriametrics.cluster.vmsingle
+  vars:
+    victoriametrics_system_user: victoriametrics
+    victoriametrics_data_dir: /var/lib/victoria-metrics/
+    victoriametrics_service_args:
+      selfScrapeInterval: 30s
+      maxConcurrentInserts: 2048
+      retentionPeriod: 90d
+      inmemoryDataFlushInterval: 1s
+      "search.maxUniqueTimeseries": 900000
+      "insert.maxQueueDuration": 30s
+      "promscrape.config": /etc/victoria-metrics/prom_config.yaml

@@ -1,0 +1,14 @@
+---
+- name: Update Oh My Zsh on all hosts
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Check if Oh My Zsh is installed
+      ansible.builtin.stat:
+        path: "{{ ansible_env.HOME }}/.oh-my-zsh"
+      register: omz_installed
+    - name: Run omz update
+      ansible.builtin.command: /bin/zsh -i -c 'omz update'
+      when: omz_installed.stat.exists
+      register: omz_update_result
+      changed_when: "'Example update string' in omz_update_result.stdout"

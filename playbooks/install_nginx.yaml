@@ -1,0 +1,22 @@
+---
+- name: Install and verify Nginx
+  hosts: '{{ vm_hosts | default("all")}}'
+  become: true
+  tasks:
+    - name: Install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+    - name: Start Nginx service
+      ansible.builtin.service:
+        name: nginx
+        state: started
+    - name: Verify Nginx is running
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+    - name: Verify Nginx is accessible
+      ansible.builtin.uri:
+        url: http://localhost
+        status_code: 200
