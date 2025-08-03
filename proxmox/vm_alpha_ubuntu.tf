@@ -2,7 +2,7 @@ module "alpha_ubuntu" {
   source = "./modules/vm_module"
 
   name                 = "alpha-ubuntu-24-04"
-  node_name            = "homelab"
+  node_name            = "homelab1"
   vm_id                = 100
   memory_dedicated     = 4096
   disk_size            = 32

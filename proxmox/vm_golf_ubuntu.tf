@@ -2,7 +2,7 @@ module "golf_ubuntu" {
   source = "./modules/vm_module"
 
   name                 = "golf-ubuntu-22.04"
-  node_name            = "homelab"
+  node_name            = "homelab1"
   vm_id                = 105
   memory_dedicated     = 1024
   disk_size            = 32

@@ -2,7 +2,7 @@ module "umami" {
   source = "./modules/vm_module"
 
   name                 = "umami"
-  node_name            = "homelab"
+  node_name            = "homelab1"
   vm_id                = 112
   memory_dedicated     = 2048
   disk_size            = 32
