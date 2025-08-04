@@ -21,3 +21,4 @@ crash.*.log
 
 *.retry
 .ansible/
+proxmox/packer/secrets.auto.pkrvars.hcl

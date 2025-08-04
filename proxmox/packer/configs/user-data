@@ -1,0 +1,34 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: en_US.UTF-8
+  keyboard:
+    layout: us
+  network:
+    network:
+      version: 2
+      ethernets:
+        ens18:
+          dhcp4: true
+  storage:
+    layout:
+      name: lvm
+  identity:
+    hostname: ubuntu-template
+    username: root
+    password: "$6$exAMPLe$UpNAb2V3b8VCIa.R/dJd2VADd2aJg.H63qBrS8p6y6sAVh5/YvGLzT0Gy52gA7k4mmj3M9wYtG2d.xX.oEe1p/"
+  ssh:
+    install-server: true
+    allow-pw: true
+    authorized-keys:
+      - ${ssh_public_key}
+  packages:
+    - openssh-server
+    - qemu-guest-agent
+  user-data:
+    disable_root: false
+  late-commands:
+    - echo 'root:password' | chpasswd
+    - systemctl enable ssh
+  power_state:
+    mode: poweroff

@@ -1,0 +1,2 @@
+instance-id: packer-ubuntu-template
+local-hostname: ubuntu-template
