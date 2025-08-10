@@ -1,4 +1,3 @@
----
 - name: Install Zsh on Proxmox servers
   hosts: "{{ vm_hosts | default([]) }}"
   become: true

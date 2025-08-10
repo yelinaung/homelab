@@ -1,4 +1,3 @@
----
 - name: Install VictoriaMetrics (Vicky) Single
   hosts: '{{ vm_hosts | default("vicky")}}'
   gather_facts: true

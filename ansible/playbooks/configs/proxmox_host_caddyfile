@@ -1,0 +1,10 @@
+# The Caddyfile is an easy way to configure your Caddy web server.
+# Tailscale name
+# https://tailscale.com/blog/caddy
+homelab2.bengal-python.ts.net {
+  reverse_proxy https://localhost:8006 {
+    transport http {
+      tls_insecure_skip_verify
+    }
+  }
+}

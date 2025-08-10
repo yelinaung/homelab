@@ -1,4 +1,3 @@
----
 - name: Create database using custom credentials
   hosts: '{{ vm_hosts | default("influx")}}'
   become: true

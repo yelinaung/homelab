@@ -1,0 +1,95 @@
+# Install and configure Caddy web server
+#
+# Usage: make run playbook=install_caddy inventory=linux_hosts become=true
+#
+# Custom config: add -e 'caddy_caddyfile="your_config_here"'
+#
+# Example configurations:
+#
+# File server:
+#   caddy_caddyfile: |
+#     :80 {
+#       root * /var/www/html
+#       file_server
+#     }
+#
+# Reverse proxy:
+#   caddy_caddyfile: |
+#     your-domain.com {
+#       reverse_proxy localhost:3000
+#     }
+#
+# Multiple sites:
+#   caddy_caddyfile: |
+#     site1.example.com {
+#       root * /var/www/site1
+#       file_server
+#     }
+#     site2.example.com {
+#       reverse_proxy localhost:8080
+#     }
+- name: Install and configure Caddy
+  hosts: '{{ vm_hosts | default("all")}}'
+  become: true
+  gather_facts: true
+  vars:
+    # Default Caddyfile - can be overridden per host/group
+    caddy_caddyfile: |
+      # Basic file server example
+      :80 {
+        respond "Hello from Caddy on {{ ansible_hostname }}!"
+      }
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - debian-keyring
+          - debian-archive-keyring
+          - apt-transport-https
+          - curl
+        state: present
+        update_cache: true
+
+    - name: Add Caddy GPG key
+      shell: |
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+        chmod 644 /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+      args:
+        creates: /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+
+    - name: Add Caddy repository
+      shell: |
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
+        chmod 644 /etc/apt/sources.list.d/caddy-stable.list
+      args:
+        creates: /etc/apt/sources.list.d/caddy-stable.list
+
+    - name: Update package cache
+      apt:
+        update_cache: true
+
+    - name: Install Caddy
+      apt:
+        name: caddy
+        state: present
+
+    - name: Create Caddyfile
+      copy:
+        content: "{{ caddy_caddyfile }}"
+        dest: /etc/caddy/Caddyfile
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart caddy
+
+    - name: Start and enable Caddy service
+      systemd:
+        name: caddy
+        state: started
+        enabled: true
+
+  handlers:
+    - name: restart caddy
+      systemd:
+        name: caddy
+        state: restarted

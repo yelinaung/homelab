@@ -21,3 +21,7 @@ crash.*.log
 
 *.retry
 .ansible/
+
+.claude
+GEMINI.md
+CLAUDE.md

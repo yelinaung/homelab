@@ -1,4 +1,3 @@
----
 - name: Add ssh key
   hosts: '{{ vm_hosts | default("all")}}'
   become: true

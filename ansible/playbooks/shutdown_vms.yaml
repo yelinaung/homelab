@@ -1,4 +1,3 @@
----
 - name: Shutdown machine
   hosts: "{{ vm_hosts | default([]) }}"
   become: true
