@@ -1,3 +1,4 @@
+---
 - name: Reboot machine
   hosts: '{{ vm_hosts | default("all")}}'
   become: true
