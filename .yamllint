@@ -16,7 +16,7 @@ rules:
     max-spaces-after: -1
     level: error
   comments:
-    min-spaces-from-content: 1 # prettier compatibility
+    min-spaces-from-content: 1 # ansible-lint requirement
   comments-indentation: disable
   document-start: disable
   empty-lines:
@@ -26,9 +26,14 @@ rules:
     level: error
   indentation: disable
   key-duplicates: enable
-  line-length: disable
+  line-length:
+    max: 120 # ansible-lint compatible
   new-line-at-end-of-file: disable
   new-lines:
     type: unix
   trailing-spaces: disable
-  truthy: disable
+  truthy:
+    allowed-values: ["true", "false", "yes", "no"] # ansible-lint compatible
+  octal-values:
+    forbid-implicit-octal: true # ansible-lint requirement
+    forbid-explicit-octal: true # ansible-lint requirement
