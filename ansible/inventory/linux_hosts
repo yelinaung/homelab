@@ -23,3 +23,7 @@ marco 			ansible_user=ubuntu	ansible_connection=ssh
 k8s-vm1		ansible_user=ubuntu	ansible_connection=ssh
 k8s-vm2		ansible_user=ubuntu	ansible_connection=ssh
 k8s-vm3		ansible_user=ubuntu	ansible_connection=ssh
+
+
+[lxc_containers] # LXC Containers running on top of Proxmox
+beszel-hub	ansible_user=root	ansible_connection=ssh

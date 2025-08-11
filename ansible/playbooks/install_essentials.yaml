@@ -31,7 +31,6 @@
       ansible.builtin.git:
         repo: https://github.com/junegunn/fzf.git
         dest: "{{ ansible_user_dir }}/.fzf"
-        version: 0.61.2
     - name: Install fzf for the user
       become: false
       ansible.builtin.command:
