@@ -1,0 +1,50 @@
+all:
+  children:
+    k8s_vms_on_proxmox:
+      hosts:
+        k8s-vm1:
+          ansible_user: ubuntu
+        k8s-vm2:
+          ansible_user: ubuntu
+        k8s-vm3:
+          ansible_user: ubuntu
+    lxc_containers:
+      hosts:
+        beszel-hub:
+          ansible_user: root
+    other_vms:
+      hosts:
+        pi5:
+          ansible_user: pi5
+        vultr:
+          ansible_user: yla
+    proxmox:
+      hosts:
+        homelab1:
+          ansible_user: root
+        homelab2:
+          ansible_user: root
+        homelab3:
+          ansible_user: root
+    vms_on_proxmox:
+      hosts:
+        grafana:
+          ansible_user: ubuntu
+        influx:
+          ansible_user: ubuntu
+        kr-playground-hotel:
+          ansible_user: ubuntu
+        marco:
+          ansible_user: ubuntu
+        nat-golf-proxmox:
+          ansible_user: yelin
+        playground-bravo:
+          ansible_user: ubuntu
+        ubuntu-alpha:
+          ansible_user: ubuntu
+        umami:
+          ansible_user: ubuntu
+        vicky:
+          ansible_user: ubuntu
+        yankee:
+          ansible_user: ubuntu

@@ -1,0 +1,10 @@
+all:
+  children:
+    desktop:
+      hosts:
+        yelinaung:
+          ansible_user: yelinaung
+    thinkpad:
+      hosts:
+        yelinaung-thinkpad-x395-1:
+          ansible_user: yelinaung

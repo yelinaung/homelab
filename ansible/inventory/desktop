@@ -1,5 +1,0 @@
-[desktop]
-yelinaung                   ansible_user=yelinaung  ansible_connection=ssh
-
-[thinkpad]
-yelinaung-thinkpad-x395-1   ansible_user=yelinaung  ansible_connection=ssh

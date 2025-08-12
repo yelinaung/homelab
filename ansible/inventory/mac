@@ -1,2 +1,0 @@
-[mac]
-ninetyninesmini         ansible_user=ninetynine     ansible_connection=ssh

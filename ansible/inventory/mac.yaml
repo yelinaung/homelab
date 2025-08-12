@@ -1,0 +1,6 @@
+all:
+  children:
+    mac:
+      hosts:
+        ninetyninesmini:
+          ansible_user: ninetynine
