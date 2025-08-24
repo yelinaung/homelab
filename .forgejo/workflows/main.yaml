@@ -18,13 +18,22 @@ jobs:
       image: ci:2025-08-24
     steps:
       - uses: actions/checkout@v5
+      - name: Upload repository
+        uses: actions/upload-artifact@v3
+        with:
+          name: repo
+          path: .
 
   fmt_and_validate:
-    needs: checkout
     runs-on: docker
     container:
       image: ci:2025-08-24
+    needs: [checkout]
     steps:
+      - name: Download repository
+        uses: actions/download-artifact@v3
+        with:
+          name: repo
       - uses: hashicorp/setup-terraform@v3
       - name: Terraform fmt
         run: terraform fmt -check
@@ -35,11 +44,15 @@ jobs:
         run: terraform validate -no-color
 
   tflint:
-    needs: checkout
     runs-on: docker
     container:
       image: ci:2025-08-24
+    needs: [checkout, fmt_and_validate]
     steps:
+      - name: Download repository
+        uses: actions/download-artifact@v3
+        with:
+          name: repo
       - uses: actions/cache@v4
         with:
           path: ~/.tflint.d/plugins
@@ -47,7 +60,6 @@ jobs:
       - uses: terraform-linters/setup-tflint@v5
         with:
           tflint_version: v0.58.1
-
       - name: Show TFLint version
         run: tflint --version
 
