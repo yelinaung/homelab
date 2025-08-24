@@ -1,0 +1,58 @@
+---
+name: Main
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+env:
+  IMAGE_NAME: ${{ gitea.repository }}
+  PROVENANCE_FILE: "attestation.json"
+  CI_IMAGE: ci:2025-08-24
+
+jobs:
+  checkout:
+    runs-on: docker
+    container:
+      image: ${{ env.CI_IMAGE }}
+    steps:
+      - uses: actions/checkout@v5
+    outputs:
+      working-directory: ${{ gitea.workspace }}
+
+  fmt_and_validate:
+    needs: checkout
+    runs-on: docker
+    container:
+      image: ${{ env.CI_IMAGE }}
+    steps:
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform fmt
+        run: terraform fmt -check
+        continue-on-error: true
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Validate
+        run: terraform validate -no-color
+
+  tflint:
+    needs: checkout
+    runs-on: docker
+    container:
+      image: ${{ env.CI_IMAGE }}
+    steps:
+      - uses: actions/cache@v4
+        with:
+          path: ~/.tflint.d/plugins
+          key: tflint-${{ hashFiles('.tflint.hcl') }}
+      - uses: terraform-linters/setup-tflint@v5
+        with:
+          tflint_version: v0.58.1
+
+      - name: Show TFLint version
+        run: tflint --version
+
+      - name: Run TFLint
+        run: tflint -f compact --recursive
