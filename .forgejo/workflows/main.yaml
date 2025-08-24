@@ -8,7 +8,7 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  IMAGE_NAME: ${{ gitea.repository }}
+  IMAGE_NAME: ${{ github.repository }}
   PROVENANCE_FILE: "attestation.json"
 
 jobs:
@@ -18,8 +18,6 @@ jobs:
       image: ci:2025-08-24
     steps:
       - uses: actions/checkout@v5
-    outputs:
-      working-directory: ${{ gitea.workspace }}
 
   fmt_and_validate:
     needs: checkout
