@@ -12,6 +12,8 @@ all:
       hosts:
         beszel-hub:
           ansible_user: root
+        forgejo:
+          ansible_user: root
     other_vms:
       hosts:
         pi5:
