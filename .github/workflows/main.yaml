@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
-
 jobs:
   checkout:
     runs-on: ubuntu-latest
