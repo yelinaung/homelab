@@ -3,7 +3,7 @@ roles:
   - name: geerlingguy.node_exporter
     version: 2.1.2
   - name: geerlingguy.docker
-    version: 7.4.7
+    version: 7.5.1
   - name: artis3n.tailscale
     version: v5.0.1
   - name: robertdebock.collectd
