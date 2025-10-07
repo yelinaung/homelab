@@ -1,4 +1,6 @@
 all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   children:
     k8s_vms_on_proxmox:
       hosts:
