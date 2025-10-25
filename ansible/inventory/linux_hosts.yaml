@@ -16,6 +16,8 @@ all:
           ansible_user: root
         forgejo:
           ansible_user: root
+        unpoller:
+          ansible_user: root
     other_vms:
       hosts:
         pi5:
