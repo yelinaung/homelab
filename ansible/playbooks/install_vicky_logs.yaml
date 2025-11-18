@@ -1,0 +1,14 @@
+---
+- name: Install VictoriaLogs Single
+  hosts: '{{ vm_hosts | default("vicky")}}'
+  gather_facts: true
+  become: true
+  roles:
+    - victoriametrics.cluster.vlsingle
+  vars:
+    victoriametrics_data_dir: "/var/lib/victoria-logs/"
+    victoriametrics_retention_period_months: "12"
+    victoriametrics_self_scrape_interval: "30s"
+    victoriametrics_service_args:
+      "insert.concurrency": 10
+      syslog.listenAddr.tcp: :514
