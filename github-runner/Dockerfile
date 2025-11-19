@@ -1,4 +1,4 @@
-ARG GITHUB_RUNNER_VERSION="2.329.0"
+ARG GITHUB_RUNNER_VERSION="2.330.0"
 FROM myoung34/github-runner:${GITHUB_RUNNER_VERSION}
 
 # Switch to root user to install packages
