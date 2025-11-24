@@ -8,10 +8,4 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Lint code with yamllint
-        run: uv run --python 3.12 --with yamllint yamllint . || exit 1
-      - name: Install Ansible and requirements
-        run: |
-          uv run --python 3.12 --with ansible-core \
-            ansible-galaxy install -r requirements.yml
-      - name: Run ansible-lint
-        uses: ansible/ansible-lint@main
+        run: make lint-ansible

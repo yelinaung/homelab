@@ -2,7 +2,7 @@ TERRAFORM_DIR = proxmox
 GREEN  = \033[0;32m
 YELLOW = \033[0;33m
 NC     = \033[0m
-.PHONY: plan apply plan_and_generate fmt init init-and-upgrade import test-ansible test-ansible-diff
+.PHONY: plan apply plan_and_generate fmt init init-and-upgrade import test-ansible test-ansible-diff lint-ansible
 
 plan:
 	cd $(TERRAFORM_DIR) && terraform plan -var-file=values.tfvars -out=output.out
@@ -67,8 +67,21 @@ test-ansible:
 	@echo "$(GREEN)Running YAML Lint$(NC)"
 	$(UV_RUN_WITH) yamllint yamllint ansible/playbooks/$(playbook).yaml
 
+lint-ansible:
+	@echo "$(GREEN)Running Ansible Syntax check on all playbooks$(NC)"
+	@for playbook in ansible/playbooks/*.yaml; do \
+		echo "Checking $$playbook..." && \
+		$(UV_RUN_WITH) ansible-core ansible-playbook $$playbook --syntax-check || exit 1; \
+	done
+
+	@echo "$(GREEN)Running Ansible Lint$(NC)"
+	$(UV_RUN_WITH) ansible-lint ansible-lint ansible/
+
+	@echo "$(GREEN)Running YAML Lint$(NC)"
+	$(UV_RUN_WITH) yamllint yamllint ansible/playbooks/*.yaml
+
 test-ansible-diff:
 	@echo "$(GREEN)Running Ansible Diff$(NC)"
-	$(UV_RUN_WITH) ansible ansible-playbook ansible/playbooks/$(playbook).yaml \
+	$(UV_RUN_WITH) ansible-core ansible-playbook ansible/playbooks/$(playbook).yaml \
 		--inventory ansible/inventory/linux_hosts.yaml \
 		--check --diff -e "vm_hosts=$(vm_hosts)"
