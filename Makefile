@@ -1,4 +1,7 @@
 TERRAFORM_DIR = proxmox
+GREEN  = \033[0;32m
+YELLOW = \033[0;33m
+NC     = \033[0m
 .PHONY: plan apply plan_and_generate fmt init init-and-upgrade import
 
 plan:
@@ -52,3 +55,22 @@ help:
 	@echo "  inventory: the name of the inventory file to use (default: hosts)"
 	@echo "  become: whether to ask for become password (default: false)"
 	@echo "  extra_vars: extra variables to pass to the playbook (default: --extra-vars \"vm_hosts=desktop\")"
+
+playbook ?= ""
+vm_hosts ?= ""
+UV_RUN_WITH = uv run --python 3.14 --with
+test-ansible:
+	@echo "$(GREEN)Running Ansible Syntax check$(NC)"
+	$(UV_RUN_WITH) ansible ansible-playbook ansible/playbooks/$(playbook).yaml --syntax-check
+
+	@echo "$(GREEN)Running Ansible Lint$(NC)"
+	$(UV_RUN_WITH) ansible-lint ansible-lint ansible/playbooks/$(playbook).yaml
+
+	@echo "$(GREEN)Running YAML Lint$(NC)"
+	$(UV_RUN_WITH) yamllint yamllint ansible/playbooks/$(playbook).yaml
+
+test-ansible-diff:
+	@echo "$(GREEN)Running Ansible Diff$(NC)"
+	$(UV_RUN_WITH) ansible ansible-playbook ansible/playbooks/$(playbook).yaml \
+		--inventory ansible/inventory/linux_hosts.yaml \
+		--check --diff -e "vm_hosts=$(vm_hosts)"
