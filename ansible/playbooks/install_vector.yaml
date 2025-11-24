@@ -1,0 +1,15 @@
+---
+- name: Install vector.dev on the given servers
+  hosts: '{{ vm_hosts | default("all")}}'
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Install prerequisites packages
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - curl
+          - gnupg
+          - xclip
+        state: present # package must present
+        update_cache: true # same as apt-get update
