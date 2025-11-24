@@ -11,7 +11,9 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Set up Python
         run: uv python install
-      - name: Install deps
-        run: uv run --python 3.14 --with ansible-core ansible-galaxy collection install -v -r ansible/requirements.yml
+      - name: Install Ansible Deps
+        run: |
+          uv run --python 3.14 --with ansible-core ansible-galaxy collection install -v -r ansible/requirements.yml
+          uv run --python 3.14 --with ansible-core ansible-galaxy role install -v -r ansible/requirements.yml
       - name: Lint code with yamllint
         run: make lint-ansible
