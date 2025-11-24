@@ -2,7 +2,7 @@
 
 Syntax validation and linting
 ```shell
-$ uv run --python 3.14 --with ansible-playbook ansible-playbook ./ansible/playbooks/install_vector.yaml --syntax-check
+$ uv run --python 3.14 --with ansible-core ansible-playbook ./ansible/playbooks/install_vector.yaml --syntax-check
 $ uv run --python 3.14 --with ansible-lint ansible-lint ansible/playbooks/install_vector.yaml -v
 $ uv run --python 3.14 --with yamllint yamllint ansible/playbooks/install_vector.yaml
 ```

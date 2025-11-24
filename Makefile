@@ -2,7 +2,7 @@ TERRAFORM_DIR = proxmox
 GREEN  = \033[0;32m
 YELLOW = \033[0;33m
 NC     = \033[0m
-.PHONY: plan apply plan_and_generate fmt init init-and-upgrade import
+.PHONY: plan apply plan_and_generate fmt init init-and-upgrade import test-ansible test-ansible-diff
 
 plan:
 	cd $(TERRAFORM_DIR) && terraform plan -var-file=values.tfvars -out=output.out
@@ -56,12 +56,10 @@ help:
 	@echo "  become: whether to ask for become password (default: false)"
 	@echo "  extra_vars: extra variables to pass to the playbook (default: --extra-vars \"vm_hosts=desktop\")"
 
-playbook ?= ""
-vm_hosts ?= ""
 UV_RUN_WITH = uv run --python 3.14 --with
 test-ansible:
 	@echo "$(GREEN)Running Ansible Syntax check$(NC)"
-	$(UV_RUN_WITH) ansible ansible-playbook ansible/playbooks/$(playbook).yaml --syntax-check
+	$(UV_RUN_WITH) ansible-core ansible-playbook ansible/playbooks/$(playbook).yaml --syntax-check
 
 	@echo "$(GREEN)Running Ansible Lint$(NC)"
 	$(UV_RUN_WITH) ansible-lint ansible-lint ansible/playbooks/$(playbook).yaml
