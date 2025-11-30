@@ -11,6 +11,9 @@ resource "proxmox_virtual_environment_vm" "vm" {
   template      = false
   vm_id         = var.vm_id
 
+  delete_unreferenced_disks_on_destroy = true
+  purge_on_destroy                     = true
+
   agent {
     enabled = true
     timeout = "15m"

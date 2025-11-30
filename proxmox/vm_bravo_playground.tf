@@ -2,7 +2,7 @@ module "bravo_ubuntu" {
   source = "./modules/vm_module"
 
   name                 = "bravo-ubuntu-server-22.04"
-  node_name            = "homelab2"
+  node_name            = "homelab1"
   vm_id                = 101
   memory_dedicated     = 4096
   disk_size            = 100
