@@ -35,7 +35,7 @@ lint:
 
 playbook ?= apt_ubuntu_vms
 inventory ?= hosts
-ANSIBLE_CMD = ansible-playbook ./playbooks/$(playbook).yaml -i ./inventory/$(inventory)
+ANSIBLE_CMD = ansible-playbook ./ansible/playbooks/$(playbook).yaml -i ./ansible/inventory/$(inventory)
 
 # Optional flags
 # EXTRA_VARS ?= --extra-vars "vm_hosts=desktop"
