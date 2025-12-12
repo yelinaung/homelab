@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Upload repository
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: repo
           path: .
@@ -31,7 +31,7 @@ jobs:
     needs: [checkout]
     steps:
       - name: Download repository
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: repo
       - name: Terraform fmt
@@ -49,7 +49,7 @@ jobs:
     needs: [checkout, fmt_and_validate]
     steps:
       - name: Download repository
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: repo
       - uses: actions/cache@v5
