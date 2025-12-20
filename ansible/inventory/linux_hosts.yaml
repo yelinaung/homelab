@@ -2,14 +2,6 @@ all:
   vars:
     ansible_python_interpreter: /usr/bin/python3
   children:
-    k8s_vms_on_proxmox:
-      hosts:
-        k8s-vm1:
-          ansible_user: ubuntu
-        k8s-vm2:
-          ansible_user: ubuntu
-        k8s-vm3:
-          ansible_user: ubuntu
     lxc_containers:
       hosts:
         beszel-hub:
@@ -20,8 +12,6 @@ all:
           ansible_user: root
     other_vms:
       hosts:
-        pi5:
-          ansible_user: pi5
         vultr:
           ansible_user: yla
     proxmox:
@@ -53,4 +43,6 @@ all:
         vicky:
           ansible_user: ubuntu
         yankee:
+          ansible_user: ubuntu
+        192.168.1.75:
           ansible_user: ubuntu
