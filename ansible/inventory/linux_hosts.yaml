@@ -44,5 +44,5 @@ all:
           ansible_user: ubuntu
         yankee:
           ansible_user: ubuntu
-        192.168.1.75:
+        immich:
           ansible_user: ubuntu
