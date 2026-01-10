@@ -30,10 +30,6 @@ all:
           ansible_user: ubuntu
         kr-playground-hotel:
           ansible_user: ubuntu
-        marco:
-          ansible_user: ubuntu
-        nat-golf-proxmox:
-          ansible_user: yelin
         playground-bravo:
           ansible_user: ubuntu
         ubuntu-alpha:
@@ -45,4 +41,6 @@ all:
         yankee:
           ansible_user: ubuntu
         immich:
+          ansible_user: ubuntu
+        dokku1:
           ansible_user: ubuntu
