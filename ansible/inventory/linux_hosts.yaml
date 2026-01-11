@@ -44,3 +44,5 @@ all:
           ansible_user: ubuntu
         dokku1:
           ansible_user: ubuntu
+        waung:
+          ansible_user: ubuntu
