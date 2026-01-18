@@ -10,6 +10,8 @@ all:
           ansible_user: root
         unpoller:
           ansible_user: root
+        readeck:
+          ansible_user: root
     other_vms:
       hosts:
         vultr:
