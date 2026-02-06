@@ -1,13 +1,26 @@
 ---
-# Works for any VM with Ubuntu (apt)
-- name: Run apt update/upgrade/autoremove on the Ubuntu VMs
-  hosts: '{{ vm_hosts | default("all")}}'
+# Works for any VM with Ubuntu (apt) or Fedora/RHEL (dnf)
+- name: Run update/upgrade on the VMs
+  hosts: '{{ vm_hosts | default("all") }}'
   become: true
   gather_facts: true
   tasks:
-    - name: Run apt update/upgrade/autoremove
+    - name: Run apt update/upgrade/autoremove (Debian/Ubuntu)
       ansible.builtin.apt:
         update_cache: true
         upgrade: true
         autoremove: true
         autoclean: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Run dnf update/upgrade/autoremove (Fedora/RHEL)
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: true
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Run dnf autoremove (Fedora/RHEL)
+      ansible.builtin.dnf:
+        autoremove: true
+      when: ansible_facts['os_family'] == "RedHat"

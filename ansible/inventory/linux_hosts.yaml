@@ -16,6 +16,7 @@ all:
       hosts:
         vultr:
           ansible_user: yla
+          ansible_port: 2222
     proxmox:
       hosts:
         homelab1:
