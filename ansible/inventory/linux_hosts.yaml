@@ -49,3 +49,5 @@ all:
           ansible_user: ubuntu
         waung:
           ansible_user: ubuntu
+        navidrome:
+          ansible_user: ubuntu

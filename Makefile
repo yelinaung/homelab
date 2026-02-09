@@ -35,6 +35,7 @@ lint:
 
 playbook ?= apt_ubuntu_vms
 inventory ?= hosts
+export ANSIBLE_CONFIG = ./ansible/ansible.cfg
 ANSIBLE_CMD = ansible-playbook ./ansible/playbooks/$(playbook).yaml -i ./ansible/inventory/$(inventory).yaml
 
 # Optional flags
@@ -47,7 +48,7 @@ run:
 ifeq ($(become), true)
 	$(ANSIBLE_CMD) --ask-become-pass $(extra_vars)
 else
-	$(ANSIBLE_CMD)
+	$(ANSIBLE_CMD) $(extra_vars)
 endif
 help:
 	@echo "Usage: make run [playbook=<playbook_name>] [inventory=<inventory_file>] [become=<true/false>] [extra_vars=<extra_vars>]"

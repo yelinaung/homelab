@@ -4,11 +4,11 @@
   become: true
   gather_facts: true
   tasks:
-    # - name: install public keys
-    #   ansible.posix.authorized_key:
-    #     user: "{{ lookup('env','USER') }}"
-    #     state: present
-    #     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    - name: install public keys
+      ansible.posix.authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
     - name: Change sudoers file
       ansible.builtin.lineinfile:
         path: /etc/sudoers

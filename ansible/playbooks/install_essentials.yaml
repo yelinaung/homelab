@@ -13,5 +13,25 @@
           - git
           - vim
           - curl
+          - fzf
         state: present
         update_cache: true
+    - name: Add fzf shell integration to bashrc
+      ansible.builtin.lineinfile:
+        path: "/home/{{ ansible_user }}/.bashrc"
+        line: 'eval "$(fzf --bash)"'
+        state: present
+    - name: Install fzf keybinding
+      ansible.builtin.lineinfile:
+        path: "/home/{{ ansible_user }}/.bashrc"
+        line: 'source /usr/share/doc/fzf/examples/key-bindings.bash'
+        state: present
+    - name: Install starship
+      ansible.builtin.shell:
+        cmd: curl -sS https://starship.rs/install.sh | sh -s -- -y
+        creates: /usr/local/bin/starship
+    - name: Add starship shell integration to bashrc
+      ansible.builtin.lineinfile:
+        path: "/home/{{ ansible_user }}/.bashrc"
+        line: 'eval "$(starship init bash)"'
+        state: present

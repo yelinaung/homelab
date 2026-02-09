@@ -4,10 +4,9 @@ roles:
     version: 2.2.0
   - name: geerlingguy.docker
     version: 8.0.0
-  - name: artis3n.tailscale
-    version: v5.0.1
   - name: robertdebock.collectd
     version: 3.1.8
 collections:
   - community.general
+  - name: artis3n.tailscale
   - victoriametrics.cluster
