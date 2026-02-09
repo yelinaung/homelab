@@ -1,0 +1,30 @@
+---
+- name: Install Navidrome on the given servers
+  hosts: '{{ vm_hosts | default("all")}}'
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Create navidrome data directory
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/navidrome/data"
+        state: directory
+        owner: "1000"
+        group: "1000"
+        mode: "0755"
+    - name: Copy docker-compose file
+      ansible.builtin.copy:
+        src: configs/navidrome/docker-compose.yaml
+        dest: "/home/{{ ansible_user }}/navidrome/docker-compose.yaml"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0644"
+      notify: Restart Navidrome
+    - name: Start Navidrome
+      community.docker.docker_compose_v2:
+        project_src: "/home/{{ ansible_user }}/navidrome"
+        state: present
+  handlers:
+    - name: Restart Navidrome
+      community.docker.docker_compose_v2:
+        project_src: "/home/{{ ansible_user }}/navidrome"
+        state: restarted

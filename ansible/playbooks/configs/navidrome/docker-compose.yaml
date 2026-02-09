@@ -1,0 +1,12 @@
+---
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    user: 1000:1000
+    ports:
+      - "4533:4533"
+    restart: unless-stopped
+    environment: {}
+    volumes:
+      - "/home/ubuntu/navidrome/data:/data"
+      - "/mnt/music:/music:ro"
