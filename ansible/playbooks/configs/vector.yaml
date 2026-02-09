@@ -1,0 +1,53 @@
+data_dir: /var/lib/vector
+
+sources:
+  # existing journald source
+  journald:
+    type: journald
+    journal_directory: /var/log/journal
+
+  # Add Docker container logs
+  docker:
+    type: docker_logs
+    # Docker socket path
+    docker_host: unix:///var/run/docker.sock
+    # Optional: only specific containers
+    # include_containers:
+    #   - my-app
+    #   - nginx
+    # Optional: exclude containers
+    # exclude_containers:
+    #   - noisy-container
+
+transforms:
+  # Separate transform for Docker logs
+  docker_metadata:
+    type: remap
+    inputs:
+      - docker
+    source: |
+      .hostname = get_hostname!()
+      # Container name and image are already in the log
+
+sinks:
+  # existing VictoriaLogs sink
+  vlogs:
+    type: elasticsearch
+    inputs:
+      - journald
+      - docker_metadata
+      - docker
+    endpoints:
+      - http://vicky:9428/insert/elasticsearch/
+    api_version: v8
+    compression: gzip
+    healthcheck:
+      enabled: false
+    query:
+      _msg_field: message
+      _time_field: timestamp
+      _stream_fields: host,container_name,container_image
+
+api:
+  enabled: true
+  address: 127.0.0.1:8686

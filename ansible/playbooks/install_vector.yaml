@@ -11,5 +11,43 @@
           - curl
           - gnupg
           - xclip
-        state: present # package must present
-        update_cache: true # same as apt-get update
+        state: present
+        update_cache: true
+    - name: Add Vector GPG key
+      ansible.builtin.shell:
+        cmd: >-
+          curl -sS https://keys.datadoghq.com/DATADOG_APT_KEY_CURRENT.public
+          | gpg --dearmor -o /usr/share/keyrings/datadog-archive-keyring.gpg
+        creates: /usr/share/keyrings/datadog-archive-keyring.gpg
+    - name: Add Vector apt repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/datadog-archive-keyring.gpg] https://apt.vector.dev stable vector-0"
+        state: present
+    - name: Install Vector
+      ansible.builtin.apt:
+        name: vector
+        state: present
+        update_cache: true
+    - name: Add vector user to docker group
+      ansible.builtin.user:
+        name: vector
+        groups: docker
+        append: true
+    - name: Deploy Vector config
+      ansible.builtin.copy:
+        src: configs/vector.yaml
+        dest: /etc/vector/vector.yaml
+        owner: vector
+        group: vector
+        mode: "0644"
+      notify: Restart Vector
+    - name: Enable and start Vector
+      ansible.builtin.systemd:
+        name: vector
+        state: started
+        enabled: true
+  handlers:
+    - name: Restart Vector
+      ansible.builtin.systemd:
+        name: vector
+        state: restarted
