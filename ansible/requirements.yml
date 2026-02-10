@@ -8,5 +8,7 @@ roles:
     version: 3.1.8
 collections:
   - community.general
+  - ansible.posix
+  - community.docker
   - name: artis3n.tailscale
   - victoriametrics.cluster

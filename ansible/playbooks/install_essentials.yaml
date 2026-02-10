@@ -27,9 +27,14 @@
         path: "/home/{{ ansible_user }}/.bashrc"
         line: 'source /usr/share/doc/fzf/examples/key-bindings.bash'
         state: present
+    - name: Download starship install script
+      ansible.builtin.get_url:
+        url: https://starship.rs/install.sh
+        dest: /tmp/starship-install.sh
+        mode: "0755"
     - name: Install starship
-      ansible.builtin.shell:
-        cmd: curl -sS https://starship.rs/install.sh | sh -s -- -y
+      ansible.builtin.command:
+        cmd: /tmp/starship-install.sh -y
         creates: /usr/local/bin/starship
     - name: Add starship shell integration to bashrc
       ansible.builtin.lineinfile:

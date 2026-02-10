@@ -16,7 +16,7 @@
     - name: Run dnf update/upgrade/autoremove (Fedora/RHEL)
       ansible.builtin.dnf:
         name: "*"
-        state: latest
+        state: latest  # noqa: package-latest
         update_cache: true
       when: ansible_facts['os_family'] == "RedHat"
 

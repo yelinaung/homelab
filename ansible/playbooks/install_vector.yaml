@@ -13,11 +13,14 @@
           - xclip
         state: present
         update_cache: true
-    - name: Add Vector GPG key
-      ansible.builtin.shell:
-        cmd: >-
-          curl -sS https://keys.datadoghq.com/DATADOG_APT_KEY_CURRENT.public
-          | gpg --dearmor -o /usr/share/keyrings/datadog-archive-keyring.gpg
+    - name: Download Vector GPG key
+      ansible.builtin.get_url:
+        url: https://keys.datadoghq.com/DATADOG_APT_KEY_CURRENT.public
+        dest: /tmp/datadog-apt-key.public
+        mode: "0644"
+    - name: Install Vector GPG key
+      ansible.builtin.command:
+        cmd: gpg --dearmor -o /usr/share/keyrings/datadog-archive-keyring.gpg /tmp/datadog-apt-key.public
         creates: /usr/share/keyrings/datadog-archive-keyring.gpg
     - name: Add Vector apt repository
       ansible.builtin.apt_repository:
