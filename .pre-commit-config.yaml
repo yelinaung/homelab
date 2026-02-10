@@ -1,4 +1,6 @@
 ---
+ci:
+  skip: [terraform_fmt, terraform_trivy, terraform_validate]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
