@@ -39,16 +39,22 @@ export ANSIBLE_CONFIG = ./ansible/ansible.cfg
 ANSIBLE_CMD = ansible-playbook ./ansible/playbooks/$(playbook).yaml -i ./ansible/inventory/$(inventory).yaml
 
 # Optional flags
-# EXTRA_VARS ?= --extra-vars "vm_hosts=desktop"
-vm_hosts ?= ""
-extra_vars ?= --extra-vars "vm_hosts=$(vm_hosts)"
+vm_hosts ?=
 become ?= false
 
 run:
 ifeq ($(become), true)
-	$(ANSIBLE_CMD) --ask-become-pass $(extra_vars)
+ifneq ($(vm_hosts),)
+	$(ANSIBLE_CMD) --ask-become-pass --extra-vars "vm_hosts=$(vm_hosts)"
 else
-	$(ANSIBLE_CMD) $(extra_vars)
+	$(ANSIBLE_CMD) --ask-become-pass
+endif
+else
+ifneq ($(vm_hosts),)
+	$(ANSIBLE_CMD) --extra-vars "vm_hosts=$(vm_hosts)"
+else
+	$(ANSIBLE_CMD)
+endif
 endif
 help:
 	@echo "Usage: make run [playbook=<playbook_name>] [inventory=<inventory_file>] [become=<true/false>] [extra_vars=<extra_vars>]"

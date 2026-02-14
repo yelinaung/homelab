@@ -31,8 +31,6 @@ all:
           ansible_user: ubuntu
         influx:
           ansible_user: ubuntu
-        kr-playground-hotel:
-          ansible_user: ubuntu
         playground-bravo:
           ansible_user: ubuntu
         ubuntu-alpha:
