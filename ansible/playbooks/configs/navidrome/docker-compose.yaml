@@ -1,7 +1,7 @@
 ---
 services:
   navidrome:
-    image: deluan/navidrome:latest
+    image: deluan/navidrome:0.60.3
     user: 1000:1000
     ports:
       - "4533:4533"
