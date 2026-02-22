@@ -5,5 +5,6 @@ variable "username" {
   type = string
 }
 variable "password" {
-  type = string
+  type      = string
+  sensitive = true
 }
