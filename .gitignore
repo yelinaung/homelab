@@ -20,6 +20,9 @@ crash.*.log
 *.out
 
 *.retry
+*.key
+*.pem
+.env*
 .ansible/
 
 .claude
