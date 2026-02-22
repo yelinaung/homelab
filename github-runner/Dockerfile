@@ -1,9 +1,5 @@
 FROM myoung34/github-runner:ubuntu-jammy
 
-# nosemgrep: dockerfile.security.last-user-is-root.last-user-is-root
-# Base image entrypoint requires root to register the runner, then drops privileges internally
-USER root
-
 # Install uv, nodejs, terraform, tflint, and other essentials
 ARG TERRAFORM_VERSION=1.14.5
 ARG TFLINT_VERSION=0.61.0
@@ -20,4 +16,3 @@ RUN apt-get update && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
 
 HEALTHCHECK NONE
-USER runner
