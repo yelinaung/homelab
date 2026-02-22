@@ -1,8 +1,10 @@
 TERRAFORM_DIR = proxmox
+CLOUDFLARE_DIR = cloudflare
 GREEN  = \033[0;32m
 YELLOW = \033[0;33m
 NC     = \033[0m
-.PHONY: plan apply plan_and_generate fmt init init-and-upgrade import test-ansible test-ansible-diff lint-ansible push
+.PHONY: plan apply plan_and_generate fmt init init-and-upgrade import test-ansible test-ansible-diff lint-ansible push \
+	plan-dns apply-dns init-dns fmt-dns
 
 plan:
 	cd $(TERRAFORM_DIR) && terraform plan -var-file=values.tfvars -out=output.out
@@ -32,6 +34,15 @@ ls-state:
 	cd $(TERRAFORM_DIR) && terraform state list
 lint:
 	cd $(TERRAFORM_DIR) && tflint --recursive -f compact --color
+
+plan-dns:
+	cd $(CLOUDFLARE_DIR) && terraform plan -var-file=values.tfvars -out=output.out
+apply-dns:
+	cd $(CLOUDFLARE_DIR) && terraform apply output.out
+init-dns:
+	cd $(CLOUDFLARE_DIR) && terraform init
+fmt-dns:
+	cd $(CLOUDFLARE_DIR) && terraform fmt -recursive
 push:
 	@set -e; \
 	branch="$$(git rev-parse --abbrev-ref HEAD)"; \
