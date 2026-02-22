@@ -12,28 +12,12 @@ env:
   PROVENANCE_FILE: "attestation.json"
 
 jobs:
-  checkout:
+  fmt_and_validate:
     runs-on: docker
     container:
       image: ci:2025-08-24
     steps:
       - uses: actions/checkout@v6
-      - name: Upload repository
-        uses: actions/upload-artifact@v6
-        with:
-          name: repo
-          path: .
-
-  fmt_and_validate:
-    runs-on: docker
-    container:
-      image: ci:2025-08-24
-    needs: [checkout]
-    steps:
-      - name: Download repository
-        uses: actions/download-artifact@v7
-        with:
-          name: repo
       - name: Terraform fmt
         run: terraform fmt -check
         continue-on-error: true
@@ -46,12 +30,9 @@ jobs:
     runs-on: docker
     container:
       image: ci:2025-08-24
-    needs: [checkout, fmt_and_validate]
+    needs: [fmt_and_validate]
     steps:
-      - name: Download repository
-        uses: actions/download-artifact@v7
-        with:
-          name: repo
+      - uses: actions/checkout@v6
       - uses: actions/cache@v5
         with:
           path: ~/.tflint.d/plugins
