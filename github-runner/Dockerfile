@@ -1,5 +1,4 @@
-ARG GITHUB_RUNNER_VERSION="2.331.0"
-FROM myoung34/github-runner:${GITHUB_RUNNER_VERSION}@sha256:388d7e9e25a57ee810c5a4ad167f998dbc518a4fc28061743d3036858cdc58de
+FROM myoung34/github-runner:ubuntu-jammy
 
 # Switch to root user to install packages
 USER root
