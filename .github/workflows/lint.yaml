@@ -9,7 +9,10 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install Ansible Deps
         run: |
+          export PATH="$HOME/.local/bin:$PATH"
           uv run --python 3.14 --with ansible-core ansible-galaxy collection install -v -r ansible/requirements.yml
           uv run --python 3.14 --with ansible-core ansible-galaxy role install -v -r ansible/requirements.yml
       - name: Lint code with yamllint
-        run: make lint-ansible
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          make lint-ansible
