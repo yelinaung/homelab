@@ -13,6 +13,7 @@ RUN apt-get update && \
 	unzip /tmp/terraform.zip -d /usr/local/bin && rm /tmp/terraform.zip && \
 	curl -fsSL https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip -o /tmp/tflint.zip && \
 	unzip /tmp/tflint.zip -d /usr/local/bin && rm /tmp/tflint.zip && \
+	pip install --no-cache-dir semgrep==1.152.0 && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
 
 HEALTHCHECK NONE
