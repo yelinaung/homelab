@@ -1,0 +1,9 @@
+---
+services:
+  github-runner:
+    build: .
+    image: ghcr.io/yelinaung/homelab/github-runner:latest
+    restart: unless-stopped
+    environment:
+      - GITHUB_REPOSITORY=${GITHUB_REPOSITORY}
+      - GITHUB_PAT=${GITHUB_PAT}

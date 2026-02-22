@@ -12,5 +12,3 @@ RUN apt-get update && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
 
 HEALTHCHECK NONE
-# Switch back to the runner user
-USER runner
