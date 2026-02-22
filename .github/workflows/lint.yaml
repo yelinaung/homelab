@@ -4,13 +4,9 @@ name: lint
 jobs:
   lint:
     name: Linting
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, playground-ubuntu]
     steps:
       - uses: actions/checkout@v6
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-      - name: Set up Python
-        run: uv python install
       - name: Install Ansible Deps
         run: |
           uv run --python 3.14 --with ansible-core ansible-galaxy collection install -v -r ansible/requirements.yml

@@ -82,7 +82,7 @@ help:
 UV_RUN_WITH = uv run --python 3.14 --with
 test-ansible:
 	@echo "$(GREEN)Running Ansible Syntax check$(NC)"
-	$(UV_RUN_WITH) ansible-core ansible-playbook ansible/playbooks/$(playbook).yaml --syntax-check
+	$(UV_RUN_WITH) ansible-core ansible-playbook ansible/playbooks/$(playbook).yaml -i ansible/inventory/linux_hosts.yaml --syntax-check
 
 	@echo "$(GREEN)Running Ansible Lint$(NC)"
 	$(UV_RUN_WITH) ansible-lint ansible-lint ansible/playbooks/$(playbook).yaml
@@ -94,7 +94,7 @@ lint-ansible:
 	@echo "$(GREEN)Running Ansible Syntax check on all playbooks$(NC)"
 	@for playbook in ansible/playbooks/*.yaml; do \
 		echo "Checking $$playbook..." && \
-		$(UV_RUN_WITH) ansible-core ansible-playbook $$playbook --syntax-check || exit 1; \
+		$(UV_RUN_WITH) ansible-core ansible-playbook $$playbook -i ansible/inventory/linux_hosts.yaml --syntax-check || exit 1; \
 	done
 
 	@echo "$(GREEN)Running Ansible Lint$(NC)"
