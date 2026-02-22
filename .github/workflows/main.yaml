@@ -15,15 +15,7 @@ on:
 permissions:
   contents: read
 jobs:
-  checkout:
-    runs-on: [self-hosted, Linux, X64, playground-ubuntu]
-    steps:
-      - uses: actions/checkout@v6
-    outputs:
-      working-directory: ${{ github.workspace }}
-
   fmt_and_validate:
-    needs: checkout
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]
     defaults:
       run:
@@ -39,7 +31,6 @@ jobs:
         run: terraform validate -no-color
 
   tflint:
-    needs: checkout
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]
     defaults:
       run:
