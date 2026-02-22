@@ -19,7 +19,11 @@ jobs:
   fmt_and_validate:
     needs: checkout
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]
+    defaults:
+      run:
+        working-directory: ./proxmox
     steps:
+      - uses: actions/checkout@v6
       - uses: hashicorp/setup-terraform@v3
       - name: Terraform fmt
         run: terraform fmt -check
@@ -32,7 +36,11 @@ jobs:
   tflint:
     needs: checkout
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]
+    defaults:
+      run:
+        working-directory: ./proxmox
     steps:
+      - uses: actions/checkout@v6
       - uses: actions/cache@v5
         with:
           path: ~/.tflint.d/plugins
