@@ -1,6 +1,7 @@
 FROM myoung34/github-runner:ubuntu-jammy
 
-# Switch to root user to install packages
+# nosemgrep: dockerfile.security.last-user-is-root.last-user-is-root
+# Base image entrypoint requires root to register the runner, then drops privileges internally
 USER root
 
 # Install uv, nodejs, and other essentials

@@ -24,7 +24,6 @@ jobs:
         working-directory: ./proxmox
     steps:
       - uses: actions/checkout@v6
-      - uses: hashicorp/setup-terraform@v3
       - name: Terraform fmt
         run: terraform fmt -check
         continue-on-error: true
@@ -41,14 +40,6 @@ jobs:
         working-directory: ./proxmox
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/cache@v5
-        with:
-          path: ~/.tflint.d/plugins
-          key: tflint-${{ hashFiles('.tflint.hcl') }}
-      - uses: terraform-linters/setup-tflint@v6
-        with:
-          tflint_version: v0.58.1
-
       - name: Show TFLint version
         run: tflint --version
 
