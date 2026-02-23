@@ -15,7 +15,7 @@ jobs:
   secret-detection:
     runs-on: docker
     container:
-      image: ci:2025-08-24
+      image: ci:2026-02-23
     steps:
       - uses: actions/checkout@v6
         with:
@@ -26,7 +26,7 @@ jobs:
   fmt_and_validate:
     runs-on: docker
     container:
-      image: ci:2025-08-24
+      image: ci:2026-02-23
     steps:
       - uses: actions/checkout@v6
       - name: Terraform fmt
@@ -40,7 +40,7 @@ jobs:
   tflint:
     runs-on: docker
     container:
-      image: ci:2025-08-24
+      image: ci:2026-02-23
     needs: [fmt_and_validate]
     steps:
       - uses: actions/checkout@v6
@@ -56,7 +56,7 @@ jobs:
   cloudflare_validate:
     runs-on: docker
     container:
-      image: ci:2025-08-24
+      image: ci:2026-02-23
     steps:
       - uses: actions/checkout@v6
       - name: Terraform fmt
