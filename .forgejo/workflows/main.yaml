@@ -41,3 +41,16 @@ jobs:
         run: tflint --version
       - name: Run TFLint
         run: tflint -f compact --recursive
+
+  cloudflare_validate:
+    runs-on: docker
+    container:
+      image: ci:2025-08-24
+    steps:
+      - uses: actions/checkout@v6
+      - name: Terraform fmt
+        run: terraform -chdir=cloudflare fmt -check
+      - name: Terraform Init
+        run: terraform -chdir=cloudflare init
+      - name: Terraform Validate
+        run: terraform -chdir=cloudflare validate -no-color
