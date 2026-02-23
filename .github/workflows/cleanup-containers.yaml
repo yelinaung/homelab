@@ -13,10 +13,18 @@ jobs:
       packages: write
 
     steps:
-      - name: Delete old untagged container versions
+      - name: Delete old untagged runner container versions
         uses: actions/delete-package-versions@v5
         with:
           package-name: 'homelab/github-runner'
+          package-type: 'container'
+          min-versions-to-keep: 5
+          delete-only-untagged-versions: true
+
+      - name: Delete old untagged CI container versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'homelab/ci'
           package-type: 'container'
           min-versions-to-keep: 5
           delete-only-untagged-versions: true
