@@ -1,0 +1,5 @@
+[[allowlists]]
+description = "Ignore known placeholder in removed historical file"
+commits = [
+  "71f9fea900a94c6819a12c1a5ff7d0beef2015c9"
+]
