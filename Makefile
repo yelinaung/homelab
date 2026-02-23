@@ -55,6 +55,8 @@ push:
 		echo "No git remotes configured."; \
 		exit 1; \
 	fi; \
+	echo "Pulling $$branch from github with rebase..."; \
+	git pull --rebase github "$$branch"; \
 	for remote in $$remotes; do \
 		echo "Pushing $$branch to $$remote..."; \
 		git push "$$remote" "$$branch"; \

@@ -6,6 +6,15 @@ name: lint
       - "ansible/**"
       - ".github/workflows/lint.yaml"
 jobs:
+  secret-detection:
+    runs-on: [self-hosted, Linux, X64, playground-ubuntu]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Run gitleaks
+        run: gitleaks detect --source . --verbose
+
   lint:
     name: Linting
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]

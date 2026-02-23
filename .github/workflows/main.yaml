@@ -1,6 +1,6 @@
 ---
 name: Main
-on:
+'on':
   push:
     branches: [main]
     paths:
@@ -15,6 +15,15 @@ on:
 permissions:
   contents: read
 jobs:
+  secret-detection:
+    runs-on: [self-hosted, Linux, X64, playground-ubuntu]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Run gitleaks
+        run: gitleaks detect --source . --verbose
+
   fmt_and_validate:
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]
     defaults:
