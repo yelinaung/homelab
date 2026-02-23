@@ -6,6 +6,7 @@ ARG GO_VERSION=1.25.0
 ARG NODE_VERSION=24
 ARG TERRAFORM_VERSION=1.10.3
 ARG TFLINT_VERSION=0.55.0
+ARG GITLEAKS_VERSION=8.30.0
 
 # Use pipefail so piped RUN commands fail on upstream command errors.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -53,6 +54,14 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/sh
     && rm tflint.zip \
     && chmod +x /usr/local/bin/tflint
 
+# ===== GITLEAKS STAGE =====
+FROM base AS gitleaks-installer
+ARG GITLEAKS_VERSION
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+    | tar -xz -C /usr/local/bin gitleaks \
+    && chmod +x /usr/local/bin/gitleaks
+
 # ===== PYTHON TOOLS STAGE =====
 FROM base AS python-installer
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -84,6 +93,7 @@ COPY --from=python-installer /root/.local/bin/uv /usr/local/bin/uv
 COPY --from=python-installer /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 COPY --from=python-installer /usr/local/bin/ruff /usr/local/bin/ruff
 COPY --from=python-installer /usr/local/bin/pytest /usr/local/bin/pytest
+COPY --from=gitleaks-installer /usr/local/bin/gitleaks /usr/local/bin/gitleaks
 
 # Install Docker CLI (not daemon - for CI use)
 # hadolint ignore=DL3008
@@ -112,7 +122,8 @@ RUN python --version \
     && terraform version \
     && tflint --version \
     && docker --version \
-    && jq --version
+    && jq --version \
+    && gitleaks version
 
 # Set working directory
 WORKDIR /workspace
