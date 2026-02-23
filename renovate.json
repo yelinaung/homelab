@@ -6,12 +6,12 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "^github-runner/Dockerfile$",
-        "^\\.forgejo/ci\\.Dockerfile$"
+      "managerFilePatterns": [
+        "/^github-runner\\/Dockerfile$/",
+        "/^\\.forgejo\\/ci\\.Dockerfile$/"
       ],
       "matchStrings": [
-        "^ARG TERRAFORM_VERSION=(?<currentValue>\\S+)$"
+        "(?m)^ARG\\s+TERRAFORM_VERSION=(?<currentValue>[0-9A-Za-z._-]+)\\s*$"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "hashicorp/terraform",
@@ -20,12 +20,12 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^github-runner/Dockerfile$",
-        "^\\.forgejo/ci\\.Dockerfile$"
+      "managerFilePatterns": [
+        "/^github-runner\\/Dockerfile$/",
+        "/^\\.forgejo\\/ci\\.Dockerfile$/"
       ],
       "matchStrings": [
-        "^ARG TFLINT_VERSION=(?<currentValue>\\S+)$"
+        "(?m)^ARG\\s+TFLINT_VERSION=(?<currentValue>[0-9A-Za-z._-]+)\\s*$"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "terraform-linters/tflint",
@@ -34,11 +34,11 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^\\.forgejo/ci\\.Dockerfile$"
+      "managerFilePatterns": [
+        "/^\\.forgejo\\/ci\\.Dockerfile$/"
       ],
       "matchStrings": [
-        "^ARG GO_VERSION=(?<currentValue>\\S+)$"
+        "(?m)^ARG\\s+GO_VERSION=(?<currentValue>[0-9A-Za-z._-]+)\\s*$"
       ],
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "golang/go",
@@ -47,25 +47,25 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^\\.forgejo/ci\\.Dockerfile$"
+      "managerFilePatterns": [
+        "/^\\.forgejo\\/ci\\.Dockerfile$/"
       ],
       "matchStrings": [
-        "^ARG NODE_VERSION=(?<currentValue>\\S+)$"
+        "(?m)^ARG\\s+NODE_VERSION=(?<currentValue>[0-9A-Za-z._-]+)\\s*$"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "nodejs/node",
-      "extractVersionTemplate": "^v?(?<version>\\d+)\\..*$",
+      "extractVersionTemplate": "^v?(?<version>\\d+)(?:\\..*)?$",
       "versioningTemplate": "loose"
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^github-runner/Dockerfile$",
-        "^\\.forgejo/ci\\.Dockerfile$"
+      "managerFilePatterns": [
+        "/^github-runner\\/Dockerfile$/",
+        "/^\\.forgejo\\/ci\\.Dockerfile$/"
       ],
       "matchStrings": [
-        "^ARG GITLEAKS_VERSION=(?<currentValue>\\S+)$"
+        "(?m)^ARG\\s+GITLEAKS_VERSION=(?<currentValue>[0-9A-Za-z._-]+)\\s*$"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "gitleaks/gitleaks",
