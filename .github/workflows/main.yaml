@@ -2,16 +2,7 @@
 name: Main
 'on':
   push:
-    branches: [main]
-    paths:
-      - "proxmox/**"
-      - ".github/workflows/main.yaml"
   pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened]
-    paths:
-      - "proxmox/**"
-      - ".github/workflows/main.yaml"
 permissions:
   contents: read
 jobs:
