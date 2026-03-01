@@ -1,0 +1,16 @@
+---
+# Bootstrap sequence for fresh Ubuntu VMs.
+# Usage:
+#   make run playbook=site_bootstrap inventory=linux_hosts vm_hosts=<host> become=true
+#
+# Notes:
+# - Expects your existing per-playbook defaults/vars.
+# - install_tailscale requires TAILSCALE_KEY in environment.
+
+- import_playbook: add_ssh_key.yaml
+- import_playbook: apt_update_upgrade.yaml
+- import_playbook: install_qemu_guest_agents.yaml
+- import_playbook: install_essentials.yaml
+- import_playbook: install_docker.yaml
+- import_playbook: install_vector.yaml
+- import_playbook: install_tailscale.yaml
