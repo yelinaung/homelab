@@ -7,11 +7,19 @@
 # - Expects your existing per-playbook defaults/vars.
 # - install_tailscale requires TAILSCALE_KEY in environment.
 
-- import_playbook: add_ssh_key.yaml
-- import_playbook: apt_update_upgrade.yaml
-- import_playbook: install_qemu_guest_agents.yaml
-- import_playbook: install_essentials.yaml
-- import_playbook: install_docker.yaml
-- import_playbook: install_cadvisor.yaml
-- import_playbook: install_vector.yaml
-- import_playbook: install_tailscale.yaml
+- name: Add SSH key
+  import_playbook: add_ssh_key.yaml
+- name: APT update and upgrade
+  import_playbook: apt_update_upgrade.yaml
+- name: Install QEMU guest agents
+  import_playbook: install_qemu_guest_agents.yaml
+- name: Install essentials
+  import_playbook: install_essentials.yaml
+- name: Install Docker
+  import_playbook: install_docker.yaml
+- name: Install cAdvisor
+  import_playbook: install_cadvisor.yaml
+- name: Install Vector
+  import_playbook: install_vector.yaml
+- name: Install Tailscale
+  import_playbook: install_tailscale.yaml
