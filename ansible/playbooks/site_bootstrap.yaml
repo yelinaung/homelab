@@ -12,5 +12,6 @@
 - import_playbook: install_qemu_guest_agents.yaml
 - import_playbook: install_essentials.yaml
 - import_playbook: install_docker.yaml
+- import_playbook: install_cadvisor.yaml
 - import_playbook: install_vector.yaml
 - import_playbook: install_tailscale.yaml
