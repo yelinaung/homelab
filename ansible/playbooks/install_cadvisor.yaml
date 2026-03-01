@@ -1,0 +1,33 @@
+---
+- name: Install cAdvisor
+  hosts: '{{ vm_hosts | default("all")}}'
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Create cadvisor directory
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/cadvisor"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0755"
+
+    - name: Copy cAdvisor docker-compose file
+      ansible.builtin.copy:
+        src: configs/cadvisor/docker-compose.yaml
+        dest: "/home/{{ ansible_user }}/cadvisor/docker-compose.yaml"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0644"
+      notify: Restart cAdvisor
+
+    - name: Start cAdvisor
+      community.docker.docker_compose_v2:
+        project_src: "/home/{{ ansible_user }}/cadvisor"
+        state: present
+
+  handlers:
+    - name: Restart cAdvisor
+      community.docker.docker_compose_v2:
+        project_src: "/home/{{ ansible_user }}/cadvisor"
+        state: restarted
