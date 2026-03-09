@@ -22,8 +22,10 @@
         state: absent
         autoremove: true
         purge: true
+      when: ansible_facts['os_family'] == "Debian"
     - name: Install latest fzf from GitHub releases
       ansible.builtin.include_tasks: tasks/ensure_latest_fzf.yaml
+      when: ansible_facts['os_family'] == "Debian"
     - name: Add fzf shell integration to bashrc
       ansible.builtin.lineinfile:
         path: "/home/{{ ansible_user }}/.bashrc"
