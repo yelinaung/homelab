@@ -10,7 +10,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # hadolint ignore=DL3008
 RUN apt-get update && \
-	apt-get install --no-install-recommends -y curl unzip gnupg && \
+	apt-get install --no-install-recommends -y curl unzip gnupg file jq && \
 	curl -LsSf https://astral.sh/uv/install.sh | sh && \
 	curl -fsSL https://deb.nodesource.com/setup_current.x | bash - && \
 	apt-get install --no-install-recommends -y nodejs && \
