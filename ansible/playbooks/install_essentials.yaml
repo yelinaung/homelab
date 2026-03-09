@@ -13,20 +13,27 @@
           - git
           - vim
           - curl
-          - fzf
           - nfs-common
         state: present
         update_cache: true
+    - name: Remove distro-packaged fzf
+      ansible.builtin.apt:
+        name: fzf
+        state: absent
+        autoremove: true
+        purge: true
+    - name: Install latest fzf from GitHub releases
+      ansible.builtin.include_tasks: tasks/ensure_latest_fzf.yaml
     - name: Add fzf shell integration to bashrc
       ansible.builtin.lineinfile:
         path: "/home/{{ ansible_user }}/.bashrc"
         line: 'eval "$(fzf --bash)"'
         state: present
-    - name: Install fzf keybinding
+    - name: Remove old distro-specific fzf bashrc entry
       ansible.builtin.lineinfile:
         path: "/home/{{ ansible_user }}/.bashrc"
         line: 'source /usr/share/doc/fzf/examples/key-bindings.bash'
-        state: present
+        state: absent
     - name: Download starship install script
       ansible.builtin.get_url:
         url: https://starship.rs/install.sh
