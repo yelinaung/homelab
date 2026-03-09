@@ -26,11 +26,14 @@
   register: fzf_release_info
   run_once: true
 
-- name: Set fzf release variables
+- name: Set fzf release version and filename
   ansible.builtin.set_fact:
     fzf_release_version: "{{ fzf_release_info.json.tag_name | regex_replace('^v', '') }}"
     fzf_release_filename: >-
       fzf-{{ fzf_release_info.json.tag_name | regex_replace('^v', '') }}-linux_{{ fzf_release_arch }}.tar.gz
+
+- name: Set fzf release URL
+  ansible.builtin.set_fact:
     fzf_release_url: >-
       {{
         fzf_release_info.json.assets
