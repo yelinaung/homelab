@@ -1,0 +1,5 @@
+misconfigurations:
+  - id: AVD-DS-0002
+    paths:
+      - github-runner/Dockerfile
+    statement: Base image runtime configuration already enforces the intended non-root user.
