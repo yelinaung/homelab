@@ -16,6 +16,7 @@
           - nfs-common
         state: present
         update_cache: true
+      when: ansible_facts['os_family'] == "Debian"
     - name: Remove distro-packaged fzf
       ansible.builtin.apt:
         name: fzf
