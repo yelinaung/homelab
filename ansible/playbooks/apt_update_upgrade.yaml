@@ -5,26 +5,28 @@
   become: true
   gather_facts: true
   tasks:
-    - name: Run apt update/upgrade/autoremove (Debian/Ubuntu)
-      ansible.builtin.apt:
-        update_cache: true
-        upgrade: true
-        autoremove: true
-        autoclean: true
+    - name: Run Debian/Ubuntu update tasks
       when: ansible_facts['os_family'] == "Debian"
+      block:
+        - name: Run apt update/upgrade/autoremove (Debian/Ubuntu)
+          ansible.builtin.apt:
+            update_cache: true
+            upgrade: true
+            autoremove: true
+            autoclean: true
 
-    - name: Upgrade fzf from latest GitHub release (Debian/Ubuntu)
-      ansible.builtin.include_tasks: tasks/ensure_latest_fzf.yaml
-      when: ansible_facts['os_family'] == "Debian"
+        - name: Upgrade fzf from latest GitHub release (Debian/Ubuntu)
+          ansible.builtin.include_tasks: tasks/ensure_latest_fzf.yaml
 
-    - name: Run dnf update/upgrade/autoremove (Fedora/RHEL)
-      ansible.builtin.dnf:
-        name: "*"
-        state: latest  # noqa: package-latest
-        update_cache: true
+    - name: Run Fedora/RHEL update tasks
       when: ansible_facts['os_family'] == "RedHat"
+      block:
+        - name: Run dnf update/upgrade/autoremove (Fedora/RHEL)
+          ansible.builtin.dnf:
+            name: "*"
+            state: latest  # noqa: package-latest
+            update_cache: true
 
-    - name: Run dnf autoremove (Fedora/RHEL)
-      ansible.builtin.dnf:
-        autoremove: true
-      when: ansible_facts['os_family'] == "RedHat"
+        - name: Run dnf autoremove (Fedora/RHEL)
+          ansible.builtin.dnf:
+            autoremove: true

@@ -1,0 +1,92 @@
+---
+- name: Map fzf release architecture
+  ansible.builtin.set_fact:
+    fzf_release_arch: "{{ fzf_arch_map.get(ansible_architecture, '') }}"
+  vars:
+    fzf_arch_map:
+      x86_64: amd64
+      amd64: amd64
+      aarch64: arm64
+      arm64: arm64
+      armv7l: armv7
+      armv6l: armv6
+      armv5l: armv5
+
+- name: Fail when fzf release architecture is unsupported
+  ansible.builtin.fail:
+    msg: "Unsupported architecture for fzf GitHub release assets: {{ ansible_architecture }}"
+  when: fzf_release_arch == ''
+
+- name: Get latest fzf release metadata
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/junegunn/fzf/releases/latest
+    return_content: true
+  become: false
+  delegate_to: localhost
+  register: fzf_release_info
+  run_once: true
+
+- name: Set fzf release variables
+  ansible.builtin.set_fact:
+    fzf_release_version: "{{ fzf_release_info.json.tag_name | regex_replace('^v', '') }}"
+    fzf_release_filename: >-
+      fzf-{{ fzf_release_info.json.tag_name | regex_replace('^v', '') }}-linux_{{ fzf_release_arch }}.tar.gz
+    fzf_release_url: >-
+      {{
+        fzf_release_info.json.assets
+        | selectattr('name', 'equalto', fzf_release_filename)
+        | map(attribute='browser_download_url')
+        | first
+        | default('')
+      }}
+
+- name: Fail when matching fzf release asset is missing
+  ansible.builtin.fail:
+    msg: "Could not find GitHub release asset for {{ fzf_release_filename }}"
+  when: fzf_release_url == ''
+
+- name: Check installed fzf version
+  ansible.builtin.command:
+    cmd: /usr/local/bin/fzf --version
+  register: fzf_installed_version
+  failed_when: false
+  changed_when: false
+
+- name: Install or upgrade fzf from GitHub releases
+  when:
+    - fzf_installed_version.rc != 0 or
+      (fzf_installed_version.stdout | regex_search('^[^ ]+')) != fzf_release_version
+  block:
+    - name: Create temporary directory for fzf release
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: fzf-
+      register: fzf_tmp_dir
+
+    - name: Download latest fzf release archive
+      ansible.builtin.get_url:
+        url: "{{ fzf_release_url }}"
+        dest: "{{ fzf_tmp_dir.path }}/{{ fzf_release_filename }}"
+        mode: "0644"
+
+    - name: Extract fzf release archive
+      ansible.builtin.unarchive:
+        src: "{{ fzf_tmp_dir.path }}/{{ fzf_release_filename }}"
+        dest: "{{ fzf_tmp_dir.path }}"
+        remote_src: true
+
+    - name: Install fzf binary
+      ansible.builtin.copy:
+        src: "{{ fzf_tmp_dir.path }}/fzf"
+        dest: /usr/local/bin/fzf
+        owner: root
+        group: root
+        mode: "0755"
+        remote_src: true
+
+  always:
+    - name: Remove temporary fzf directory
+      ansible.builtin.file:
+        path: "{{ fzf_tmp_dir.path }}"
+        state: absent
+      when: fzf_tmp_dir is defined
