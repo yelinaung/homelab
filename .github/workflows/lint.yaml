@@ -5,6 +5,7 @@ name: lint
     paths:
       - "ansible/**"
       - ".github/workflows/lint.yaml"
+      - "mise.toml"
 jobs:
   secret-detection:
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]
@@ -20,12 +21,11 @@ jobs:
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]
     steps:
       - uses: actions/checkout@v6
+      - name: Install mise
+        run: |
+          curl https://mise.run | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Install Ansible Deps
-        run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          uv run --python 3.14 --with ansible-core ansible-galaxy collection install -v -r ansible/requirements.yml
-          uv run --python 3.14 --with ansible-core ansible-galaxy role install -v -r ansible/requirements.yml
+        run: mise run install-ansible-deps
       - name: Lint code with yamllint
-        run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          make lint-ansible
+        run: mise run lint-ansible

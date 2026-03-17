@@ -1,7 +1,7 @@
 ---
 # Bootstrap sequence for fresh Ubuntu VMs.
 # Usage:
-#   make run playbook=site_bootstrap inventory=linux_hosts vm_hosts=<host> become=true
+#   PLAYBOOK=site_bootstrap INVENTORY=linux_hosts VM_HOSTS=<host> BECOME=true mise run run
 #
 # Notes:
 # - Expects your existing per-playbook defaults/vars.

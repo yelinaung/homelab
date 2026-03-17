@@ -1,0 +1,220 @@
+[tools]
+python = "3.14.3"
+uv = "0.8.0"
+terraform = "1.14.7"
+tflint = "0.61.0"
+
+[tasks.help]
+description = "List available mise tasks"
+run = "mise tasks ls"
+
+[tasks.plan]
+description = "Run terraform plan for proxmox"
+run = "cd proxmox && terraform plan -var-file=values.tfvars -out=output.out"
+
+[tasks.plan-module]
+description = "Run terraform plan for a specific proxmox target"
+run = '''
+module="${MODULE:-${module:-}}"
+if [ -z "$module" ]; then
+  echo "Set MODULE=<terraform target>" >&2
+  exit 1
+fi
+cd proxmox && terraform plan -var-file=values.tfvars -out="${module}_output.out" -target="$module"
+'''
+
+[tasks.plan-and-generate]
+description = "Generate terraform config from proxmox plan"
+alias = ["plan_and_generate"]
+run = "cd proxmox && terraform plan -var-file=values.tfvars -generate-config-out=generated.tf"
+
+[tasks.apply]
+description = "Apply the saved proxmox terraform plan"
+raw = true
+run = "cd proxmox && terraform apply output.out"
+
+[tasks.apply-module]
+description = "Apply the saved terraform plan for a specific proxmox target"
+raw = true
+run = '''
+module="${MODULE:-${module:-}}"
+if [ -z "$module" ]; then
+  echo "Set MODULE=<terraform target>" >&2
+  exit 1
+fi
+cd proxmox && terraform apply "${module}_output.out"
+'''
+
+[tasks.plan-and-apply-module]
+description = "Plan and apply a specific proxmox terraform target"
+raw = true
+run = '''
+module="${MODULE:-${module:-}}"
+if [ -z "$module" ]; then
+  echo "Set MODULE=<terraform target>" >&2
+  exit 1
+fi
+cd proxmox && terraform plan -var-file=values.tfvars -out="${module}_output.out" -target="$module" && terraform apply "${module}_output.out"
+'''
+
+[tasks.fmt]
+description = "Format terraform files in proxmox"
+run = "cd proxmox && terraform fmt -recursive"
+
+[tasks.init]
+description = "Initialize terraform in proxmox"
+raw = true
+run = "cd proxmox && terraform init"
+
+[tasks.init-and-upgrade]
+description = "Initialize and upgrade terraform providers in proxmox"
+raw = true
+run = "cd proxmox && terraform init -upgrade"
+
+[tasks.import]
+description = "Import terraform state into proxmox"
+raw = true
+run = '''
+module="${MODULE:-${module:-}}"
+id="${ID:-${id:-}}"
+if [ -z "$module" ] || [ -z "$id" ]; then
+  echo "Set MODULE=<terraform target> and ID=<resource id>" >&2
+  exit 1
+fi
+cd proxmox && terraform import -var-file=values.tfvars "$module" "$id"
+'''
+
+[tasks.rm-state]
+description = "Remove a resource from proxmox terraform state"
+raw = true
+run = '''
+module="${MODULE:-${module:-}}"
+if [ -z "$module" ]; then
+  echo "Set MODULE=<terraform target>" >&2
+  exit 1
+fi
+cd proxmox && terraform state rm "$module"
+'''
+
+[tasks.ls-state]
+description = "List resources in proxmox terraform state"
+run = "cd proxmox && terraform state list"
+
+[tasks.lint]
+description = "Run tflint against proxmox terraform"
+run = "cd proxmox && tflint --recursive -f compact --color"
+
+[tasks.plan-dns]
+description = "Run terraform plan for cloudflare"
+run = "cd cloudflare && terraform plan -var-file=values.tfvars -out=output.out"
+
+[tasks.apply-dns]
+description = "Apply the saved cloudflare terraform plan"
+raw = true
+run = "cd cloudflare && terraform apply output.out"
+
+[tasks.init-dns]
+description = "Initialize terraform in cloudflare"
+raw = true
+run = "cd cloudflare && terraform init"
+
+[tasks.fmt-dns]
+description = "Format terraform files in cloudflare"
+run = "cd cloudflare && terraform fmt -recursive"
+
+[tasks.push]
+description = "Rebase from github and push the current branch to every configured remote"
+run = '''
+set -e
+branch="$(git rev-parse --abbrev-ref HEAD)"
+if [ "$branch" = "HEAD" ]; then
+  echo "Detached HEAD; please checkout a branch before pushing."
+  exit 1
+fi
+remotes="$(git remote)"
+if [ -z "$remotes" ]; then
+  echo "No git remotes configured."
+  exit 1
+fi
+echo "Pulling $branch from github with rebase..."
+git pull --rebase github "$branch"
+for remote in $remotes; do
+  echo "Pushing $branch to $remote..."
+  git push "$remote" "$branch"
+done
+'''
+
+[tasks.run]
+description = "Run an ansible playbook from ansible/playbooks"
+raw = true
+run = '''
+playbook="${PLAYBOOK:-${playbook:-apt_ubuntu_vms}}"
+inventory="${INVENTORY:-${inventory:-hosts}}"
+vm_hosts="${VM_HOSTS:-${vm_hosts:-}}"
+become="${BECOME:-${become:-false}}"
+extra_vars="${EXTRA_VARS:-${extra_vars:-}}"
+
+export ANSIBLE_CONFIG="./ansible/ansible.cfg"
+set -- ansible-playbook "./ansible/playbooks/${playbook}.yaml" -i "./ansible/inventory/${inventory}.yaml"
+
+if [ "$become" = "true" ]; then
+  set -- "$@" --ask-become-pass
+fi
+
+if [ -n "$vm_hosts" ]; then
+  set -- "$@" --extra-vars "vm_hosts=$vm_hosts"
+fi
+
+if [ -n "$extra_vars" ]; then
+  set -- "$@" --extra-vars "$extra_vars"
+fi
+
+"$@"
+'''
+
+[tasks.install-ansible-deps]
+description = "Install ansible collections and roles from requirements.yml"
+run = '''
+uv run --python 3.14 --with ansible-core ansible-galaxy collection install -v -r ansible/requirements.yml
+uv run --python 3.14 --with ansible-core ansible-galaxy role install -v -r ansible/requirements.yml
+'''
+
+[tasks.test-ansible]
+description = "Run syntax, ansible-lint, and yamllint for one playbook"
+run = '''
+playbook="${PLAYBOOK:-${playbook:-apt_ubuntu_vms}}"
+printf "\033[0;32mRunning Ansible Syntax check\033[0m\n"
+uv run --python 3.14 --with ansible-core ansible-playbook "ansible/playbooks/${playbook}.yaml" -i ansible/inventory/linux_hosts.yaml --syntax-check
+
+printf "\033[0;32mRunning Ansible Lint\033[0m\n"
+uv run --python 3.14 --with ansible-lint ansible-lint "ansible/playbooks/${playbook}.yaml"
+
+printf "\033[0;32mRunning YAML Lint\033[0m\n"
+uv run --python 3.14 --with yamllint yamllint "ansible/playbooks/${playbook}.yaml"
+'''
+
+[tasks.lint-ansible]
+description = "Run syntax checks, ansible-lint, and yamllint for all playbooks"
+run = '''
+printf "\033[0;32mRunning Ansible Syntax check on all playbooks\033[0m\n"
+for playbook in ansible/playbooks/*.yaml; do
+  echo "Checking $playbook..."
+  uv run --python 3.14 --with ansible-core ansible-playbook "$playbook" -i ansible/inventory/linux_hosts.yaml --syntax-check || exit 1
+done
+
+printf "\033[0;32mRunning Ansible Lint\033[0m\n"
+uv run --python 3.14 --with ansible-lint ansible-lint ansible/
+
+printf "\033[0;32mRunning YAML Lint\033[0m\n"
+uv run --python 3.14 --with yamllint yamllint ansible/playbooks/*.yaml
+'''
+
+[tasks.test-ansible-diff]
+description = "Run ansible in check+diff mode for one playbook"
+raw = true
+run = '''
+playbook="${PLAYBOOK:-${playbook:-apt_ubuntu_vms}}"
+vm_hosts="${VM_HOSTS:-${vm_hosts:-}}"
+printf "\033[0;32mRunning Ansible Diff\033[0m\n"
+uv run --python 3.14 --with ansible-core ansible-playbook "ansible/playbooks/${playbook}.yaml" --inventory ansible/inventory/linux_hosts.yaml --check --diff -e "vm_hosts=${vm_hosts}"
+'''

@@ -11,6 +11,15 @@ To use the custom runner, you can pull the image from `ghcr.io/yelinaung/homelab
 
 ### Terraform
 
+Run project automation with `mise`:
+
+```bash
+mise install
+mise tasks ls
+mise run plan
+MODULE=proxmox_vm_qemu.example mise run plan-module
+PLAYBOOK=site_bootstrap INVENTORY=linux_hosts VM_HOSTS=<host> BECOME=true mise run run
+```
 
 ### Anisble Configs and Playbook for the Homelab
 

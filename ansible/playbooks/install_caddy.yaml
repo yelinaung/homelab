@@ -1,7 +1,7 @@
 ---
 # Install and configure Caddy web server
 #
-# Usage: make run playbook=install_caddy inventory=linux_hosts become=true
+# Usage: PLAYBOOK=install_caddy INVENTORY=linux_hosts BECOME=true mise run run
 #
 # Custom config: add -e 'caddy_caddyfile="your_config_here"'
 #
