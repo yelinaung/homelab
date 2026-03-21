@@ -6,7 +6,7 @@ ARG GO_VERSION=1.26.1
 ARG NODE_VERSION=25
 ARG TERRAFORM_VERSION=1.14.7
 ARG TFLINT_VERSION=0.61.0
-ARG GITLEAKS_VERSION=8.30.0
+ARG GITLEAKS_VERSION=8.30.1
 
 # Use pipefail so piped RUN commands fail on upstream command errors.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
