@@ -1,7 +1,7 @@
 [tools]
 python = "3.14.3"
 uv = "0.11.1"
-terraform = "1.14.7"
+terraform = "1.14.8"
 tflint = "0.61.0"
 
 [tasks.help]
