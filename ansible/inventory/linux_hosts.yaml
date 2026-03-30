@@ -12,6 +12,8 @@ all:
           ansible_user: root
         readeck:
           ansible_user: root
+        miniflux:
+          ansible_user: root
     other_vms:
       hosts:
         vultr:

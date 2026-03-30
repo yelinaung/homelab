@@ -30,3 +30,11 @@
         - name: Run dnf autoremove (Fedora/RHEL)
           ansible.builtin.dnf:
             autoremove: true
+
+    - name: Run Alpine update tasks
+      when: ansible_facts['os_family'] == "Alpine"
+      block:
+        - name: Run apk update/upgrade (Alpine)
+          community.general.apk:
+            update_cache: true
+            upgrade: true

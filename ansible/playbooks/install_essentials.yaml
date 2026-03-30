@@ -39,6 +39,49 @@
         line: 'source /usr/share/doc/fzf/examples/key-bindings.bash'
         state: absent
       when: ansible_facts['os_family'] == "Debian"
+    - name: Install essential packages (Alpine)
+      community.general.apk:
+        name:
+          - tar
+          - gzip
+          - htop
+          - build-base
+          - net-tools
+          - git
+          - vim
+          - curl
+          - nfs-utils
+          - zsh
+        state: present
+        update_cache: true
+      when: ansible_facts['os_family'] == "Alpine"
+    - name: Install latest fzf from GitHub releases (Alpine)
+      ansible.builtin.include_tasks: tasks/ensure_latest_fzf.yaml
+      when: ansible_facts['os_family'] == "Alpine"
+    - name: Set zsh as default shell (Alpine)
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        shell: /bin/zsh
+      when: ansible_facts['os_family'] == "Alpine"
+    - name: Configure zsh history (Alpine)
+      ansible.builtin.blockinfile:
+        path: "/home/{{ ansible_user }}/.zshrc"
+        block: |
+          HISTFILE=~/.zsh_history
+          HISTSIZE=10000
+          SAVEHIST=10000
+          setopt APPEND_HISTORY
+          setopt SHARE_HISTORY
+        marker: "# {mark} ZSH HISTORY CONFIG"
+        create: true
+      when: ansible_facts['os_family'] == "Alpine"
+    - name: Add fzf shell integration to zshrc (Alpine)
+      ansible.builtin.lineinfile:
+        path: "/home/{{ ansible_user }}/.zshrc"
+        line: 'eval "$(fzf --zsh)"'
+        state: present
+        create: true
+      when: ansible_facts['os_family'] == "Alpine"
     - name: Download starship install script
       ansible.builtin.get_url:
         url: https://starship.rs/install.sh
@@ -53,3 +96,11 @@
         path: "/home/{{ ansible_user }}/.bashrc"
         line: 'eval "$(starship init bash)"'
         state: present
+      when: ansible_facts['os_family'] != "Alpine"
+    - name: Add starship shell integration to zshrc (Alpine)
+      ansible.builtin.lineinfile:
+        path: "/home/{{ ansible_user }}/.zshrc"
+        line: 'eval "$(starship init zsh)"'
+        state: present
+        create: true
+      when: ansible_facts['os_family'] == "Alpine"

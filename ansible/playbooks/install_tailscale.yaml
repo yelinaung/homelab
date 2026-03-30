@@ -3,7 +3,30 @@
   hosts: '{{ vm_hosts | default("all")}}'
   gather_facts: true
   become: true
-  roles:
-    - role: artis3n.tailscale.machine
+  tasks:
+    - name: Install Tailscale via role (Debian/RedHat)
+      ansible.builtin.include_role:
+        name: artis3n.tailscale.machine
       vars:
         tailscale_authkey: "{{ lookup('env', 'TAILSCALE_KEY') }}"
+      when: ansible_facts['os_family'] != "Alpine"
+
+    - name: Install Tailscale (Alpine)
+      when: ansible_facts['os_family'] == "Alpine"
+      block:
+        - name: Install tailscale package (Alpine)
+          community.general.apk:
+            name: tailscale
+            state: present
+            update_cache: true
+
+        - name: Enable and start tailscaled service (Alpine)
+          ansible.builtin.service:
+            name: tailscale
+            enabled: true
+            state: started
+
+        - name: Authenticate to Tailscale (Alpine)
+          ansible.builtin.command:
+            cmd: tailscale up --authkey={{ lookup('env', 'TAILSCALE_KEY') }}
+          changed_when: true
