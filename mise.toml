@@ -122,7 +122,7 @@ run = "cd cloudflare && terraform init"
 description = "Format terraform files in cloudflare"
 run = "cd cloudflare && terraform fmt -recursive"
 
-[tasks.push]
+[tasks.push-all]
 description = "Rebase from github and push the current branch to every configured remote"
 run = '''
 set -e
