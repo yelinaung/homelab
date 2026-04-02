@@ -66,6 +66,7 @@
     - name: Configure zsh history (Alpine)
       ansible.builtin.blockinfile:
         path: "/home/{{ ansible_user }}/.zshrc"
+        mode: "0644"
         block: |
           HISTFILE=~/.zsh_history
           HISTSIZE=10000
@@ -78,6 +79,7 @@
     - name: Add fzf shell integration to zshrc (Alpine)
       ansible.builtin.lineinfile:
         path: "/home/{{ ansible_user }}/.zshrc"
+        mode: "0644"
         line: 'eval "$(fzf --zsh)"'
         state: present
         create: true
@@ -100,6 +102,7 @@
     - name: Add starship shell integration to zshrc (Alpine)
       ansible.builtin.lineinfile:
         path: "/home/{{ ansible_user }}/.zshrc"
+        mode: "0644"
         line: 'eval "$(starship init zsh)"'
         state: present
         create: true
