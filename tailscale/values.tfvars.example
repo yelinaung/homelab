@@ -1,0 +1,37 @@
+# Prefer environment variables for credentials:
+#   export TAILSCALE_OAUTH_CLIENT_ID="..."
+#   export TAILSCALE_OAUTH_CLIENT_SECRET="tskey-client-..."
+# or:
+#   export TAILSCALE_API_KEY="tskey-api-..."
+#
+# If you prefer tfvars, copy this file to values.tfvars and fill in the values.
+
+tailscale_tailnet = "example.com"
+
+# tailscale_api_key = "tskey-api-..."
+# tailscale_oauth_client_id = "..."
+# tailscale_oauth_client_secret = "tskey-client-..."
+
+# Add the live values below before importing the resources, then run:
+#   MODULE='tailscale_tailnet_settings.main[0]' ID=tailnet_settings mise run import-tailscale
+#   MODULE='tailscale_contacts.main[0]' ID=contacts mise run import-tailscale
+
+# tailscale_tailnet_settings = {
+#   acls_externally_managed_on                  = true
+#   acls_external_link                          = "https://github.com/example/homelab"
+#   devices_approval_on                         = true
+#   devices_auto_updates_on                     = true
+#   devices_key_duration_days                   = 180
+#   https_enabled                               = true
+#   network_flow_logging_on                     = false
+#   posture_identity_collection_on              = false
+#   regional_routing_on                         = false
+#   users_approval_on                           = false
+#   users_role_allowed_to_join_external_tailnet = "member"
+# }
+
+# tailscale_contacts = {
+#   account_email  = "account@example.com"
+#   support_email  = "support@example.com"
+#   security_email = "security@example.com"
+# }

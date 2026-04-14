@@ -22,5 +22,5 @@ repos:
       - id: terraform_fmt
       - id: terraform_trivy
         args:
-          - --args=--ignorefile=.trivyignore.yaml
+          - --args=--ignorefile=__GIT_WORKING_DIR__/.trivyignore.yaml
       - id: terraform_validate

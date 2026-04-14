@@ -122,6 +122,57 @@ run = "cd cloudflare && terraform init"
 description = "Format terraform files in cloudflare"
 run = "cd cloudflare && terraform fmt -recursive"
 
+[tasks.plan-tailscale]
+description = "Run terraform plan for tailscale"
+run = "cd tailscale && terraform plan -var-file=values.tfvars -out=output.out"
+
+[tasks.apply-tailscale]
+description = "Apply the saved tailscale terraform plan"
+raw = true
+run = "cd tailscale && terraform apply output.out"
+
+[tasks.init-tailscale]
+description = "Initialize terraform in tailscale"
+raw = true
+run = "cd tailscale && terraform init"
+
+[tasks.fmt-tailscale]
+description = "Format terraform files in tailscale"
+run = "cd tailscale && terraform fmt -recursive"
+
+[tasks.lint-tailscale]
+description = "Run tflint against tailscale terraform"
+run = "cd tailscale && tflint --recursive -f compact --color"
+
+[tasks.import-tailscale]
+description = "Import terraform state into tailscale"
+raw = true
+run = '''
+module="${MODULE:-${module:-}}"
+id="${ID:-${id:-}}"
+if [ -z "$module" ] || [ -z "$id" ]; then
+  echo "Set MODULE=<terraform target> and ID=<resource id>" >&2
+  exit 1
+fi
+cd tailscale && terraform import -var-file=values.tfvars "$module" "$id"
+'''
+
+[tasks.rm-state-tailscale]
+description = "Remove a resource from tailscale terraform state"
+raw = true
+run = '''
+module="${MODULE:-${module:-}}"
+if [ -z "$module" ]; then
+  echo "Set MODULE=<terraform target>" >&2
+  exit 1
+fi
+cd tailscale && terraform state rm "$module"
+'''
+
+[tasks.ls-state-tailscale]
+description = "List resources in tailscale terraform state"
+run = "cd tailscale && terraform state list"
+
 [tasks.push-all]
 description = "Rebase from github and push the current branch to every configured remote"
 run = '''
