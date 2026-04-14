@@ -27,5 +27,5 @@ crash.*.log
 
 .claude
 GEMINI.md
-CLAUDE.md
 .rtk
+.env

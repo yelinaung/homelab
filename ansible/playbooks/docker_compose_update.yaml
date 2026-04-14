@@ -1,0 +1,13 @@
+---
+# https://docs.ansible.com/projects/ansible/latest/collections/community/docker/docker_compose_v2_module.html
+- name: Pull and restart docker compose services
+  hosts: '{{ vm_hosts | default("all")}}'
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Pull and restart each compose project
+      community.docker.docker_compose_v2:
+        project_src: "{{ item }}"
+        pull: always
+        state: restarted
+      loop: "{{ compose_dirs | default([]) }}"

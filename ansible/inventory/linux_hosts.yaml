@@ -8,12 +8,20 @@ all:
           ansible_user: root
         forgejo:
           ansible_user: root
+          compose_dirs:
+            - "/root"
         unpoller:
           ansible_user: root
+          compose_dirs:
+            - "/root"
         readeck:
           ansible_user: root
+          compose_dirs:
+            - "/root"
         miniflux:
           ansible_user: root
+          compose_dirs:
+            - "/root"
     other_vms:
       hosts:
         vultr:
@@ -39,6 +47,8 @@ all:
           ansible_user: ubuntu
         umami:
           ansible_user: ubuntu
+          compose_dirs:
+            - "/home/ubuntu"
         vicky:
           ansible_user: ubuntu
         yankee:
@@ -51,5 +61,7 @@ all:
           ansible_user: ubuntu
         navidrome:
           ansible_user: ubuntu
+          compose_dirs:
+            - "/home/ubuntu/navidrome"
         clickstack:
           ansible_user: ubuntu
