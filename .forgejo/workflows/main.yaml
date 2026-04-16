@@ -15,6 +15,7 @@ jobs:
   secret-detection:
     runs-on: docker
     container:
+      # yamllint disable rule:line-length
       image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -26,6 +27,7 @@ jobs:
   fmt_and_validate:
     runs-on: docker
     container:
+      # yamllint disable rule:line-length
       image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -40,6 +42,7 @@ jobs:
   tflint:
     runs-on: docker
     container:
+      # yamllint disable rule:line-length
       image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     needs: [fmt_and_validate]
     steps:
@@ -56,6 +59,7 @@ jobs:
   cloudflare_validate:
     runs-on: docker
     container:
+      # yamllint disable rule:line-length
       image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
