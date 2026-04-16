@@ -9,9 +9,10 @@ jobs:
   secret-detection:
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Run gitleaks
         run: gitleaks detect --source . --verbose
 
@@ -21,7 +22,9 @@ jobs:
       run:
         working-directory: ./proxmox
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
+        with:
+          persist-credentials: false
       - name: Terraform fmt
         run: terraform fmt -check
         continue-on-error: true
@@ -36,7 +39,9 @@ jobs:
       run:
         working-directory: ./proxmox
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
+        with:
+          persist-credentials: false
       - name: Show TFLint version
         run: tflint --version
 

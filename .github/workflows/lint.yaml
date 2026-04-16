@@ -6,13 +6,16 @@ name: lint
       - "ansible/**"
       - ".github/workflows/lint.yaml"
       - "mise.toml"
+permissions:
+  contents: read
 jobs:
   secret-detection:
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Run gitleaks
         run: gitleaks detect --source . --verbose
 
@@ -20,7 +23,9 @@ jobs:
     name: Linting
     runs-on: [self-hosted, Linux, X64, playground-ubuntu]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
+        with:
+          persist-credentials: false
       - name: Install mise
         run: |
           curl https://mise.run | sh
