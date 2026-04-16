@@ -1,5 +1,5 @@
 # Multi-stage build for CI tooling
-FROM python:3.14-slim-bookworm AS base
+FROM python:3.14-slim-bookworm@sha256:980c03657c7c8bfbce5212d242ffe5caf69bfd8b6c8383e3580b27d028a6ddb3 AS base
 
 # Set build-time variables for versions
 ARG GO_VERSION=1.26.2

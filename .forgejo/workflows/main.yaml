@@ -15,9 +15,9 @@ jobs:
   secret-detection:
     runs-on: docker
     container:
-      image: ghcr.io/yelinaung/homelab/ci:2026-02-23
+      image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
       - name: Run gitleaks
@@ -26,9 +26,9 @@ jobs:
   fmt_and_validate:
     runs-on: docker
     container:
-      image: ghcr.io/yelinaung/homelab/ci:2026-02-23
+      image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Terraform fmt
         run: terraform fmt -check
         continue-on-error: true
@@ -40,11 +40,11 @@ jobs:
   tflint:
     runs-on: docker
     container:
-      image: ghcr.io/yelinaung/homelab/ci:2026-02-23
+      image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     needs: [fmt_and_validate]
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/cache@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
           path: ~/.tflint.d/plugins
           key: tflint-${{ hashFiles('.tflint.hcl') }}
@@ -56,9 +56,9 @@ jobs:
   cloudflare_validate:
     runs-on: docker
     container:
-      image: ghcr.io/yelinaung/homelab/ci:2026-02-23
+      image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Terraform fmt
         run: terraform -chdir=cloudflare fmt -check
       - name: Terraform Init
