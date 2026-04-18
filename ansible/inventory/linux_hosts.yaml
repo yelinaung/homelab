@@ -55,6 +55,8 @@ all:
           ansible_user: ubuntu
         immich:
           ansible_user: ubuntu
+          compose_dirs:
+            - "/home/ubuntu/immich-app"
         dokku1:
           ansible_user: ubuntu
         waung:
@@ -65,3 +67,5 @@ all:
             - "/home/ubuntu/navidrome"
         clickstack:
           ansible_user: ubuntu
+        cloud-gateway-fiber:
+          ansible_user: root

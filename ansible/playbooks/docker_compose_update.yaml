@@ -9,5 +9,5 @@
       community.docker.docker_compose_v2:
         project_src: "{{ item }}"
         pull: always
-        state: restarted
+        state: present
       loop: "{{ compose_dirs | default([]) }}"

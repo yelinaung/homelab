@@ -188,7 +188,7 @@ if [ -z "$remotes" ]; then
   exit 1
 fi
 echo "Pulling $branch from github with rebase..."
-git pull --rebase github "$branch"
+git pull --rebase --autostash github "$branch"
 for remote in $remotes; do
   echo "Pushing $branch to $remote..."
   git push "$remote" "$branch"
