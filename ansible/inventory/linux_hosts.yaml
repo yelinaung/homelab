@@ -65,6 +65,7 @@ all:
           ansible_user: ubuntu
           compose_dirs:
             - "/home/ubuntu/navidrome"
+            - "/home/ubuntu/lidarr"
         clickstack:
           ansible_user: ubuntu
         cloud-gateway-fiber:

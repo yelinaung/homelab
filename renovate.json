@@ -4,6 +4,21 @@
     "config:best-practices"
   ],
   "minimumReleaseAge": "3 days",
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "myoung34/github-runner"
+      ],
+      "matchUpdateTypes": [
+        "digest"
+      ],
+      "automerge": true,
+      "platformAutomerge": true
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",

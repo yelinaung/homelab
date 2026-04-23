@@ -3,6 +3,8 @@
   hosts: '{{ vm_hosts | default("all")}}'
   become: true
   gather_facts: true
+  vars:
+    user_home: "{{ '/root' if ansible_user == 'root' else '/home/' ~ ansible_user }}"
   tasks:
     - name: Install essential packages
       ansible.builtin.apt:
@@ -29,13 +31,13 @@
       when: ansible_facts['os_family'] == "Debian"
     - name: Add fzf shell integration to bashrc
       ansible.builtin.lineinfile:
-        path: "/home/{{ ansible_user }}/.bashrc"
+        path: "{{ user_home }}/.bashrc"
         line: 'eval "$(fzf --bash)"'
         state: present
       when: ansible_facts['os_family'] == "Debian"
     - name: Remove old distro-specific fzf bashrc entry
       ansible.builtin.lineinfile:
-        path: "/home/{{ ansible_user }}/.bashrc"
+        path: "{{ user_home }}/.bashrc"
         line: 'source /usr/share/doc/fzf/examples/key-bindings.bash'
         state: absent
       when: ansible_facts['os_family'] == "Debian"
@@ -65,7 +67,7 @@
       when: ansible_facts['os_family'] == "Alpine"
     - name: Configure zsh history (Alpine)
       ansible.builtin.blockinfile:
-        path: "/home/{{ ansible_user }}/.zshrc"
+        path: "{{ user_home }}/.zshrc"
         mode: "0644"
         block: |
           HISTFILE=~/.zsh_history
@@ -78,7 +80,7 @@
       when: ansible_facts['os_family'] == "Alpine"
     - name: Add fzf shell integration to zshrc (Alpine)
       ansible.builtin.lineinfile:
-        path: "/home/{{ ansible_user }}/.zshrc"
+        path: "{{ user_home }}/.zshrc"
         mode: "0644"
         line: 'eval "$(fzf --zsh)"'
         state: present
@@ -95,13 +97,13 @@
         creates: /usr/local/bin/starship
     - name: Add starship shell integration to bashrc
       ansible.builtin.lineinfile:
-        path: "/home/{{ ansible_user }}/.bashrc"
+        path: "{{ user_home }}/.bashrc"
         line: 'eval "$(starship init bash)"'
         state: present
       when: ansible_facts['os_family'] != "Alpine"
     - name: Add starship shell integration to zshrc (Alpine)
       ansible.builtin.lineinfile:
-        path: "/home/{{ ansible_user }}/.zshrc"
+        path: "{{ user_home }}/.zshrc"
         mode: "0644"
         line: 'eval "$(starship init zsh)"'
         state: present
