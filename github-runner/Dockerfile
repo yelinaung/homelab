@@ -1,4 +1,4 @@
-FROM myoung34/github-runner:ubuntu-jammy@sha256:7e3697ba8137eb87d527341369d8d24c3dd498e582a3c70c9c73e95153e63878
+FROM myoung34/github-runner:ubuntu-jammy@sha256:f0d70d471642d6e9c9a24a288d26229991c872ba1ddf2a64cb9211b2ab394927
 
 # Install uv, nodejs, terraform, tflint, and other essentials
 ARG TERRAFORM_VERSION=1.14.8
