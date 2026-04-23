@@ -1,14 +1,3 @@
-variable "tailscale_api_key" {
-  type      = string
-  sensitive = true
-  default   = null
-
-  validation {
-    condition     = var.tailscale_api_key == null || trimspace(var.tailscale_api_key) != ""
-    error_message = "tailscale_api_key must be null or a non-empty string."
-  }
-}
-
 variable "tailscale_oauth_client_id" {
   type      = string
   sensitive = true
