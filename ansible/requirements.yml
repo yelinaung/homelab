@@ -7,8 +7,13 @@ roles:
   - name: robertdebock.collectd
     version: 3.1.8
 collections:
-  - community.general
-  - ansible.posix
-  - community.docker
+  - name: community.general
+    version: 12.6.0
+  - name: ansible.posix
+    version: 2.1.0
+  - name: community.docker
+    version: 5.2.0
   - name: artis3n.tailscale
-  - victoriametrics.cluster
+    version: 1.2.1
+  - name: victoriametrics.cluster
+    version: 2.50.2
