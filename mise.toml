@@ -1,6 +1,6 @@
 [tools]
 python = "3.14.4"
-uv = "0.11.8"
+uv = "0.11.10"
 terraform = "1.15.1"
 tflint = "0.62.0"
 
