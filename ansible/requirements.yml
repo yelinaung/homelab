@@ -16,4 +16,4 @@ collections:
   - name: artis3n.tailscale
     version: 1.2.1
   - name: victoriametrics.cluster
-    version: 2.50.2
+    version: 2.50.3
