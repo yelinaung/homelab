@@ -46,6 +46,9 @@ semgrep-sast:
   stage: security
   tags:
   - playground-bravo
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 check_sast:
   stage: validate
