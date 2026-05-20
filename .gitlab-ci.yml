@@ -1,0 +1,91 @@
+---
+include:
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
+
+stages:
+  - test
+  - validate
+  - lint
+  - build
+  - deploy
+  - cleanup
+
+# =============================================================================
+# Terraform fmt + validate + tflint
+# =============================================================================
+terraform-fmt-validate:
+  stage: validate
+  tags: [self-hosted, Linux, X64, playground-ubuntu]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  before_script:
+    - cd ./proxmox
+  script:
+    - terraform fmt -check || true
+    - terraform init
+    - terraform validate -no-color
+
+tflint:
+  stage: validate
+  tags: [self-hosted, Linux, X64, playground-ubuntu]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  before_script:
+    - cd ./proxmox
+  script:
+    - tflint --version
+    - tflint -f compact --recursive
+
+terraform-plan:
+  stage: validate
+  tags: [self-hosted, Linux, X64, playground-ubuntu]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  before_script:
+    - cd ./proxmox
+  script:
+    - terraform init
+    - terraform plan -out=plan.tfplan -no-color
+  artifacts:
+    paths:
+      - proxmox/plan.tfplan
+    expire_in: 7 days
+
+terraform-apply:
+  stage: deploy
+  tags: [self-hosted, Linux, X64, playground-ubuntu]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
+  before_script:
+    - cd ./proxmox
+  script:
+    - terraform init
+    - terraform apply -no-color plan.tfplan
+  needs:
+    - terraform-plan
+
+# =============================================================================
+# Ansible lint (only when ansible/** or mise.toml changes)
+# =============================================================================
+ansible-lint:
+  stage: lint
+  tags: [self-hosted, Linux, X64, playground-ubuntu]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - ansible/**
+        - mise.toml
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - ansible/**
+        - mise.toml
+  script:
+    - curl https://mise.run | sh
+    - export PATH="$HOME/.local/bin:$PATH"
+    - mise run install-ansible-deps
+    - mise run lint-ansible
