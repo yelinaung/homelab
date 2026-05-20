@@ -4,19 +4,84 @@ include:
   - template: Jobs/SAST.gitlab-ci.yml
 
 stages:
+  - security
   - test
   - validate
   - lint
-  - build
+  - plan
   - deploy
   - cleanup
+
+
+secret_detection:
+  stage: security
+  tags:
+  - playground-bravo
+
+check_secrets:
+  stage: validate
+  image: apteno/alpine-jq:latest@sha256:3470a642109f10a1549037877c94de78de8395d566c197f52bb8521b9aeec273
+  tags:
+  - playground-bravo
+  needs:
+  - job: secret_detection
+    artifacts: true
+  script:
+  - |
+    if [ ! -f "gl-secret-detection-report.json" ]; then
+      echo "Secret detection report not found!"
+      exit 1
+    fi
+
+    if [ "$(jq '.vulnerabilities | length' gl-secret-detection-report.json)" -gt 0 ]; then
+      echo "Secrets detected in the codebase!"
+      jq -r '.vulnerabilities[] | "- \(.message) in \(.location.file):\(.location.start_line)"' \
+        gl-secret-detection-report.json
+      exit 1
+    else
+      echo "No secrets detected"
+    fi
+
+semgrep-sast:
+  stage: security
+  tags:
+  - playground-bravo
+
+check_sast:
+  stage: validate
+  image: apteno/alpine-jq:latest@sha256:3470a642109f10a1549037877c94de78de8395d566c197f52bb8521b9aeec273
+  tags:
+  - playground-bravo
+  needs:
+  - job: semgrep-sast
+    artifacts: true
+  script:
+  - |
+    if [ ! -f "gl-sast-report.json" ]; then
+      echo "SAST report not found!"
+      exit 1
+    fi
+
+    VULN_COUNT=$(jq '.vulnerabilities | length' gl-sast-report.json)
+    if [ "$VULN_COUNT" -gt 0 ]; then
+      echo "SAST vulnerabilities detected!"
+      jq -r '.vulnerabilities[] | "- [\(.severity)] \(.name) in \(.location.file):\(.location.start_line)"' \
+        gl-sast-report.json
+      exit 1
+    else
+      echo "No SAST vulnerabilities detected"
+    fi
+  rules:
+  - if: $CI_COMMIT_BRANCH == "master"
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 # =============================================================================
 # Terraform fmt + validate + tflint
 # =============================================================================
-terraform-fmt-validate:
+tf-fmt-validate:
   stage: validate
-  tags: [self-hosted, Linux, X64, playground-ubuntu]
+  tags:
+  - playground-bravo
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -29,7 +94,8 @@ terraform-fmt-validate:
 
 tflint:
   stage: validate
-  tags: [self-hosted, Linux, X64, playground-ubuntu]
+  tags:
+  - playground-bravo
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -40,11 +106,17 @@ tflint:
     - tflint -f compact --recursive
 
 terraform-plan:
-  stage: validate
-  tags: [self-hosted, Linux, X64, playground-ubuntu]
+  stage: plan
+  tags:
+  - playground-bravo
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  needs:
+    - tflint
+    - tf-fmt-validate
+    - check_sast
+    - check_secrets
   before_script:
     - cd ./proxmox
   script:
@@ -57,7 +129,8 @@ terraform-plan:
 
 terraform-apply:
   stage: deploy
-  tags: [self-hosted, Linux, X64, playground-ubuntu]
+  tags:
+  - playground-bravo
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: manual
@@ -74,7 +147,8 @@ terraform-apply:
 # =============================================================================
 ansible-lint:
   stage: lint
-  tags: [self-hosted, Linux, X64, playground-ubuntu]
+  tags:
+    - playground-bravo
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
       changes:
