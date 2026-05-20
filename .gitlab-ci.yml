@@ -72,8 +72,8 @@ check_sast:
       echo "No SAST vulnerabilities detected"
     fi
   rules:
-  - if: $CI_COMMIT_BRANCH == "master"
-  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 # =============================================================================
 # Terraform fmt + validate + tflint
