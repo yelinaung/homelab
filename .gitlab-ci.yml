@@ -97,6 +97,7 @@ tf-fmt-validate:
 
 tflint:
   stage: validate
+  image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
   tags:
   - playground-bravo
   rules:
@@ -144,6 +145,29 @@ terraform-apply:
     - terraform apply -no-color plan.tfplan
   needs:
     - terraform-plan
+
+
+cloudflare_validate:
+  stage: validate
+  tags:
+    - playground-bravo
+  # yamllint disable rule:line-length
+  image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
+  # yamllint enable rule:line-length
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - cloudflare/**
+        - mise.toml
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - cloudflare/**
+        - mise.toml
+  script:
+    - terraform -chdir=cloudflare fmt -check
+    - terraform -chdir=cloudflare init
+    - terraform -chdir=cloudflare validate -no-color
+
 
 # =============================================================================
 # Ansible lint (only when ansible/** or mise.toml changes)
