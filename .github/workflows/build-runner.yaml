@@ -6,7 +6,7 @@ name: Build and Push Docker Image
     branches:
       - main
     paths:
-      - "github-runner/**"
+      - "runners/github/**"
 
 jobs:
   build-and-push:
@@ -31,6 +31,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f  # v7
         with:
-          context: ./github-runner
+          context: ./runners/github
           push: true
           tags: ghcr.io/${{ github.repository }}/github-runner:latest

@@ -4,6 +4,7 @@ include:
   - template: Jobs/SAST.gitlab-ci.yml
 
 stages:
+  - build
   - security
   - test
   - validate
@@ -11,6 +12,33 @@ stages:
   - plan
   - deploy
   - cleanup
+
+
+# =============================================================================
+# Build the CI image used by downstream jobs and push to GitLab registry.
+# Kaniko auto-authenticates to $CI_REGISTRY via CI_JOB_TOKEN.
+# =============================================================================
+build_ci_image:
+  stage: build
+  # TODO: pin by @sha256 digest once Renovate (or `crane digest`) provides one
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  tags:
+    - playground-bravo
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - runners/gitlab/Dockerfile
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - runners/gitlab/Dockerfile
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/runners/gitlab"
+      --dockerfile "${CI_PROJECT_DIR}/runners/gitlab/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/ci:${CI_COMMIT_SHORT_SHA}"
+      --destination "${CI_REGISTRY_IMAGE}/ci:latest"
 
 
 secret_detection:
@@ -79,9 +107,9 @@ check_sast:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 # =============================================================================
-# Terraform fmt + validate + tflint
+# Proxmox Terraform fmt + validate + tflint
 # =============================================================================
-tf-fmt-validate:
+proxmox_validate:
   stage: validate
   tags:
   - playground-bravo
@@ -95,7 +123,7 @@ tf-fmt-validate:
     - terraform init
     - terraform validate -no-color
 
-tflint:
+proxmox_tflint:
   stage: validate
   image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
   tags:
@@ -109,7 +137,7 @@ tflint:
     - tflint --version
     - tflint -f compact --recursive
 
-terraform-plan:
+proxmox_plan:
   stage: plan
   tags:
   - playground-bravo
@@ -117,8 +145,8 @@ terraform-plan:
     - if: $CI_PIPELINE_SOURCE == "push"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   needs:
-    - tflint
-    - tf-fmt-validate
+    - proxmox_tflint
+    - proxmox_validate
     - check_sast
     - check_secrets
   before_script:
@@ -131,7 +159,7 @@ terraform-plan:
       - proxmox/plan.tfplan
     expire_in: 7 days
 
-terraform-apply:
+proxmox_apply:
   stage: deploy
   tags:
   - playground-bravo
@@ -144,7 +172,7 @@ terraform-apply:
     - terraform init
     - terraform apply -no-color plan.tfplan
   needs:
-    - terraform-plan
+    - proxmox_plan
 
 
 cloudflare_validate:
