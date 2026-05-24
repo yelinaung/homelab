@@ -75,7 +75,7 @@ check_secrets:
       echo "No secrets detected"
     fi
 
-semgrep-sast:
+semgrep_sast:
   stage: security
   tags:
   - playground-bravo
@@ -89,7 +89,7 @@ check_sast:
   tags:
   - playground-bravo
   needs:
-  - job: semgrep-sast
+  - job: semgrep_sast
     artifacts: true
   script:
   - |
