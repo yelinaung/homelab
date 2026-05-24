@@ -180,7 +180,7 @@ proxmox_plan:
     - cd ./proxmox
   script:
     - terraform init
-    - terraform plan -out=plan.tfplan -no-color
+    - terraform plan -out=plan.tfplan -no-color -var-file="$PROXMOX_TFVARS"
   artifacts:
     paths:
       - proxmox/plan.tfplan
@@ -275,7 +275,7 @@ tailscale_plan:
     - cd ./tailscale
   script:
     - terraform init
-    - terraform plan -out=plan.tfplan -no-color
+    - terraform plan -out=plan.tfplan -no-color -var-file="$TAILSCALE_TFVARS"
   artifacts:
     paths:
       - tailscale/plan.tfplan
