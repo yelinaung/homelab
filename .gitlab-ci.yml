@@ -206,6 +206,101 @@ proxmox_apply:
     - proxmox_plan
 
 
+# =============================================================================
+# Tailscale Terraform fmt + validate + tflint
+# =============================================================================
+tailscale_validate:
+  stage: validate
+  image: $CI_IMAGE
+  tags:
+  - playground-bravo
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - tailscale/**
+        - mise.toml
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - tailscale/**
+        - mise.toml
+  before_script:
+    - cd ./tailscale
+  script:
+    - terraform fmt -check
+    - terraform init
+    - terraform validate -no-color
+
+tailscale_tflint:
+  stage: validate
+  image: $CI_IMAGE
+  tags:
+  - playground-bravo
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - tailscale/**
+        - mise.toml
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - tailscale/**
+        - mise.toml
+  before_script:
+    - cd ./tailscale
+  script:
+    - tflint --version
+    - tflint -f compact --recursive
+
+tailscale_plan:
+  stage: plan
+  image: $CI_IMAGE
+  tags:
+  - playground-bravo
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - tailscale/**
+        - mise.toml
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - tailscale/**
+        - mise.toml
+  needs:
+    - tailscale_tflint
+    - tailscale_validate
+    - job: check_sast
+      optional: true
+    - job: check_secrets
+      optional: true
+  before_script:
+    - cd ./tailscale
+  script:
+    - terraform init
+    - terraform plan -out=plan.tfplan -no-color
+  artifacts:
+    paths:
+      - tailscale/plan.tfplan
+    expire_in: 7 days
+
+tailscale_apply:
+  stage: deploy
+  image: $CI_IMAGE
+  tags:
+  - playground-bravo
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - tailscale/**
+        - mise.toml
+      when: manual
+  before_script:
+    - cd ./tailscale
+  script:
+    - terraform init
+    - terraform apply -no-color plan.tfplan
+  needs:
+    - tailscale_plan
+
+
 cloudflare_validate:
   stage: validate
   image: $CI_IMAGE
