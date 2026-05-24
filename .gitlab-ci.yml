@@ -13,6 +13,11 @@ stages:
   - deploy
   - cleanup
 
+# Shared CI image, built by build_ci_image and pushed to the GitLab registry.
+# TODO: pin by @sha256 digest once Renovate (or `crane digest`) provides one.
+variables:
+  CI_IMAGE: "${CI_REGISTRY_IMAGE}/ci:latest"
+
 
 # =============================================================================
 # Build the CI image used by downstream jobs and push to GitLab registry.
@@ -111,11 +116,18 @@ check_sast:
 # =============================================================================
 proxmox_validate:
   stage: validate
+  image: $CI_IMAGE
   tags:
   - playground-bravo
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - proxmox/**
+        - mise.toml
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - proxmox/**
+        - mise.toml
   before_script:
     - cd ./proxmox
   script:
@@ -125,12 +137,18 @@ proxmox_validate:
 
 proxmox_tflint:
   stage: validate
-  image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
+  image: $CI_IMAGE
   tags:
   - playground-bravo
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - proxmox/**
+        - mise.toml
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - proxmox/**
+        - mise.toml
   before_script:
     - cd ./proxmox
   script:
@@ -139,16 +157,25 @@ proxmox_tflint:
 
 proxmox_plan:
   stage: plan
+  image: $CI_IMAGE
   tags:
   - playground-bravo
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - proxmox/**
+        - mise.toml
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - proxmox/**
+        - mise.toml
   needs:
     - proxmox_tflint
     - proxmox_validate
-    - check_sast
-    - check_secrets
+    - job: check_sast
+      optional: true
+    - job: check_secrets
+      optional: true
   before_script:
     - cd ./proxmox
   script:
@@ -161,10 +188,14 @@ proxmox_plan:
 
 proxmox_apply:
   stage: deploy
+  image: $CI_IMAGE
   tags:
   - playground-bravo
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - proxmox/**
+        - mise.toml
       when: manual
   before_script:
     - cd ./proxmox
@@ -177,11 +208,9 @@ proxmox_apply:
 
 cloudflare_validate:
   stage: validate
+  image: $CI_IMAGE
   tags:
     - playground-bravo
-  # yamllint disable rule:line-length
-  image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
-  # yamllint enable rule:line-length
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
       changes:
@@ -202,6 +231,7 @@ cloudflare_validate:
 # =============================================================================
 ansible-lint:
   stage: lint
+  image: $CI_IMAGE
   tags:
     - playground-bravo
   rules:
@@ -214,7 +244,5 @@ ansible-lint:
         - ansible/**
         - mise.toml
   script:
-    - curl https://mise.run | sh
-    - export PATH="$HOME/.local/bin:$PATH"
     - mise run install-ansible-deps
     - mise run lint-ansible
