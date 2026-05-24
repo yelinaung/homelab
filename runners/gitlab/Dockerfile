@@ -2,7 +2,7 @@ FROM debian:bookworm-slim@sha256:1209d8fd77def86ceb6663deef7956481cc6c14a25e1e64
 
 ARG TERRAFORM_VERSION=1.15.3
 ARG TFLINT_VERSION=0.62.1
-ARG MISE_VERSION=2026.2.1
+ARG MISE_VERSION=2026.5.15
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
