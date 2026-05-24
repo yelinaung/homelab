@@ -149,11 +149,9 @@ proxmox_tflint:
       changes:
         - proxmox/**
         - mise.toml
-  before_script:
-    - cd ./proxmox
   script:
     - tflint --version
-    - tflint -f compact --recursive
+    - mise run lint
 
 proxmox_plan:
   stage: plan
@@ -177,13 +175,13 @@ proxmox_plan:
     - job: check_secrets
       optional: true
   before_script:
-    - cd ./proxmox
+    - cp "$PROXMOX_TFVARS" proxmox/values.tfvars
   script:
-    - terraform init
-    - terraform plan -out=plan.tfplan -no-color -var-file="$PROXMOX_TFVARS"
+    - mise run init
+    - mise run plan
   artifacts:
     paths:
-      - proxmox/plan.tfplan
+      - proxmox/output.out
     expire_in: 7 days
 
 proxmox_apply:
@@ -197,11 +195,9 @@ proxmox_apply:
         - proxmox/**
         - mise.toml
       when: manual
-  before_script:
-    - cd ./proxmox
   script:
-    - terraform init
-    - terraform apply -no-color plan.tfplan
+    - mise run init
+    - mise run apply
   needs:
     - proxmox_plan
 
@@ -244,11 +240,9 @@ tailscale_tflint:
       changes:
         - tailscale/**
         - mise.toml
-  before_script:
-    - cd ./tailscale
   script:
     - tflint --version
-    - tflint -f compact --recursive
+    - mise run lint-tailscale
 
 tailscale_plan:
   stage: plan
@@ -272,13 +266,13 @@ tailscale_plan:
     - job: check_secrets
       optional: true
   before_script:
-    - cd ./tailscale
+    - cp "$TAILSCALE_TFVARS" tailscale/values.tfvars
   script:
-    - terraform init
-    - terraform plan -out=plan.tfplan -no-color -var-file="$TAILSCALE_TFVARS"
+    - mise run init-tailscale
+    - mise run plan-tailscale
   artifacts:
     paths:
-      - tailscale/plan.tfplan
+      - tailscale/output.out
     expire_in: 7 days
 
 tailscale_apply:
@@ -292,11 +286,9 @@ tailscale_apply:
         - tailscale/**
         - mise.toml
       when: manual
-  before_script:
-    - cd ./tailscale
   script:
-    - terraform init
-    - terraform apply -no-color plan.tfplan
+    - mise run init-tailscale
+    - mise run apply-tailscale
   needs:
     - tailscale_plan
 
