@@ -14,6 +14,15 @@ terraform {
       version = "2.9.0"
     }
   }
+
+  backend "http" {
+    address        = "https://gitlab.com/api/v4/projects/82330927/terraform/state/proxmox"
+    lock_address   = "https://gitlab.com/api/v4/projects/82330927/terraform/state/proxmox/lock"
+    unlock_address = "https://gitlab.com/api/v4/projects/82330927/terraform/state/proxmox/lock"
+    lock_method    = "POST"
+    unlock_method  = "DELETE"
+    retry_wait_min = 5
+  }
 }
 
 provider "proxmox" {

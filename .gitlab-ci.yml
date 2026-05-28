@@ -17,6 +17,9 @@ stages:
 # TODO: pin by @sha256 digest once Renovate (or `crane digest`) provides one.
 variables:
   CI_IMAGE: "${CI_REGISTRY_IMAGE}/ci:latest"
+  # GitLab-managed Terraform HTTP backend auth — applies to every terraform job.
+  TF_HTTP_USERNAME: gitlab-ci-token
+  TF_HTTP_PASSWORD: $CI_JOB_TOKEN
 
 
 # =============================================================================
@@ -311,6 +314,53 @@ cloudflare_validate:
     - terraform -chdir=cloudflare fmt -check
     - terraform -chdir=cloudflare init
     - terraform -chdir=cloudflare validate -no-color
+
+cloudflare_plan:
+  stage: plan
+  image: $CI_IMAGE
+  tags:
+    - playground-bravo
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - cloudflare/**
+        - mise.toml
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - cloudflare/**
+        - mise.toml
+  needs:
+    - cloudflare_validate
+    - job: check_sast
+      optional: true
+    - job: check_secrets
+      optional: true
+  before_script:
+    - cp "$CLOUDFLARE_TFVARS" cloudflare/values.tfvars
+  script:
+    - mise run init-dns
+    - mise run plan-dns
+  artifacts:
+    paths:
+      - cloudflare/output.out
+    expire_in: 7 days
+
+cloudflare_apply:
+  stage: deploy
+  image: $CI_IMAGE
+  tags:
+    - playground-bravo
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - cloudflare/**
+        - mise.toml
+      when: manual
+  needs:
+    - cloudflare_plan
+  script:
+    - mise run init-dns
+    - mise run apply-dns
 
 
 # =============================================================================
