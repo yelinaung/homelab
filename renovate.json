@@ -3,7 +3,7 @@
   "extends": [
     "config:best-practices"
   ],
-  "minimumReleaseAge": "7 days",
+  "minimumReleaseAge": "14 days",
   "packageRules": [
     {
       "matchDatasources": [
@@ -15,6 +15,7 @@
       "matchUpdateTypes": [
         "digest"
       ],
+      "schedule": ["on sunday"],
       "automerge": true,
       "platformAutomerge": true
     }
