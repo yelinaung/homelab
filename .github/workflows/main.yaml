@@ -29,7 +29,7 @@ jobs:
         run: terraform fmt -check
         continue-on-error: true
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend=false
       - name: Terraform Validate
         run: terraform validate -no-color
 
