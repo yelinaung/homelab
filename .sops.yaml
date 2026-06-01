@@ -1,0 +1,6 @@
+# SOPS encryption rules. Public age recipient(s) only — safe to commit.
+# Generate a key with `age-keygen` and paste its public key (age1...) below.
+creation_rules:
+  - path_regex: cloudflare/dns\.sops\.yaml$
+    # Encrypts values but leaves YAML keys readable, so diffs stay meaningful.
+    age: "age1zc0ygrgfzg6gwnqtpvv3h8q5xq8ejdwc4ym78hr0n2m7dzr0mq0s6z9sgw"

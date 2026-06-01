@@ -19,6 +19,10 @@ crash.*.log
 *.tfvars.json
 *.out
 
+# Non-secret config is tracked; secrets.auto.tfvars stays ignored by *.tfvars above.
+!proxmox/config.auto.tfvars
+!tailscale/config.auto.tfvars
+
 *.retry
 *.key
 *.pem

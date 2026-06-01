@@ -15,7 +15,7 @@ run = "mise tasks ls"
 
 [tasks.plan]
 description = "Run terraform plan for proxmox"
-run = "cd proxmox && terraform plan -var-file=values.tfvars -out=output.out"
+run = "cd proxmox && terraform plan -out=output.out"
 
 [tasks.plan-module]
 description = "Run terraform plan for a specific proxmox target"
@@ -25,13 +25,13 @@ if [ -z "$module" ]; then
   echo "Set MODULE=<terraform target>" >&2
   exit 1
 fi
-cd proxmox && terraform plan -var-file=values.tfvars -out="${module}_output.out" -target="$module"
+cd proxmox && terraform plan -out="${module}_output.out" -target="$module"
 '''
 
 [tasks.plan-and-generate]
 description = "Generate terraform config from proxmox plan"
 alias = ["plan_and_generate"]
-run = "cd proxmox && terraform plan -var-file=values.tfvars -generate-config-out=generated.tf"
+run = "cd proxmox && terraform plan -generate-config-out=generated.tf"
 
 [tasks.apply]
 description = "Apply the saved proxmox terraform plan"
@@ -59,7 +59,7 @@ if [ -z "$module" ]; then
   echo "Set MODULE=<terraform target>" >&2
   exit 1
 fi
-cd proxmox && terraform plan -var-file=values.tfvars -out="${module}_output.out" -target="$module" && terraform apply "${module}_output.out"
+cd proxmox && terraform plan -out="${module}_output.out" -target="$module" && terraform apply "${module}_output.out"
 '''
 
 [tasks.fmt]
@@ -86,7 +86,7 @@ if [ -z "$module" ] || [ -z "$id" ]; then
   echo "Set MODULE=<terraform target> and ID=<resource id>" >&2
   exit 1
 fi
-cd proxmox && terraform import -var-file=values.tfvars "$module" "$id"
+cd proxmox && terraform import "$module" "$id"
 '''
 
 [tasks.rm-state]
@@ -140,7 +140,7 @@ run = "cd cloudflare && terraform fmt -recursive"
 
 [tasks.plan-tailscale]
 description = "Run terraform plan for tailscale"
-run = "cd tailscale && terraform plan -var-file=values.tfvars -out=output.out"
+run = "cd tailscale && terraform plan -out=output.out"
 
 [tasks.apply-tailscale]
 description = "Apply the saved tailscale terraform plan"
@@ -170,7 +170,7 @@ if [ -z "$module" ] || [ -z "$id" ]; then
   echo "Set MODULE=<terraform target> and ID=<resource id>" >&2
   exit 1
 fi
-cd tailscale && terraform import -var-file=values.tfvars "$module" "$id"
+cd tailscale && terraform import "$module" "$id"
 '''
 
 [tasks.rm-state-tailscale]
@@ -211,7 +211,7 @@ for remote in $remotes; do
 done
 '''
 
-[tasks.run]
+[tasks.playbook]
 description = "Run an ansible playbook from ansible/playbooks"
 raw = true
 run = '''
@@ -220,9 +220,10 @@ inventory="${INVENTORY:-${inventory:-hosts}}"
 vm_hosts="${VM_HOSTS:-${vm_hosts:-}}"
 become="${BECOME:-${become:-false}}"
 extra_vars="${EXTRA_VARS:-${extra_vars:-}}"
+verbosity="${ANSIBLE_VERBOSITY:-${ansible_verbosity:-}}"
 
 export ANSIBLE_CONFIG="./ansible/ansible.cfg"
-set -- ansible-playbook "./ansible/playbooks/${playbook}.yaml" -i "./ansible/inventory/${inventory}.yaml"
+set -- uv run --python 3.14 --with ansible-core ansible-playbook "./ansible/playbooks/${playbook}.yaml" -i "./ansible/inventory/${inventory}.yaml"
 
 if [ "$become" = "true" ]; then
   set -- "$@" --ask-become-pass
@@ -234,6 +235,12 @@ fi
 
 if [ -n "$extra_vars" ]; then
   set -- "$@" --extra-vars "$extra_vars"
+fi
+
+if [ -n "$verbosity" ]; then
+  for _ in $(seq 1 "$verbosity"); do
+    set -- "$@" -v
+  done
 fi
 
 "$@"
@@ -284,4 +291,5 @@ playbook="${PLAYBOOK:-${playbook:-apt_ubuntu_vms}}"
 vm_hosts="${VM_HOSTS:-${vm_hosts:-}}"
 printf "\033[0;32mRunning Ansible Diff\033[0m\n"
 uv run --python 3.14 --with ansible-core ansible-playbook "ansible/playbooks/${playbook}.yaml" --inventory ansible/inventory/linux_hosts.yaml --check --diff -e "vm_hosts=${vm_hosts}"
+
 '''

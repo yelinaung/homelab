@@ -17,6 +17,6 @@ terraform {
   }
 }
 
-provider "cloudflare" {
-  api_token = var.cloudflare_api_token
-}
+# api_token is read from the CLOUDFLARE_API_TOKEN environment variable
+# (local: cloudflare/.env; CI: masked GitLab variable). Never stored in git.
+provider "cloudflare" {}

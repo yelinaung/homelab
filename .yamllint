@@ -2,6 +2,7 @@
 extends: default
 ignore:
   - .venv/
+  - cloudflare/dns.sops.yaml # sops-encrypted; ENC[...] values exceed line-length
 rules:
   braces:
     max-spaces-inside: 1

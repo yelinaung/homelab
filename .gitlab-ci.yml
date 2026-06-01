@@ -177,8 +177,7 @@ proxmox_plan:
       optional: true
     - job: check_secrets
       optional: true
-  before_script:
-    - cp "$PROXMOX_TFVARS" proxmox/values.tfvars
+  # config.auto.tfvars is committed; TF_VAR_password is a masked CI/CD variable.
   script:
     - mise run init
     - mise run plan
@@ -268,8 +267,8 @@ tailscale_plan:
       optional: true
     - job: check_secrets
       optional: true
-  before_script:
-    - cp "$TAILSCALE_TFVARS" tailscale/values.tfvars
+  # config.auto.tfvars is committed; TF_VAR_tailscale_oauth_client_id and
+  # TF_VAR_tailscale_oauth_client_secret are masked CI/CD variables.
   script:
     - mise run init-tailscale
     - mise run plan-tailscale
@@ -383,3 +382,45 @@ ansible-lint:
   script:
     - mise run install-ansible-deps
     - mise run lint-ansible
+
+
+# =============================================================================
+# Ansible APT update/upgrade (dry-run preview)
+# =============================================================================
+ansible_apt_update_check:
+  stage: plan
+  image: $CI_IMAGE
+  tags:
+    - playground-bravo
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - ansible/**
+        - mise.toml
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - ansible/**
+        - mise.toml
+  script:
+    - mise run install-ansible-deps
+    - PLAYBOOK=apt_update_upgrade VM_HOSTS=all mise run test-ansible-diff
+
+# =============================================================================
+# Ansible APT update/upgrade (apply)
+# =============================================================================
+ansible_apt_update:
+  stage: deploy
+  image: $CI_IMAGE
+  tags:
+    - playground-bravo
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - ansible/**
+        - mise.toml
+      when: manual
+  needs:
+    - ansible_apt_update_check
+  script:
+    - mise run install-ansible-deps
+    - ANSIBLE_VERBOSITY=0 PLAYBOOK=apt_update_upgrade INVENTORY=linux_hosts mise run playbook

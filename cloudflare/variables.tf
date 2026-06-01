@@ -1,13 +1,3 @@
-variable "cloudflare_api_token" {
-  type      = string
-  sensitive = true
-
-  validation {
-    condition     = length(var.cloudflare_api_token) > 0
-    error_message = "Cloudflare API token must not be empty."
-  }
-}
-
 variable "cloudflare_zone_id" {
   type      = string
   sensitive = true
