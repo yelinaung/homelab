@@ -18,6 +18,7 @@ RUN apt-get update && \
         git \
         gnupg \
         jq \
+        openssh-client \
         unzip \
         xz-utils && \
     curl -fsSL "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o /tmp/terraform.zip && \

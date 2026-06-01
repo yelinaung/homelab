@@ -223,7 +223,7 @@ extra_vars="${EXTRA_VARS:-${extra_vars:-}}"
 verbosity="${ANSIBLE_VERBOSITY:-${ansible_verbosity:-}}"
 
 export ANSIBLE_CONFIG="./ansible/ansible.cfg"
-set -- uv run --python 3.14 --with ansible-core ansible-playbook "./ansible/playbooks/${playbook}.yaml" -i "./ansible/inventory/${inventory}.yaml"
+set -- .venv/bin/ansible-playbook "./ansible/playbooks/${playbook}.yaml" -i "./ansible/inventory/${inventory}.yaml"
 
 if [ "$become" = "true" ]; then
   set -- "$@" --ask-become-pass
@@ -247,10 +247,12 @@ fi
 '''
 
 [tasks.install-ansible-deps]
-description = "Install ansible collections and roles from requirements.yml"
+description = "Install ansible-core, collections and roles into .venv"
 run = '''
-uv run --python 3.14 --with ansible-core ansible-galaxy collection install -v -r ansible/requirements.yml
-uv run --python 3.14 --with ansible-core ansible-galaxy role install -v -r ansible/requirements.yml
+uv venv --allow-existing --python 3.14
+uv pip install ansible-core ansible-lint yamllint
+.venv/bin/ansible-galaxy collection install -v -r ansible/requirements.yml
+.venv/bin/ansible-galaxy role install -v -r ansible/requirements.yml
 '''
 
 [tasks.test-ansible]
@@ -258,13 +260,13 @@ description = "Run syntax, ansible-lint, and yamllint for one playbook"
 run = '''
 playbook="${PLAYBOOK:-${playbook:-apt_ubuntu_vms}}"
 printf "\033[0;32mRunning Ansible Syntax check\033[0m\n"
-uv run --python 3.14 --with ansible-core ansible-playbook "ansible/playbooks/${playbook}.yaml" -i ansible/inventory/linux_hosts.yaml --syntax-check
+.venv/bin/ansible-playbook "ansible/playbooks/${playbook}.yaml" -i ansible/inventory/linux_hosts.yaml --syntax-check
 
 printf "\033[0;32mRunning Ansible Lint\033[0m\n"
-uv run --python 3.14 --with ansible-lint ansible-lint "ansible/playbooks/${playbook}.yaml"
+.venv/bin/ansible-lint "ansible/playbooks/${playbook}.yaml"
 
 printf "\033[0;32mRunning YAML Lint\033[0m\n"
-uv run --python 3.14 --with yamllint yamllint "ansible/playbooks/${playbook}.yaml"
+.venv/bin/yamllint "ansible/playbooks/${playbook}.yaml"
 '''
 
 [tasks.lint-ansible]
@@ -273,14 +275,14 @@ run = '''
 printf "\033[0;32mRunning Ansible Syntax check on all playbooks\033[0m\n"
 for playbook in ansible/playbooks/*.yaml; do
   echo "Checking $playbook..."
-  uv run --python 3.14 --with ansible-core ansible-playbook "$playbook" -i ansible/inventory/linux_hosts.yaml --syntax-check || exit 1
+  .venv/bin/ansible-playbook "$playbook" -i ansible/inventory/linux_hosts.yaml --syntax-check || exit 1
 done
 
 printf "\033[0;32mRunning Ansible Lint\033[0m\n"
-uv run --python 3.14 --with ansible-lint ansible-lint ansible/
+.venv/bin/ansible-lint ansible/
 
 printf "\033[0;32mRunning YAML Lint\033[0m\n"
-uv run --python 3.14 --with yamllint yamllint ansible/playbooks/*.yaml
+.venv/bin/yamllint ansible/playbooks/*.yaml
 '''
 
 [tasks.test-ansible-diff]
@@ -290,6 +292,6 @@ run = '''
 playbook="${PLAYBOOK:-${playbook:-apt_ubuntu_vms}}"
 vm_hosts="${VM_HOSTS:-${vm_hosts:-}}"
 printf "\033[0;32mRunning Ansible Diff\033[0m\n"
-uv run --python 3.14 --with ansible-core ansible-playbook "ansible/playbooks/${playbook}.yaml" --inventory ansible/inventory/linux_hosts.yaml --check --diff -e "vm_hosts=${vm_hosts}"
+.venv/bin/ansible-playbook "ansible/playbooks/${playbook}.yaml" --inventory ansible/inventory/linux_hosts.yaml --check --diff -e "vm_hosts=${vm_hosts}"
 
 '''
