@@ -3,6 +3,10 @@ FROM debian:bookworm-slim@sha256:1209d8fd77def86ceb6663deef7956481cc6c14a25e1e64
 ARG TERRAFORM_VERSION=1.15.3
 ARG TFLINT_VERSION=0.62.1
 ARG MISE_VERSION=2026.5.15
+# Must match the pinned versions in mise.toml.
+ARG SOPS_VERSION=3.13.1
+ARG AGE_VERSION=1.3.1
+ARG YQ_VERSION=4.53.2
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -26,5 +30,13 @@ RUN apt-get update && \
 
 ENV MISE_DATA_DIR=/usr/local/share/mise
 ENV PATH="/usr/local/share/mise/shims:${PATH}"
+
+# Pre-install the tools used by `mise run plan-dns` (cloudflare SOPS flow) so CI
+# jobs never fetch them at runtime. Versions must match mise.toml.
+RUN mise install \
+        "sops@${SOPS_VERSION}" \
+        "age@${AGE_VERSION}" \
+        "yq@${YQ_VERSION}" && \
+    mise reshim
 
 HEALTHCHECK NONE

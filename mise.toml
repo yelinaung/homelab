@@ -3,6 +3,11 @@ python = "3.14.5"
 uv = "0.11.16"
 terraform = "1.15.3"
 tflint = "0.62.1"
+# Used to decrypt cloudflare/dns.sops.yaml and convert YAML -> JSON for terraform.
+# Pinned to match the versions baked into runners/gitlab/Dockerfile.
+sops = "3.13.1"
+age = "1.3.1"
+yq = "4.53.2"
 
 [tasks.help]
 description = "List available mise tasks"
@@ -105,13 +110,24 @@ description = "Run tflint against proxmox terraform"
 run = "cd proxmox && tflint --recursive -f compact --color"
 
 [tasks.plan-dns]
-description = "Run terraform plan for cloudflare"
-run = "cd cloudflare && terraform plan -var-file=values.tfvars -out=output.out"
+description = "Decrypt SOPS DNS config, convert to JSON, and run terraform plan for cloudflare"
+run = """
+cd cloudflare
+# Local: export CLOUDFLARE_API_TOKEN from .env. CI: var is already in the env
+# and .env doesn't exist, so this is a no-op there.
+set -a; [ -f .env ] && . ./.env; set +a
+sops -d dns.sops.yaml | yq -o=json > dns.auto.tfvars.json
+terraform plan -out=output.out
+"""
 
 [tasks.apply-dns]
 description = "Apply the saved cloudflare terraform plan"
 raw = true
-run = "cd cloudflare && terraform apply output.out"
+run = """
+cd cloudflare
+set -a; [ -f .env ] && . ./.env; set +a
+terraform apply output.out
+"""
 
 [tasks.init-dns]
 description = "Initialize terraform in cloudflare"

@@ -19,13 +19,26 @@
       "minimumReleaseAge": "0 days",
       "automerge": true,
       "platformAutomerge": true
+    },
+    {
+      "description": "Keep the gitlab CI image ARGs and mise.toml pins for sops/age/yq in lockstep (one PR updates both files).",
+      "matchPackageNames": [
+        "getsops/sops",
+        "FiloSottile/age",
+        "mikefarah/yq",
+        "sops",
+        "age",
+        "yq"
+      ],
+      "groupName": "gitlab ci tools (sops/age/yq)"
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^github-runner\\/Dockerfile$/",
+        "/^runners\\/github\\/Dockerfile$/",
+        "/^runners\\/gitlab\\/Dockerfile$/",
         "/^\\.forgejo\\/ci\\.Dockerfile$/"
       ],
       "matchStrings": [
@@ -39,7 +52,8 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^github-runner\\/Dockerfile$/",
+        "/^runners\\/github\\/Dockerfile$/",
+        "/^runners\\/gitlab\\/Dockerfile$/",
         "/^\\.forgejo\\/ci\\.Dockerfile$/"
       ],
       "matchStrings": [
@@ -79,7 +93,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^github-runner\\/Dockerfile$/",
+        "/^runners\\/github\\/Dockerfile$/",
         "/^\\.forgejo\\/ci\\.Dockerfile$/"
       ],
       "matchStrings": [
@@ -87,6 +101,58 @@
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "gitleaks/gitleaks",
+      "extractVersionTemplate": "^v?(?<version>.*)$",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^runners\\/gitlab\\/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "(?m)^ARG\\s+SOPS_VERSION=(?<currentValue>[0-9A-Za-z._-]+)\\s*$"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "getsops/sops",
+      "extractVersionTemplate": "^v?(?<version>.*)$",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^runners\\/gitlab\\/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "(?m)^ARG\\s+AGE_VERSION=(?<currentValue>[0-9A-Za-z._-]+)\\s*$"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "FiloSottile/age",
+      "extractVersionTemplate": "^v?(?<version>.*)$",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^runners\\/gitlab\\/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "(?m)^ARG\\s+YQ_VERSION=(?<currentValue>[0-9A-Za-z._-]+)\\s*$"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "mikefarah/yq",
+      "extractVersionTemplate": "^v?(?<version>.*)$",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^runners\\/gitlab\\/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "(?m)^ARG\\s+MISE_VERSION=(?<currentValue>[0-9A-Za-z._-]+)\\s*$"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "jdx/mise",
       "extractVersionTemplate": "^v?(?<version>.*)$",
       "versioningTemplate": "semver"
     }

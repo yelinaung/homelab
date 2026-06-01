@@ -29,3 +29,8 @@ crash.*.log
 GEMINI.md
 .rtk
 .env
+
+# age/sops private keys must never be committed (public keys in .sops.yaml are fine)
+*.agekey
+age-key*.txt
+keys.txt

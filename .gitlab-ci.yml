@@ -335,8 +335,8 @@ cloudflare_plan:
       optional: true
     - job: check_secrets
       optional: true
-  before_script:
-    - cp "$CLOUDFLARE_TFVARS" cloudflare/values.tfvars
+  # sops/age/yq are baked into $CI_IMAGE (runners/gitlab/Dockerfile).
+  # SOPS_AGE_KEY and CLOUDFLARE_API_TOKEN are masked CI/CD variables.
   script:
     - mise run init-dns
     - mise run plan-dns
