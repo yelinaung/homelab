@@ -56,7 +56,7 @@ secret_detection:
 
 check_secrets:
   stage: validate
-  image: apteno/alpine-jq:latest@sha256:3470a642109f10a1549037877c94de78de8395d566c197f52bb8521b9aeec273
+  image: apteno/alpine-jq:latest@sha256:19d748c62e9431e25878b16d571c374c1d4794029b7420bc8ae94521a861e816
   tags:
   - playground-bravo
   needs:
@@ -88,7 +88,7 @@ semgrep-sast:
 
 check_sast:
   stage: validate
-  image: apteno/alpine-jq:latest@sha256:3470a642109f10a1549037877c94de78de8395d566c197f52bb8521b9aeec273
+  image: apteno/alpine-jq:latest@sha256:19d748c62e9431e25878b16d571c374c1d4794029b7420bc8ae94521a861e816
   tags:
   - playground-bravo
   needs:
