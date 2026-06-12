@@ -223,7 +223,7 @@ extra_vars="${EXTRA_VARS:-${extra_vars:-}}"
 verbosity="${ANSIBLE_VERBOSITY:-${ansible_verbosity:-}}"
 
 export ANSIBLE_CONFIG="./ansible/ansible.cfg"
-set -- .venv/bin/ansible-playbook "./ansible/playbooks/${playbook}.yaml" -i "./ansible/inventory/${inventory}.yaml"
+ansible-playbook "./ansible/playbooks/${playbook}.yaml" -i "./ansible/inventory/${inventory}.yaml"
 
 if [ "$become" = "true" ]; then
   set -- "$@" --ask-become-pass

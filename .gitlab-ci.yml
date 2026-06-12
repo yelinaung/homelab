@@ -387,7 +387,18 @@ ansible-lint:
 # =============================================================================
 # Ansible APT update/upgrade (dry-run preview)
 # =============================================================================
+.ansible_ssh_setup: &ansible_ssh_setup
+  before_script:
+    - mkdir -p ~/.ssh
+    - cp "$ANSIBLE_SSH_KEY" ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+# =============================================================================
+# Ansible APT update/upgrade (dry-run preview)
+# =============================================================================
 ansible_apt_update_check:
+  <<: *ansible_ssh_setup
   stage: plan
   image: $CI_IMAGE
   tags:
@@ -409,6 +420,7 @@ ansible_apt_update_check:
 # Ansible APT update/upgrade (apply)
 # =============================================================================
 ansible_apt_update:
+  <<: *ansible_ssh_setup
   stage: deploy
   image: $CI_IMAGE
   tags:
