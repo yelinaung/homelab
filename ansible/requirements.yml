@@ -12,7 +12,7 @@ collections:
   - name: ansible.posix
     version: 2.2.0
   - name: community.docker
-    version: 5.2.0
+    version: 5.2.1
   - name: artis3n.tailscale
     version: 1.2.1
   - name: victoriametrics.cluster
