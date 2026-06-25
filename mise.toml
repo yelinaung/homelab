@@ -221,9 +221,19 @@ vm_hosts="${VM_HOSTS:-${vm_hosts:-}}"
 become="${BECOME:-${become:-false}}"
 extra_vars="${EXTRA_VARS:-${extra_vars:-}}"
 verbosity="${ANSIBLE_VERBOSITY:-${ansible_verbosity:-}}"
+mitogen="${MITOGEN:-${mitogen:-false}}"
 
 export ANSIBLE_CONFIG="./ansible/ansible.cfg"
-ansible-playbook "./ansible/playbooks/${playbook}.yaml" -i "./ansible/inventory/${inventory}.yaml"
+
+# Opt-in: enable the Mitogen execution strategy (persistent remote interpreter,
+# in-memory module transport). Resolves the plugin dir from the installed package.
+if [ "$mitogen" = "true" ]; then
+  mitogen_dir="$(.venv/bin/python -c 'import os,ansible_mitogen; print(os.path.join(os.path.dirname(ansible_mitogen.__file__),"plugins","strategy"))')"
+  export ANSIBLE_STRATEGY_PLUGINS="$mitogen_dir"
+  export ANSIBLE_STRATEGY="mitogen_linear"
+fi
+
+set -- ansible-playbook "./ansible/playbooks/${playbook}.yaml" -i "./ansible/inventory/${inventory}.yaml"
 
 if [ "$become" = "true" ]; then
   set -- "$@" --ask-become-pass
@@ -250,7 +260,7 @@ fi
 description = "Install ansible-core, collections and roles into .venv"
 run = '''
 uv venv --allow-existing --python 3.14
-uv pip install ansible-core ansible-lint yamllint
+uv pip install ansible-core ansible-lint yamllint mitogen
 .venv/bin/ansible-galaxy collection install -v -r ansible/requirements.yml
 .venv/bin/ansible-galaxy role install -v -r ansible/requirements.yml
 '''
