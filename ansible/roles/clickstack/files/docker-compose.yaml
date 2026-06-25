@@ -1,0 +1,24 @@
+services:
+  clickstack:
+    image: clickhouse/clickstack-all-in-one:2.20.0
+    container_name: clickstack
+    restart: unless-stopped
+    # HYPERDX_API_KEY is supplied via .env when set; when absent, the image
+    # auto-generates an ingestion key on first boot (persisted in the
+    # clickstack-mongodb volume), retrievable from the HyperDX UI.
+    env_file:
+      - .env
+    ports:
+      - "${CLICKSTACK_BIND_HOST:-127.0.0.1}:8123:8123"
+      - "${CLICKSTACK_BIND_HOST:-127.0.0.1}:${CLICKSTACK_APP_PORT:-8081}:8080"
+      - "${CLICKSTACK_BIND_HOST:-127.0.0.1}:4317:4317"
+      - "${CLICKSTACK_BIND_HOST:-127.0.0.1}:4318:4318"
+    volumes:
+      - clickstack-clickhouse:/var/lib/clickhouse
+      - clickstack-mongodb:/data/db
+      - clickstack-mongodb-config:/data/configdb
+
+volumes:
+  clickstack-clickhouse:
+  clickstack-mongodb:
+  clickstack-mongodb-config:

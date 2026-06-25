@@ -1,0 +1,9 @@
+---
+- name: Install ClickStack
+  hosts: '{{ vm_hosts | default("all")}}'
+  become: true
+  gather_facts: true
+  roles:
+    - role: clickstack
+      vars:
+        clickstack_pull: missing

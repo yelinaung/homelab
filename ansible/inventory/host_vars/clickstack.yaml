@@ -1,0 +1,5 @@
+---
+# ClickStack sits behind Caddy, which terminates TLS for the Tailscale MagicDNS
+# name and reverse-proxies to the loopback-bound app. Tell HyperDX its real
+# public URL so post-login redirects/links don't point at http://localhost:8080.
+clickstack_frontend_url: "https://clickstack.bengal-python.ts.net"

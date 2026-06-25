@@ -1,0 +1,40 @@
+---
+- name: Note when ClickStack API key is not set
+  ansible.builtin.debug:
+    msg: >-
+      clickstack_api_key is not set; ClickStack will auto-generate an ingestion
+      key on first boot. Retrieve it from the HyperDX UI. The generated key
+      persists in the clickstack-mongodb volume across upgrades. Pass
+      clickstack_api_key (e.g. via extra-vars) to pin a stable, reproducible key.
+  when: (clickstack_api_key | default('') | trim | length) == 0
+
+- name: Ensure ClickStack project directory exists
+  ansible.builtin.file:
+    path: "{{ clickstack_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Sync ClickStack docker-compose file
+  ansible.builtin.copy:
+    src: docker-compose.yaml
+    dest: "{{ clickstack_dir }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: Render ClickStack environment file
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ clickstack_dir }}/.env"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+
+- name: Apply ClickStack via Docker Compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ clickstack_dir }}"
+    state: present
+    pull: "{{ clickstack_pull }}"
+    remove_orphans: "{{ clickstack_remove_orphans }}"

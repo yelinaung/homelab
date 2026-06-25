@@ -1,0 +1,5 @@
+---
+# Homelab defaults for ClickStack.
+# Override per-host/group as needed.
+clickstack_bind_host: "127.0.0.1"
+clickstack_app_port: "8081"

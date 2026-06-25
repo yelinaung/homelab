@@ -1,0 +1,12 @@
+---
+clickstack_dir: "/home/{{ ansible_user }}/clickstack"
+clickstack_bind_host: "127.0.0.1"
+clickstack_app_port: "8081"
+# Public URL HyperDX uses to build redirects/links. Set this to the external
+# address when fronting with a reverse proxy (e.g. https://host.tailnet.ts.net);
+# empty leaves the image default (http://localhost:8080). Overrides FRONTEND_URL
+# directly, so the in-container listen port (8080) is unaffected.
+clickstack_frontend_url: ""
+# Overridden per-playbook: "missing" for install, "always" for upgrade.
+clickstack_pull: missing
+clickstack_remove_orphans: false
