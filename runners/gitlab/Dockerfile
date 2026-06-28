@@ -6,7 +6,7 @@ ARG MISE_VERSION=2026.6.1
 # Must match the pinned versions in mise.toml.
 ARG SOPS_VERSION=3.13.1
 ARG AGE_VERSION=1.3.1
-ARG YQ_VERSION=4.53.2
+ARG YQ_VERSION=4.53.3
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
