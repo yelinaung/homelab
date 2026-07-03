@@ -1,0 +1,101 @@
+---
+# Install the OpenTelemetry Collector (contrib) on Linux hosts and ship host
+# telemetry to ClickStack, using the upstream grafana.grafana role.
+#
+# Usage:
+#   PLAYBOOK=install_otel_collector INVENTORY=linux_hosts BECOME=true \
+#     EXTRA_VARS="otel_ingest_key=YOUR_INGEST_KEY" mise run playbook
+#
+# Target a subset with VM_HOSTS=<host-or-group>. Override the endpoint with
+# EXTRA_VARS="otel_clickstack_endpoint=https://..." if needed.
+#
+# Requires the ClickStack host to expose OTLP/HTTP (Caddy fronts localhost:4318).
+- name: Install OpenTelemetry Collector
+  hosts: '{{ vm_hosts | default("all") }}'
+  become: true
+  gather_facts: true
+  vars:
+    otel_clickstack_endpoint: "https://clickstack.bengal-python.ts.net:4318"
+    otel_clickstack_ingest_key: "{{ otel_ingest_key | default('') }}"
+
+    # Pin a current collector (the role default is old).
+    otel_collector_version: "0.155.0"
+    otel_collector_type: contrib
+
+    otel_collector_receivers:
+      host_metrics:
+        collection_interval: 30s
+        scrapers:
+          cpu: {}
+          load: {}
+          memory: {}
+          disk: {}
+          filesystem: {}
+          network: {}
+          paging: {}
+      # systemd journal logs. start_at=end avoids replaying the whole backlog
+      # on first start. Needs the 'otel' user in systemd-journal (post_task).
+      journald:
+        start_at: end
+
+    otel_collector_processors:
+      resource_detection:
+        detectors: [env, system]
+        system:
+          hostname_sources: [os]
+      resource:
+        attributes:
+          - key: service.name
+            value: "{{ inventory_hostname }}"
+            action: upsert
+      batch: {}
+
+    otel_collector_exporters:
+      otlp_http/clickstack:
+        endpoint: "{{ otel_clickstack_endpoint }}"
+        headers:
+          authorization: "{{ otel_clickstack_ingest_key }}"
+        compression: gzip
+
+    otel_collector_service:
+      telemetry:
+        metrics:
+          level: none
+      pipelines:
+        metrics:
+          receivers: [host_metrics]
+          processors: [resource_detection, resource, batch]
+          exporters: [otlp_http/clickstack]
+        logs:
+          receivers: [journald]
+          processors: [resource_detection, resource, batch]
+          exporters: [otlp_http/clickstack]
+
+  pre_tasks:
+    - name: Require a ClickStack ingestion API key
+      ansible.builtin.assert:
+        that:
+          - otel_clickstack_ingest_key | trim | length > 0
+        fail_msg: >-
+          Pass otel_ingest_key=<ClickStack ingestion key> via EXTRA_VARS before
+          installing the OpenTelemetry collector.
+
+  roles:
+    - role: grafana.grafana.opentelemetry_collector
+
+  post_tasks:
+    # The role runs the collector as the 'otel' user, which can't read the
+    # journal until it joins systemd-journal. Done after the role creates the
+    # user; the handler restarts only when membership actually changes.
+    - name: Allow the collector to read the systemd journal
+      ansible.builtin.user:
+        name: "{{ otel_collector_service_user | default('otel') }}"
+        groups: systemd-journal
+        append: true
+      notify: Restart otel collector
+
+  handlers:
+    - name: Restart otel collector
+      ansible.builtin.systemd:
+        name: "{{ otel_collector_service_name | default('otel-collector') }}"
+        state: restarted
