@@ -282,6 +282,7 @@ printf "\033[0;32mRunning YAML Lint\033[0m\n"
 [tasks.lint-ansible]
 description = "Run syntax checks, ansible-lint, and yamllint for all playbooks"
 run = '''
+export ANSIBLE_CONFIG=ansible/ansible.cfg
 printf "\033[0;32mRunning Ansible Syntax check on all playbooks\033[0m\n"
 for playbook in ansible/playbooks/*.yaml; do
   echo "Checking $playbook..."
