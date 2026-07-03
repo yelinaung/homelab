@@ -28,7 +28,8 @@ jobs:
           persist-credentials: false
       - name: Install mise
         run: |
-          curl https://mise.run | sh
+          curl -fsSL https://mise.run -o install-mise.sh
+          sh install-mise.sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Install Ansible Deps
         run: mise run install-ansible-deps
