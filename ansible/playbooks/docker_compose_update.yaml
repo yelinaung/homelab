@@ -3,7 +3,7 @@
 - name: Pull and restart docker compose services
   hosts: '{{ vm_hosts | default("all")}}'
   become: true
-  gather_facts: true
+  gather_facts: false
   tasks:
     - name: Pull and restart each compose project
       community.docker.docker_compose_v2:
