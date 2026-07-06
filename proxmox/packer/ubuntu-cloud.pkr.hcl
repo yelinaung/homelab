@@ -1,7 +1,8 @@
 packer {
   required_plugins {
+    # from https://github.com/hashicorp/packer-plugin-proxmox
     proxmox = {
-      version = "~> 1"
+      version = ">= 1.2.2"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -48,6 +49,9 @@ build {
       "echo 'Waiting for cloud-init to complete...'",
       "cloud-init status --wait",
       "sudo apt update",
+      "sudo apt upgrade",
+      # cloud-init-base.yml.tftpl already installed qemu agent
+      # redundant but harmless here. Act as a safety net in case the cloud-init fails
       "sudo apt install -y qemu-guest-agent",
       "sudo systemctl enable qemu-guest-agent",
       "sudo systemctl start qemu-guest-agent"
