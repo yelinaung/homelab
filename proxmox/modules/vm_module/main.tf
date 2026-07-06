@@ -137,7 +137,10 @@ resource "proxmox_virtual_environment_vm" "vm" {
     ignore_changes = [
       disk,
       network_device,
-      vga
+      vga,
+      # Imported VMs report units=0; updating them trips a provider bug on
+      # VMs with an ide2 ISO disk ("Defined disk interface not supported").
+      cpu[0].units,
     ]
   }
 }
