@@ -8,6 +8,12 @@ variable "has_started" {
   default = true
 }
 
+variable "on_boot" {
+  type        = bool
+  default     = true
+  description = "Start the VM automatically when the Proxmox host boots"
+}
+
 variable "node_name" {
   type        = string
   description = "The name of the Proxmox node"

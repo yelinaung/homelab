@@ -3,6 +3,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   bios          = var.bios
   name          = var.name
   node_name     = var.node_name
+  on_boot       = var.on_boot
   protection    = false
   scsi_hardware = "virtio-scsi-single"
   started       = var.has_started

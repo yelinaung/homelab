@@ -12,4 +12,7 @@ module "delta_ubuntu" {
   mac_address          = "BC:24:11:63:3E:62"
   tags                 = ["linux", "ubuntu", "terraform"]
   iso_disk_size        = 1
+
+  has_started = false
+  on_boot     = false
 }
