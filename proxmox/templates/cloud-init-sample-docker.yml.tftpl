@@ -12,8 +12,6 @@ packages:
   - docker.io
 runcmd:
   - |
-    docker run -d --restart=always --name=github-runner \
-    -e GITHUB_OWNER=${github_owner} \
-    -e GITHUB_REPOSITORY=${github_repository} \
-    -e GITHUB_PAT=${github_pat} \
-    ghcr.io/yelinaung/homelab/github-runner:latest
+    docker run -d --restart=always --name=${container_name} \
+    -p 80:80 \
+    ${container_image}
