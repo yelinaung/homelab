@@ -2,7 +2,7 @@ module "vicky" {
   source = "./modules/vm_module"
 
   name                 = "vicky"
-  node_name            = "homelab3"
+  node_name            = "homelab2"
   vm_id                = 113
   memory_dedicated     = 8192
   disk_size            = 100

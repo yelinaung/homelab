@@ -2,7 +2,7 @@ module "yankee_ubuntu" {
   source = "./modules/vm_module"
 
   name             = "yankee-ubuntu-24-04"
-  node_name        = "homelab2"
+  node_name        = "homelab1"
   vm_id            = 111
   memory_dedicated = 2048
   cpu_cores        = 2

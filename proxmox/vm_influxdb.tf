@@ -4,7 +4,7 @@ module "influxdb" {
   name                 = "influxdb"
   node_name            = "homelab2"
   vm_id                = 115
-  memory_dedicated     = 2048
+  memory_dedicated     = 1024
   disk_size            = 32
   vm_disk_datastore_id = "homelab2-data2"
   iso_datastore_id     = "homelab2-data2"
