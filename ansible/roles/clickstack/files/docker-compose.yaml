@@ -1,6 +1,7 @@
 services:
   clickstack:
-    image: clickhouse/clickstack-all-in-one:2.20.0@sha256:1376afe541ea77b56186fedeaa8e1eb5832ec32fd3ec5eb8093a81018f745f0c
+    image: >-
+      clickhouse/clickstack-all-in-one:2.20.0@sha256:1376afe541ea77b56186fedeaa8e1eb5832ec32fd3ec5eb8093a81018f745f0c
     container_name: clickstack
     restart: unless-stopped
     # HYPERDX_API_KEY is supplied via .env when set; when absent, the image
