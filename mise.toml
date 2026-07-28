@@ -1,6 +1,6 @@
 [tools]
 python = "3.14.6"
-uv = "0.11.26"
+uv = "0.11.28"
 terraform = "1.15.8"
 packer = "1.15.4"
 tflint = "0.62.1"
