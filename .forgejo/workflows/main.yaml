@@ -18,7 +18,7 @@ jobs:
       # yamllint disable rule:line-length
       image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
       - name: Run gitleaks
@@ -30,7 +30,7 @@ jobs:
       # yamllint disable rule:line-length
       image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - name: Terraform fmt
         run: terraform fmt -check
         continue-on-error: true
@@ -46,7 +46,7 @@ jobs:
       image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     needs: [fmt_and_validate]
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ~/.tflint.d/plugins
@@ -62,7 +62,7 @@ jobs:
       # yamllint disable rule:line-length
       image: ghcr.io/yelinaung/homelab/ci:2026-02-23@sha256:2e9089a3b3d162df4129b4caae2b73a760230262d9bd9812572e172059933e04
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - name: Terraform fmt
         run: terraform -chdir=cloudflare fmt -check
       - name: Terraform Init
