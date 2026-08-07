@@ -2,7 +2,7 @@
 python = "3.14.6"
 uv = "0.11.31"
 terraform = "1.15.8"
-packer = "1.15.4"
+packer = "1.16.0"
 tflint = "0.64.0"
 # Used to decrypt cloudflare/dns.sops.yaml and convert YAML -> JSON for terraform.
 # Pinned to match the versions baked into runners/gitlab/Dockerfile.
