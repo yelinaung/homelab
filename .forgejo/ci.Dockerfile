@@ -5,7 +5,7 @@ FROM python:3.14-slim-bookworm@sha256:86f975aca15cf04a40b399eebede9aea7c82eae084
 ARG GO_VERSION=1.26.5
 ARG NODE_VERSION=26
 ARG TERRAFORM_VERSION=1.15.8
-ARG TFLINT_VERSION=0.63.1
+ARG TFLINT_VERSION=0.64.0
 ARG GITLEAKS_VERSION=8.30.1
 
 # Use pipefail so piped RUN commands fail on upstream command errors.

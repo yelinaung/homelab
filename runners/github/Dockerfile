@@ -2,7 +2,7 @@ FROM myoung34/github-runner:ubuntu-jammy@sha256:41be4b798930517be5b52aa5a2049749
 
 # Install uv, nodejs, terraform, tflint, and other essentials
 ARG TERRAFORM_VERSION=1.15.8
-ARG TFLINT_VERSION=0.63.1
+ARG TFLINT_VERSION=0.64.0
 ARG GITLEAKS_VERSION=8.30.1
 
 # Ensure pipelines fail if any command in the chain fails.
