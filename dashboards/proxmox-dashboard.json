@@ -1,0 +1,267 @@
+{
+  "id": "0000000000000000000pve01",
+  "name": "Proxmox VE",
+  "tags": ["proxmox"],
+  "filters": [],
+  "savedFilterValues": [],
+  "tiles": [
+    {
+      "id": "pve-node-cpu",
+      "x": 0,
+      "y": 0,
+      "w": 6,
+      "h": 4,
+      "config": {
+        "name": "Node CPU Usage",
+        "source": "6a3cd6947631cf36786c5017",
+        "connection": "6a3cd6947631cf36786c500f",
+        "displayType": "line",
+        "granularity": "auto",
+        "timestampValueExpression": "TimeUnix",
+        "from": { "databaseName": "default", "tableName": "" },
+        "where": "ServiceName = 'proxmox-ve'",
+        "whereLanguage": "sql",
+        "select": [
+          {
+            "aggFn": "avg",
+            "valueExpression": "Value",
+            "metricType": "gauge",
+            "metricName": "proxmox_node_cpustat_used",
+            "alias": "CPU Used"
+          }
+        ],
+        "groupBy": "Attributes['node']"
+      }
+    },
+    {
+      "id": "pve-node-memory",
+      "x": 6,
+      "y": 0,
+      "w": 6,
+      "h": 4,
+      "config": {
+        "name": "Node Memory (Used vs Total)",
+        "source": "6a3cd6947631cf36786c5017",
+        "connection": "6a3cd6947631cf36786c500f",
+        "displayType": "line",
+        "granularity": "auto",
+        "timestampValueExpression": "TimeUnix",
+        "from": { "databaseName": "default", "tableName": "" },
+        "where": "ServiceName = 'proxmox-ve'",
+        "whereLanguage": "sql",
+        "numberFormat": { "output": "byte" },
+        "select": [
+          {
+            "aggFn": "avg",
+            "valueExpression": "Value",
+            "metricType": "gauge",
+            "metricName": "proxmox_node_memory_memused",
+            "alias": "Memory Used"
+          },
+          {
+            "aggFn": "avg",
+            "valueExpression": "Value",
+            "metricType": "gauge",
+            "metricName": "proxmox_node_memory_memtotal",
+            "alias": "Memory Total"
+          }
+        ],
+        "groupBy": "Attributes['node']"
+      }
+    },
+    {
+      "id": "pve-storage-used",
+      "x": 0,
+      "y": 4,
+      "w": 6,
+      "h": 4,
+      "config": {
+        "name": "Storage Used vs Total",
+        "source": "6a3cd6947631cf36786c5017",
+        "connection": "6a3cd6947631cf36786c500f",
+        "displayType": "line",
+        "granularity": "auto",
+        "timestampValueExpression": "TimeUnix",
+        "from": { "databaseName": "default", "tableName": "" },
+        "where": "ServiceName = 'proxmox-ve'",
+        "whereLanguage": "sql",
+        "numberFormat": { "output": "byte" },
+        "select": [
+          {
+            "aggFn": "avg",
+            "valueExpression": "Value",
+            "metricType": "gauge",
+            "metricName": "proxmox_storage_used",
+            "alias": "Storage Used"
+          },
+          {
+            "aggFn": "avg",
+            "valueExpression": "Value",
+            "metricType": "gauge",
+            "metricName": "proxmox_storage_total",
+            "alias": "Storage Total"
+          }
+        ],
+        "groupBy": "concat(Attributes['node'], ' / ', Attributes['storage'])"
+      }
+    },
+    {
+      "id": "pve-node-network",
+      "x": 6,
+      "y": 4,
+      "w": 6,
+      "h": 4,
+      "config": {
+        "name": "Node Network Throughput",
+        "source": "6a3cd6947631cf36786c5017",
+        "connection": "6a3cd6947631cf36786c500f",
+        "displayType": "line",
+        "granularity": "auto",
+        "timestampValueExpression": "TimeUnix",
+        "from": { "databaseName": "default", "tableName": "" },
+        "where": "ServiceName = 'proxmox-ve'",
+        "whereLanguage": "sql",
+        "numberFormat": { "output": "data_rate" },
+        "select": [
+          {
+            "aggFn": "increase",
+            "valueExpression": "Value",
+            "metricType": "sum",
+            "metricName": "proxmox_node_network_receive_total",
+            "alias": "Receive"
+          },
+          {
+            "aggFn": "increase",
+            "valueExpression": "Value",
+            "metricType": "sum",
+            "metricName": "proxmox_node_network_transmit_total",
+            "alias": "Transmit"
+          }
+        ],
+        "groupBy": "concat(Attributes['node'], ' / ', Attributes['device'])"
+      }
+    },
+    {
+      "id": "pve-vm-cpu",
+      "x": 0,
+      "y": 8,
+      "w": 6,
+      "h": 4,
+      "config": {
+        "name": "VM CPU Usage",
+        "source": "6a3cd6947631cf36786c5017",
+        "connection": "6a3cd6947631cf36786c500f",
+        "displayType": "line",
+        "granularity": "auto",
+        "timestampValueExpression": "TimeUnix",
+        "from": { "databaseName": "default", "tableName": "" },
+        "where": "ServiceName = 'proxmox-ve'",
+        "whereLanguage": "sql",
+        "select": [
+          {
+            "aggFn": "avg",
+            "valueExpression": "Value",
+            "metricType": "gauge",
+            "metricName": "proxmox_vm_cpu",
+            "alias": "CPU Used"
+          }
+        ],
+        "groupBy": "Attributes['name']"
+      }
+    },
+    {
+      "id": "pve-vm-memory",
+      "x": 6,
+      "y": 8,
+      "w": 6,
+      "h": 4,
+      "config": {
+        "name": "VM Memory (Used vs Max)",
+        "source": "6a3cd6947631cf36786c5017",
+        "connection": "6a3cd6947631cf36786c500f",
+        "displayType": "line",
+        "granularity": "auto",
+        "timestampValueExpression": "TimeUnix",
+        "from": { "databaseName": "default", "tableName": "" },
+        "where": "ServiceName = 'proxmox-ve'",
+        "whereLanguage": "sql",
+        "numberFormat": { "output": "byte" },
+        "select": [
+          {
+            "aggFn": "avg",
+            "valueExpression": "Value",
+            "metricType": "gauge",
+            "metricName": "proxmox_vm_mem",
+            "alias": "Memory Used"
+          },
+          {
+            "aggFn": "avg",
+            "valueExpression": "Value",
+            "metricType": "gauge",
+            "metricName": "proxmox_vm_maxmem",
+            "alias": "Memory Max"
+          }
+        ],
+        "groupBy": "Attributes['name']"
+      }
+    },
+    {
+      "id": "pve-node-uptime",
+      "x": 0,
+      "y": 12,
+      "w": 6,
+      "h": 3,
+      "config": {
+        "name": "Node Uptime",
+        "source": "6a3cd6947631cf36786c5017",
+        "connection": "6a3cd6947631cf36786c500f",
+        "displayType": "number",
+        "granularity": "auto",
+        "timestampValueExpression": "TimeUnix",
+        "from": { "databaseName": "default", "tableName": "" },
+        "where": "ServiceName = 'proxmox-ve'",
+        "whereLanguage": "sql",
+        "numberFormat": { "output": "duration" },
+        "select": [
+          {
+            "aggFn": "max",
+            "valueExpression": "Value",
+            "metricType": "gauge",
+            "metricName": "proxmox_node_uptime",
+            "alias": "Uptime"
+          }
+        ],
+        "groupBy": "Attributes['node']"
+      }
+    },
+    {
+      "id": "pve-vm-uptime",
+      "x": 6,
+      "y": 12,
+      "w": 6,
+      "h": 3,
+      "config": {
+        "name": "VM Uptime",
+        "source": "6a3cd6947631cf36786c5017",
+        "connection": "6a3cd6947631cf36786c500f",
+        "displayType": "table",
+        "granularity": "auto",
+        "timestampValueExpression": "TimeUnix",
+        "from": { "databaseName": "default", "tableName": "" },
+        "where": "ServiceName = 'proxmox-ve'",
+        "whereLanguage": "sql",
+        "numberFormat": { "output": "duration" },
+        "select": [
+          {
+            "aggFn": "max",
+            "valueExpression": "Value",
+            "metricType": "gauge",
+            "metricName": "proxmox_vm_uptime",
+            "alias": "Uptime"
+          }
+        ],
+        "groupBy": "Attributes['name']"
+      }
+    }
+  ]
+}
