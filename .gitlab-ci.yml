@@ -178,8 +178,11 @@ proxmox_plan:
       optional: true
     - job: check_secrets
       optional: true
-  # config.auto.tfvars is committed; TF_VAR_password is a masked CI/CD variable.
+  # config.auto.tfvars is committed; PROXMOX_TFVARS (masked CI/CD variable,
+  # holding secrets.auto.tfvars-style content e.g. password) is written to an
+  # auto-loaded tfvars file so terraform picks it up without a -var-file flag.
   script:
+    - echo "$PROXMOX_TFVARS" > proxmox/ci.auto.tfvars
     - mise run init
     - mise run plan
   artifacts:
@@ -198,7 +201,9 @@ proxmox_apply:
         - proxmox/**
         - mise.toml
       when: manual
+  # PROXMOX_TFVARS (masked CI/CD variable) — see proxmox_plan comment above.
   script:
+    - echo "$PROXMOX_TFVARS" > proxmox/ci.auto.tfvars
     - mise run init
     - mise run apply
   needs:
