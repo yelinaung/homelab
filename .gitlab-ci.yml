@@ -182,7 +182,7 @@ proxmox_plan:
   # holding secrets.auto.tfvars-style content e.g. password) is written to an
   # auto-loaded tfvars file so terraform picks it up without a -var-file flag.
   script:
-    - echo "$PROXMOX_TFVARS" > proxmox/ci.auto.tfvars
+    - cp "$PROXMOX_TFVARS" proxmox/ci.auto.tfvars
     - mise run init
     - mise run plan
   artifacts:
@@ -203,7 +203,7 @@ proxmox_apply:
       when: manual
   # PROXMOX_TFVARS (masked CI/CD variable) — see proxmox_plan comment above.
   script:
-    - echo "$PROXMOX_TFVARS" > proxmox/ci.auto.tfvars
+    - cp "$PROXMOX_TFVARS" proxmox/ci.auto.tfvars
     - mise run init
     - mise run apply
   needs:
