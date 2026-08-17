@@ -3,8 +3,13 @@
   "schemaVersion": 36,
   "__inputs": [],
   "editable": true,
-  "tags": ["proxmox"],
-  "time": { "from": "now-6h", "to": "now" },
+  "tags": [
+    "proxmox"
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
   "refresh": "1m",
   "templating": {
     "list": [
@@ -30,11 +35,21 @@
       "id": 1,
       "type": "timeseries",
       "title": "Node CPU Usage",
-      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
+          "color": {
+            "mode": "palette-classic"
+          },
           "custom": {
             "drawStyle": "line",
             "fillOpacity": 10,
@@ -49,20 +64,42 @@
         "overrides": []
       },
       "options": {
-        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi", "sort": "none" }
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
       },
       "transformations": [
-        { "id": "prepareTimeSeries", "options": { "format": "many" } }
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "many"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^value (.*)$",
+            "renamePattern": "$1"
+          }
+        }
       ],
       "targets": [
         {
           "refId": "A",
-          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
           "queryType": "sql",
           "format": 0,
           "editorType": "sql",
-          "rawSql": "SELECT\n  $__timeInterval(TimeUnix) as time,\n  Attributes['node'] as node,\n  avg(Value) as value\nFROM otel_metrics_gauge\nWHERE ServiceName = 'proxmox-ve'\n  AND MetricName = 'proxmox_node_cpustat_used'\n  AND $__timeFilter(TimeUnix)\nGROUP BY node, time\nORDER BY time"
+          "rawSql": "SELECT\n  $__timeInterval(TimeUnix) as time,\n  Attributes['node'] as node,\n  avg(Value) as value\nFROM otel_metrics_gauge\nWHERE ServiceName = 'proxmox-ve'\n  AND MetricName = 'proxmox_node_cpustat_cpu'\n  AND $__timeFilter(TimeUnix)\nGROUP BY node, time\nORDER BY time"
         }
       ]
     },
@@ -70,11 +107,21 @@
       "id": 2,
       "type": "timeseries",
       "title": "Node Memory (Used vs Total)",
-      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
+          "color": {
+            "mode": "palette-classic"
+          },
           "custom": {
             "drawStyle": "line",
             "fillOpacity": 10,
@@ -89,16 +136,38 @@
         "overrides": []
       },
       "options": {
-        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi", "sort": "none" }
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
       },
       "transformations": [
-        { "id": "prepareTimeSeries", "options": { "format": "many" } }
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "many"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^value (.*)$",
+            "renamePattern": "$1"
+          }
+        }
       ],
       "targets": [
         {
           "refId": "A",
-          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
           "queryType": "sql",
           "format": 0,
           "editorType": "sql",
@@ -110,11 +179,21 @@
       "id": 3,
       "type": "timeseries",
       "title": "Storage Used vs Total",
-      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
+          "color": {
+            "mode": "palette-classic"
+          },
           "custom": {
             "drawStyle": "line",
             "fillOpacity": 10,
@@ -129,16 +208,38 @@
         "overrides": []
       },
       "options": {
-        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi", "sort": "none" }
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
       },
       "transformations": [
-        { "id": "prepareTimeSeries", "options": { "format": "many" } }
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "many"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^value (.*)$",
+            "renamePattern": "$1"
+          }
+        }
       ],
       "targets": [
         {
           "refId": "A",
-          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
           "queryType": "sql",
           "format": 0,
           "editorType": "sql",
@@ -151,11 +252,21 @@
       "type": "timeseries",
       "title": "Node Network (cumulative bytes)",
       "description": "Raw cumulative counters, not rate. Slope = throughput.",
-      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
+          "color": {
+            "mode": "palette-classic"
+          },
           "custom": {
             "drawStyle": "line",
             "fillOpacity": 10,
@@ -170,16 +281,38 @@
         "overrides": []
       },
       "options": {
-        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi", "sort": "none" }
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
       },
       "transformations": [
-        { "id": "prepareTimeSeries", "options": { "format": "many" } }
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "many"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^value (.*)$",
+            "renamePattern": "$1"
+          }
+        }
       ],
       "targets": [
         {
           "refId": "A",
-          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
           "queryType": "sql",
           "format": 0,
           "editorType": "sql",
@@ -191,11 +324,21 @@
       "id": 5,
       "type": "timeseries",
       "title": "VM CPU Usage",
-      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
+          "color": {
+            "mode": "palette-classic"
+          },
           "custom": {
             "drawStyle": "line",
             "fillOpacity": 10,
@@ -210,16 +353,38 @@
         "overrides": []
       },
       "options": {
-        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi", "sort": "none" }
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
       },
       "transformations": [
-        { "id": "prepareTimeSeries", "options": { "format": "many" } }
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "many"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^value (.*)$",
+            "renamePattern": "$1"
+          }
+        }
       ],
       "targets": [
         {
           "refId": "A",
-          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
           "queryType": "sql",
           "format": 0,
           "editorType": "sql",
@@ -231,11 +396,21 @@
       "id": 6,
       "type": "timeseries",
       "title": "VM Memory (Used vs Max)",
-      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
+          "color": {
+            "mode": "palette-classic"
+          },
           "custom": {
             "drawStyle": "line",
             "fillOpacity": 10,
@@ -250,16 +425,38 @@
         "overrides": []
       },
       "options": {
-        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi", "sort": "none" }
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
       },
       "transformations": [
-        { "id": "prepareTimeSeries", "options": { "format": "many" } }
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "many"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^value (.*)$",
+            "renamePattern": "$1"
+          }
+        }
       ],
       "targets": [
         {
           "refId": "A",
-          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
           "queryType": "sql",
           "format": 0,
           "editorType": "sql",
@@ -271,17 +468,31 @@
       "id": 7,
       "type": "table",
       "title": "Node Uptime",
-      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
-      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 24 },
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
       "fieldConfig": {
-        "defaults": { "unit": "s", "mappings": [] },
+        "defaults": {
+          "unit": "s",
+          "mappings": []
+        },
         "overrides": []
       },
       "options": {},
       "targets": [
         {
           "refId": "A",
-          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
           "queryType": "sql",
           "format": 1,
           "editorType": "sql",
@@ -293,17 +504,31 @@
       "id": 8,
       "type": "table",
       "title": "VM Uptime",
-      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
-      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 24 },
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
       "fieldConfig": {
-        "defaults": { "unit": "s", "mappings": [] },
+        "defaults": {
+          "unit": "s",
+          "mappings": []
+        },
         "overrides": []
       },
       "options": {},
       "targets": [
         {
           "refId": "A",
-          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "${datasource}" },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
           "queryType": "sql",
           "format": 1,
           "editorType": "sql",
