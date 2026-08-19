@@ -1,6 +1,10 @@
 ---
 clickstack_dir: "/home/{{ ansible_user }}/clickstack"
 clickstack_bind_host: "127.0.0.1"
+# ClickHouse HTTP (8123) bind host, kept independent of clickstack_bind_host so
+# it can be opened on the tailnet (e.g. for Grafana) without also exposing
+# 4317/4318/8080, which stay loopback-only and are fronted by Caddy.
+clickstack_clickhouse_bind_host: "127.0.0.1"
 clickstack_app_port: "8081"
 # Public URL HyperDX uses to build redirects/links. Set this to the external
 # address when fronting with a reverse proxy (e.g. https://host.tailnet.ts.net);

@@ -3,3 +3,11 @@
 # name and reverse-proxies to the loopback-bound app. Tell HyperDX its real
 # public URL so post-login redirects/links don't point at http://localhost:8080.
 clickstack_frontend_url: "https://clickstack.bengal-python.ts.net"
+
+# Expose ClickHouse HTTP directly on the tailnet (plain HTTP, no Caddy) so
+# Grafana can query it without going through Caddy's TLS termination — the
+# Grafana ClickHouse datasource's Go HTTP client sends
+# X-ClickHouse-SSL-Certificate-Auth over TLS connections, which ClickHouse
+# rejects since no client certificate is actually presented. Tailscale
+# already encrypts this hop, so plain HTTP here is fine.
+clickstack_clickhouse_bind_host: "100.109.123.125"

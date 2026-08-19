@@ -10,7 +10,10 @@ services:
     env_file:
       - .env
     ports:
-      - "${CLICKSTACK_BIND_HOST:-127.0.0.1}:8123:8123"
+      # ClickHouse HTTP has its own bind host so it can be exposed on the
+      # tailnet directly (e.g. for Grafana), independent of the other ports
+      # below which stay loopback-only and are fronted by Caddy.
+      - "${CLICKSTACK_CLICKHOUSE_BIND_HOST:-127.0.0.1}:8123:8123"
       - "${CLICKSTACK_BIND_HOST:-127.0.0.1}:${CLICKSTACK_APP_PORT:-8081}:8080"
       - "${CLICKSTACK_BIND_HOST:-127.0.0.1}:4317:4317"
       - "${CLICKSTACK_BIND_HOST:-127.0.0.1}:4318:4318"
