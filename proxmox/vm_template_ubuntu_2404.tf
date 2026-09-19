@@ -24,6 +24,7 @@ resource "proxmox_virtual_environment_file" "ubuntu_2404_template_cloud_init" {
   source_raw {
     file_name = "cloud-init-ubuntu-2404-template.yml"
     data = templatefile("${path.module}/templates/cloud-init-base.yml.tftpl", {
+      hostname       = "ubuntu-24-04-template"
       ssh_public_key = trimspace(file("${path.module}/data/ubuntu.pub"))
     })
   }

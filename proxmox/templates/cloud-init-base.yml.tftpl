@@ -1,4 +1,9 @@
 #cloud-config
+hostname: ${hostname}
+apt:
+  primary:
+    - arches: [amd64]
+      uri: http://mirror.sg.gs/ubuntu/
 users:
   - name: ubuntu
     groups: [sudo]

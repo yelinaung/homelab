@@ -68,5 +68,8 @@ all:
             - "/home/ubuntu/lidarr"
         clickstack:
           ansible_user: ubuntu
+        sportzx:
+          ansible_host: 192.168.1.110
+          ansible_user: ubuntu
         cloud-gateway-fiber:
           ansible_user: root
