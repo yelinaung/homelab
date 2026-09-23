@@ -1,6 +1,6 @@
 FROM debian:bookworm-slim@sha256:7b140f374b289a7c2befc338f42ebe6441b7ea838a042bbd5acbfca6ec875818
 
-ARG TERRAFORM_VERSION=1.16.1
+ARG TERRAFORM_VERSION=1.16.2
 ARG TFLINT_VERSION=0.64.0
 ARG MISE_VERSION=2026.9.1
 # Must match the pinned versions in mise.toml.
