@@ -1,7 +1,7 @@
 FROM myoung34/github-runner:ubuntu-jammy@sha256:9045fe382b39d85c27fb3d42ce80cfb5b235f30a8c0be7c8ac76f9b694b833f7
 
 # Install uv, nodejs, terraform, tflint, and other essentials
-ARG TERRAFORM_VERSION=1.16.1
+ARG TERRAFORM_VERSION=1.16.2
 ARG TFLINT_VERSION=0.64.0
 ARG GITLEAKS_VERSION=8.30.1
 
