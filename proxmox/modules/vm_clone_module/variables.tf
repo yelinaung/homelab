@@ -18,6 +18,12 @@ variable "template_vm_id" {
   description = "The VMID of the template to clone from (e.g. the Packer-built 9001)"
 }
 
+variable "template_node_name" {
+  type        = string
+  default     = null
+  description = "The node holding the template, when it differs from node_name (the clone is migrated to node_name)"
+}
+
 variable "cpu_cores" {
   type        = number
   default     = 2

@@ -30,8 +30,9 @@ resource "proxmox_virtual_environment_vm" "vm" {
   on_boot   = var.on_boot
 
   clone {
-    vm_id = var.template_vm_id
-    full  = true
+    vm_id     = var.template_vm_id
+    node_name = var.template_node_name
+    full      = true
   }
 
   agent {
