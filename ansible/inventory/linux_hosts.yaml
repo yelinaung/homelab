@@ -71,5 +71,9 @@ all:
         sportzx:
           ansible_host: 192.168.1.110
           ansible_user: ubuntu
+        yla-jp-1:
+          ansible_user: ubuntu
+        yla-jp-2:
+          ansible_user: ubuntu
         cloud-gateway-fiber:
           ansible_user: root
