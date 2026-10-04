@@ -10,6 +10,7 @@
           - apt-transport-https
           - curl
           - gnupg
+          - python3-debian
           - xclip
         state: present
         update_cache: true
@@ -22,9 +23,18 @@
       ansible.builtin.command:
         cmd: gpg --dearmor -o /usr/share/keyrings/datadog-archive-keyring.gpg /tmp/datadog-apt-key.public
         creates: /usr/share/keyrings/datadog-archive-keyring.gpg
+    - name: Remove legacy Vector apt repository
+      ansible.builtin.file:
+        path: /etc/apt/sources.list.d/apt_vector_dev.list
+        state: absent
     - name: Add Vector apt repository
-      ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/usr/share/keyrings/datadog-archive-keyring.gpg] https://apt.vector.dev stable vector-0"
+      ansible.builtin.deb822_repository:
+        name: vector
+        types: deb
+        uris: https://apt.vector.dev
+        suites: stable
+        components: vector-0
+        signed_by: /usr/share/keyrings/datadog-archive-keyring.gpg
         state: present
     - name: Install Vector
       ansible.builtin.apt:
