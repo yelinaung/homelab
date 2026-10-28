@@ -1,7 +1,7 @@
 [tools]
 python = "3.15.0"
 uv = "0.13.0"
-terraform = "1.16.5"
+terraform = "1.16.6"
 packer = "1.16.1"
 tflint = "0.64.0"
 # Used to decrypt cloudflare/dns.sops.yaml and convert YAML -> JSON for terraform.
