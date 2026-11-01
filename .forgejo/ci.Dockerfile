@@ -2,7 +2,7 @@
 FROM python:3.14-slim-bookworm@sha256:48b13b003dda20b16f9442b8475aa05fe21bf6579a8c881db92ffb4d8fd20f83 AS base
 
 # Set build-time variables for versions
-ARG GO_VERSION=1.27.2
+ARG GO_VERSION=1.27.3
 ARG NODE_VERSION=26
 ARG TERRAFORM_VERSION=1.16.6
 ARG TFLINT_VERSION=0.64.0
