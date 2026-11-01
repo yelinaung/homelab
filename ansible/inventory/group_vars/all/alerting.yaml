@@ -1,0 +1,6 @@
+---
+# Vicky's stable Tailscale address; do not expose Alertmanager on the LAN/WAN.
+monitoring_vicky_address: "100.127.231.78"
+monitoring_metrics_url: "http://{{ monitoring_vicky_address }}:8428"
+monitoring_alertmanager_url: "http://{{ monitoring_vicky_address }}:9093"
+monitoring_vmalert_proxy_url: "http://127.0.0.1:9431"

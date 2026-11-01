@@ -1,0 +1,26 @@
+# {{ ansible_managed }}
+apiVersion: 1
+datasources:
+  - name: Homelab alerts
+    uid: homelab-alerts
+    orgId: 1
+    type: prometheus
+    access: proxy
+    url: {{ monitoring_metrics_url | to_json }}
+    isDefault: false
+    editable: false
+    jsonData:
+      httpMethod: POST
+      prometheusType: Prometheus
+      manageAlerts: true
+  - name: Homelab Alertmanager
+    uid: homelab-alertmanager
+    orgId: 1
+    type: alertmanager
+    access: proxy
+    url: {{ monitoring_alertmanager_url | to_json }}
+    isDefault: false
+    editable: false
+    jsonData:
+      implementation: prometheus
+      handleGrafanaManagedAlerts: false

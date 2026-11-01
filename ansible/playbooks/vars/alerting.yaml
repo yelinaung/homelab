@@ -1,0 +1,106 @@
+---
+alertmanager_version: "0.34.0"
+alertmanager_web_listen_address: "{{ monitoring_vicky_address }}:9093"
+alertmanager_web_external_url: "{{ monitoring_alertmanager_url }}"
+alertmanager_cluster:
+  listen-address: ""
+alertmanager_mask_diff: true
+alertmanager_template_files: []
+alertmanager_receivers:
+  - name: telegram
+    telegram_configs:
+      - bot_token_file: /etc/homelab-alerting/telegram-bot-token
+        chat_id: "{{ lookup('ansible.builtin.env', 'TELEGRAM_CHAT_ID') | int }}"
+        parse_mode: ""
+        send_resolved: true
+        message: |-
+          {% raw %}{{ if eq .Status "resolved" }}✅{{ else }}🔔
+          {{- end }} [{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}
+          {{ range .Alerts }}
+          {{ if eq .Status "resolved" }}✅
+          {{- else if eq .Labels.alertname "ScrapeTargetDown" }}🚨
+          {{- else if eq .Labels.severity "critical" }}🔴
+          {{- else if eq .Labels.severity "warning" }}🟠
+          {{- else if eq .Labels.severity "info" }}🔵
+          {{- else }}🔔
+          {{- end }} {{ .Labels.instance }} ({{ .Labels.severity }}): {{ .Annotations.summary }}
+          {{ .Annotations.description }}
+          {{ end }}{% endraw %}
+alertmanager_route:
+  receiver: telegram
+  group_by: [alertname, instance]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+alertmanager_inhibit_rules:
+  - source_matchers: ['severity="critical"']
+    target_matchers: ['severity="warning"']
+    equal: [alertname, instance, device, mountpoint]
+
+vmalert_version: "v1.151.0"
+vmalert_service_name: vmalert
+vmalert_config_dir: /etc/vmalert
+vmalert_service_args:
+  httpListenAddr: "127.0.0.1:9431"
+  datasource.url: "http://127.0.0.1:8428"
+  notifier.url: "{{ monitoring_alertmanager_url }}"
+  evaluationInterval: 1m
+  remoteWrite.url: "http://127.0.0.1:8428"
+  remoteRead.url: "http://127.0.0.1:8428"
+vmalert_rules:
+  - name: homelab
+    rules:
+      - alert: ScrapeTargetDown
+        expr: up == 0
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "{% raw %}Cannot scrape {{ $labels.instance }}{% endraw %}"
+          description: >-
+            {% raw %}The {{ $labels.job }} scrape has failed for 3 minutes.
+            Check the exporter and network; this does not prove the host is down.{% endraw %}
+      - alert: HostDiskSpaceLow
+        expr: >-
+          (node_filesystem_avail_bytes{job="nodes",fstype!~"tmpfs|devtmpfs|overlay|squashfs|ramfs|nsfs"}
+          / node_filesystem_size_bytes{job="nodes"} < 0.15)
+          and on(instance, job, device, mountpoint) (node_filesystem_readonly{job="nodes"} == 0)
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{% raw %}Low disk space on {{ $labels.instance }}:{{ $labels.mountpoint }}{% endraw %}"
+          description: >-
+            {% raw %}Available: {{ humanizePercentage $value }} (below 15% for 15 minutes).{% endraw %}
+      - alert: HostDiskSpaceLow
+        expr: >-
+          (node_filesystem_avail_bytes{job="nodes",fstype!~"tmpfs|devtmpfs|overlay|squashfs|ramfs|nsfs"}
+          / node_filesystem_size_bytes{job="nodes"} < 0.05)
+          and on(instance, job, device, mountpoint) (node_filesystem_readonly{job="nodes"} == 0)
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "{% raw %}Critical disk space on {{ $labels.instance }}:{{ $labels.mountpoint }}{% endraw %}"
+          description: >-
+            {% raw %}Available: {{ humanizePercentage $value }} (below 5% for 5 minutes).{% endraw %}
+      - alert: HostMemoryPressure
+        expr: node_memory_MemAvailable_bytes{job="nodes"} / node_memory_MemTotal_bytes{job="nodes"} < 0.10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{% raw %}Low available memory on {{ $labels.instance }}{% endraw %}"
+          description: >-
+            {% raw %}Available: {{ humanizePercentage $value }} (below 10% for 10 minutes).{% endraw %}
+      - alert: HostHighCPUUsage
+        expr: >-
+          (1 - avg by (instance, job) (rate(node_cpu_seconds_total{job="nodes",mode="idle"}[5m]))) > 0.90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{% raw %}High CPU usage on {{ $labels.instance }}{% endraw %}"
+          description: >-
+            {% raw %}CPU usage: {{ humanizePercentage $value }}
+            (5-minute average across all cores, above 90% for 5 minutes).{% endraw %}

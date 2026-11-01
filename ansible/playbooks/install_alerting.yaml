@@ -1,0 +1,79 @@
+---
+- name: Install independent alert evaluation and Telegram delivery
+  hosts: vicky
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  vars_files:
+    - vars/alerting.yaml
+
+  pre_tasks:
+    - name: Require Telegram credentials from the controller environment
+      ansible.builtin.assert:
+        that:
+          - lookup('ansible.builtin.env', 'TELEGRAM_BOT_TOKEN') | trim | length > 0
+          - lookup('ansible.builtin.env', 'TELEGRAM_CHAT_ID') is match('^-?[1-9][0-9]*$')
+        fail_msg: Set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID before deploying alerting.
+      no_log: true
+
+    - name: Create the group that can read the Telegram token
+      ansible.builtin.group:
+        name: alertmanager
+        system: true
+
+    - name: Create the restricted alerting secrets directory
+      ansible.builtin.file:
+        path: /etc/homelab-alerting
+        state: directory
+        owner: root
+        group: alertmanager
+        mode: "0750"
+
+    - name: Store the Telegram token separately from the configuration
+      ansible.builtin.copy:
+        content: "{{ lookup('ansible.builtin.env', 'TELEGRAM_BOT_TOKEN') | trim }}"
+        dest: /etc/homelab-alerting/telegram-bot-token
+        owner: root
+        group: alertmanager
+        mode: "0640"
+      no_log: true
+      diff: false
+      # The role reads the token file when notifying; no pre-role restart needed.
+
+  roles:
+    - role: prometheus.prometheus.alertmanager
+    - role: victoriametrics.cluster.vmalert
+
+# Uses the existing VictoriaMetrics source of truth, including the rules proxy.
+- name: Configure VictoriaMetrics scraping and the vmalert API proxy
+  ansible.builtin.import_playbook: install_vicky.yaml
+  vars:
+    vm_hosts: vicky
+
+- name: Provision Grafana views of the independent alerting stack
+  hosts: grafana
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Ensure the data source provisioning directory exists
+      ansible.builtin.file:
+        path: /etc/grafana/provisioning/datasources
+        state: directory
+        owner: root
+        group: grafana
+        mode: "0755"
+
+    - name: Provision alerting data sources without adopting existing dashboard sources
+      ansible.builtin.template:
+        src: grafana-alerting-datasources.yaml.j2
+        dest: /etc/grafana/provisioning/datasources/homelab-alerting.yaml
+        owner: root
+        group: grafana
+        mode: "0644"
+      notify: Restart Grafana
+
+  handlers:
+    - name: Restart Grafana
+      ansible.builtin.systemd_service:
+        name: grafana-server
+        state: restarted

@@ -20,6 +20,7 @@
       "insert.maxQueueDuration": 30s
       "promscrape.config": /etc/victoria-metrics/prom_config.yaml
       "promscrape.configCheckInterval": 30s
+      "vmalert.proxyURL": "{{ monitoring_vmalert_proxy_url }}"
       storageDataPath: /var/lib/victoria-metrics/
       graphiteListenAddr: :2003
 
