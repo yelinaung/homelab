@@ -1,12 +1,12 @@
 ---
 - name: Install/Update VictoriaMetrics (Vicky) Single
-  hosts: '{{ vm_hosts | default("vicky")}}'
+  hosts: '{{ vm_hosts | default("vicky") }}'
   gather_facts: true
   become: true
-  roles:
-    - victoriametrics.cluster.vmsingle
+
   vars:
     victoriametrics_system_user: victoriametrics
+    victoriametrics_system_group: "{{ victoriametrics_system_user }}"
     victoriametrics_version: "v1.151.0"
     victoriametrics_data_dir: "/var/lib/victoria-metrics/"
     victoriametrics_retention_period_months: "12"
@@ -19,5 +19,39 @@
       "search.maxUniqueTimeseries": 900000
       "insert.maxQueueDuration": 30s
       "promscrape.config": /etc/victoria-metrics/prom_config.yaml
+      "promscrape.configCheckInterval": 30s
       storageDataPath: /var/lib/victoria-metrics/
       graphiteListenAddr: :2003
+
+  pre_tasks:
+    - name: Validate rendered scrape configuration on controller
+      vars:
+        _validated_config: "{{ lookup('ansible.builtin.template', 'templates/prom_config.yaml.j2') | from_yaml }}"
+      ansible.builtin.assert:
+        that:
+          - _validated_config is mapping
+          - _validated_config.scrape_configs is defined
+          - _validated_config.scrape_configs | length > 0
+        fail_msg: "Rendered prom_config.yaml is missing non-empty scrape_configs"
+
+    - name: Ensure VictoriaMetrics configuration directory exists
+      ansible.builtin.file:
+        path: /etc/victoria-metrics
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Deploy VictoriaMetrics scrape configuration
+      ansible.builtin.template:
+        src: templates/prom_config.yaml.j2
+        dest: /etc/victoria-metrics/prom_config.yaml
+        owner: root
+        group: root
+        mode: "0644"
+        validate: >-
+          sh -c '! test -x /usr/local/bin/victoria-metrics-prod ||
+          /usr/local/bin/victoria-metrics-prod -promscrape.config.dryRun -promscrape.config="$1"' -- %s
+
+  roles:
+    - victoriametrics.cluster.vmsingle

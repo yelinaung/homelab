@@ -307,3 +307,8 @@ printf "\033[0;32mRunning Ansible Diff\033[0m\n"
 .venv/bin/ansible-playbook "ansible/playbooks/${playbook}.yaml" --inventory ansible/inventory/linux_hosts.yaml --check --diff -e "vm_hosts=${vm_hosts}"
 
 '''
+
+[tasks.deploy-vicky-config]
+description = "Deploy and reload VictoriaMetrics scrape configuration on Vicky"
+raw = true
+run = "PLAYBOOK=install_vicky INVENTORY=linux_hosts VM_HOSTS=vicky BECOME=true mise run playbook"
