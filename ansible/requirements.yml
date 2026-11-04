@@ -16,7 +16,7 @@ collections:
   - name: artis3n.tailscale
     version: 1.2.1
   - name: victoriametrics.cluster
-    version: 2.56.0
+    version: 2.57.1
   - name: grafana.grafana
     version: 6.1.0
   - name: prometheus.prometheus
