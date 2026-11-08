@@ -17,10 +17,10 @@ source "proxmox-clone" "ubuntu-cloud" {
   insecure_skip_tls_verify = true
 
   // Clone settings
-  clone_vm             = "ubuntu-24.04-template" // Name of your cloud image template
-  vm_id                = 9001                    // Stable ID so Terraform can clone { vm_id = 9001 }
-  template_name        = "ubuntu-24.04-packer"
-  template_description = "Ubuntu 24.04 template built with Packer from cloud image"
+  clone_vm             = "ubuntu-${var.ubuntu_release}-template" // Base template from vm_template_ubuntu_*.tf
+  vm_id                = local.template.golden_vm_id             // Stable ID so Terraform can clone it
+  template_name        = "ubuntu-${var.ubuntu_release}-packer"
+  template_description = "Ubuntu ${var.ubuntu_release} template built with Packer from cloud image"
 
   // VM settings — the plugin does NOT inherit these from the cloned template;
   // its defaults (scsi_controller=lsi, os=other) leave the cloud image unbootable.
