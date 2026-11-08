@@ -8,7 +8,9 @@ resource "proxmox_download_file" "ubuntu_2404_cloud_image" {
   node_name    = "homelab3"
   file_name    = "noble-server-cloudimg-amd64.img"
   url          = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-  overwrite    = true
+  # noble/current/ is rebuilt upstream; don't re-download (and so replace
+  # template 9000) on every size change. Refresh the image deliberately.
+  overwrite = false
   # Take over the file if it already exists on the node (e.g. manual wget).
   overwrite_unmanaged = true
 }
