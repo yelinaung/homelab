@@ -1,0 +1,69 @@
+---
+# Install the Wazuh agent and enroll it with the wazuh manager.
+#   PLAYBOOK=install_wazuh_agent INVENTORY=linux_hosts mise run playbook
+# Defaults to every Proxmox VM except the manager itself and the UniFi
+# gateway appliance; set VM_HOSTS to target specific hosts.
+- name: Install Wazuh agent
+  hosts: '{{ vm_hosts | default("vms_on_proxmox:!wazuh:!cloud-gateway-fiber") }}'
+  become: true
+  gather_facts: true
+  vars:
+    # Tailnet name rather than the LAN IP, which comes from DHCP.
+    wazuh_manager: wazuh.bengal-python.ts.net
+    # Agents must not be newer than the manager (4.14.10), so pin and hold.
+    wazuh_agent_version: 4.14.10-1
+  tasks:
+    - name: Gather installed packages
+      ansible.builtin.package_facts:
+
+    # wazuh-agent conflicts with wazuh-manager; apt would remove the manager.
+    - name: Refuse to run on the Wazuh manager
+      ansible.builtin.assert:
+        that: "'wazuh-manager' not in ansible_facts.packages"
+        fail_msg: "{{ inventory_hostname }} runs wazuh-manager, which already includes an agent."
+
+    - name: Download Wazuh GPG key
+      ansible.builtin.get_url:
+        url: https://packages.wazuh.com/key/GPG-KEY-WAZUH
+        dest: /tmp/GPG-KEY-WAZUH
+        mode: "0644"
+
+    - name: Install Wazuh GPG key
+      ansible.builtin.command:
+        cmd: gpg --dearmor -o /usr/share/keyrings/wazuh.gpg /tmp/GPG-KEY-WAZUH
+        creates: /usr/share/keyrings/wazuh.gpg
+
+    - name: Add Wazuh apt repository
+      ansible.builtin.deb822_repository:
+        name: wazuh
+        types: deb
+        uris: https://packages.wazuh.com/4.x/apt/
+        suites: stable
+        components: main
+        signed_by: /usr/share/keyrings/wazuh.gpg
+        state: present
+
+    # The package's install script writes WAZUH_MANAGER and WAZUH_AGENT_NAME
+    # into ossec.conf on first install only; it doesn't rewrite an existing
+    # agent's config.
+    - name: Install Wazuh agent
+      ansible.builtin.apt:
+        name: "wazuh-agent={{ wazuh_agent_version }}"
+        state: present
+        update_cache: true
+      environment:
+        WAZUH_MANAGER: "{{ wazuh_manager }}"
+        WAZUH_AGENT_NAME: "{{ inventory_hostname }}"
+
+    # Keeps apt_update_upgrade.yaml from upgrading agents past the manager.
+    - name: Hold Wazuh agent version
+      ansible.builtin.dpkg_selections:
+        name: wazuh-agent
+        selection: hold
+
+    - name: Enable and start Wazuh agent
+      ansible.builtin.systemd:
+        name: wazuh-agent
+        state: started
+        enabled: true
+        daemon_reload: true
