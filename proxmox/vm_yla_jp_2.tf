@@ -6,8 +6,8 @@ module "yla_jp_2" {
   vm_id              = 133
   template_vm_id     = 9001
   template_node_name = "homelab3"
-  cpu_cores          = 4
-  memory_dedicated   = 8192
+  cpu_cores          = 2
+  memory_dedicated   = 4096
   disk_size          = 100
   tags               = ["24.04", "linux", "ubuntu", "terraform"]
 
