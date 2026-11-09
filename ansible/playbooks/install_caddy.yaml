@@ -1,7 +1,9 @@
 ---
 # Install and configure Caddy web server
 #
-# Usage: PLAYBOOK=install_caddy INVENTORY=linux_hosts BECOME=true mise run run
+# Usage: PLAYBOOK=install_caddy INVENTORY=linux_hosts VM_HOSTS=<host> mise run playbook
+#
+# Per-host config: set caddy_caddyfile in inventory/host_vars/<host>.yaml.
 #
 # Custom config: add -e 'caddy_caddyfile="your_config_here"'
 #
@@ -34,8 +36,9 @@
   become: true
   gather_facts: true
   vars:
-    # Default Caddyfile - can be overridden per host/group
-    caddy_caddyfile: |
+    # Used when caddy_caddyfile isn't set in host_vars/group_vars or extra vars.
+    # (A play var named caddy_caddyfile would outrank host_vars.)
+    caddy_default_caddyfile: |
       # Basic file server example
       :80 {
         respond "Hello from Caddy on {{ ansible_hostname }}!"
@@ -83,12 +86,28 @@
 
     - name: Create Caddyfile
       ansible.builtin.copy:
-        content: "{{ caddy_caddyfile }}"
+        content: "{{ caddy_caddyfile | default(caddy_default_caddyfile) }}"
         dest: /etc/caddy/Caddyfile
         owner: root
         group: root
         mode: "0644"
       notify: Restart caddy
+
+    - name: Check for tailscaled defaults file
+      ansible.builtin.stat:
+        path: /etc/default/tailscaled
+      register: caddy_tailscaled_defaults
+
+    # Caddy fetches *.ts.net certs from the local tailscaled, which only serves
+    # them to root unless the caddy user is permitted.
+    # https://tailscale.com/kb/1190/caddy-certificates
+    - name: Let Caddy fetch Tailscale certificates
+      ansible.builtin.lineinfile:
+        path: /etc/default/tailscaled
+        regexp: ^TS_PERMIT_CERT_UID=
+        line: TS_PERMIT_CERT_UID=caddy
+      when: caddy_tailscaled_defaults.stat.exists
+      notify: Restart tailscaled
 
     - name: Start and enable Caddy service
       ansible.builtin.systemd:
@@ -97,6 +116,13 @@
         enabled: true
 
   handlers:
+    # Listed first so tailscaled is permitting the caddy user before Caddy
+    # restarts and requests its certificate.
+    - name: Restart tailscaled
+      ansible.builtin.systemd:
+        name: tailscaled
+        state: restarted
+
     - name: Restart caddy
       ansible.builtin.systemd:
         name: caddy

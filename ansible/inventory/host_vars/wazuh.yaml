@@ -1,0 +1,16 @@
+---
+# The Wazuh dashboard listens on loopback only; Caddy (install_caddy.yaml)
+# serves it on 443 with the Tailscale certificate for the MagicDNS name.
+wazuh_dashboard_host: 127.0.0.1
+wazuh_dashboard_port: 5601
+
+# The dashboard keeps its own self-signed TLS; the hop is loopback-only, so
+# Caddy skips verifying it rather than reading Wazuh's root CA.
+caddy_caddyfile: |
+  wazuh.bengal-python.ts.net {
+    reverse_proxy https://127.0.0.1:5601 {
+      transport http {
+        tls_insecure_skip_verify
+      }
+    }
+  }

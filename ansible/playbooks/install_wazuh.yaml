@@ -47,6 +47,18 @@
         regexp: '^deb '
         replace: '#deb '
 
+    # Defaults keep the assistant's 0.0.0.0:443. host_vars can move it to
+    # loopback so Caddy can serve 443 with a Tailscale cert (see wazuh.yaml).
+    - name: Set Wazuh dashboard listen address
+      ansible.builtin.lineinfile:
+        path: /etc/wazuh-dashboard/opensearch_dashboards.yml
+        regexp: "^{{ item.key }}:"
+        line: "{{ item.key }}: {{ item.value }}"
+      loop:
+        - { key: server.host, value: "{{ wazuh_dashboard_host | default('0.0.0.0') }}" }
+        - { key: server.port, value: "{{ wazuh_dashboard_port | default(443) }}" }
+      notify: Restart wazuh-dashboard
+
     - name: Ensure Wazuh services are running
       ansible.builtin.systemd:
         name: "{{ item }}"
@@ -61,7 +73,12 @@
     - name: Show where the credentials are
       ansible.builtin.debug:
         msg: >-
-          Dashboard: https://{{ ansible_host | default(inventory_hostname) }}
-          (user admin). Passwords: sudo tar -O -xf
+          Dashboard user is admin. Passwords: sudo tar -O -xf
           {{ wazuh_install_dir }}/wazuh-install-files.tar
           wazuh-install-files/wazuh-passwords.txt
+
+  handlers:
+    - name: Restart wazuh-dashboard
+      ansible.builtin.systemd:
+        name: wazuh-dashboard
+        state: restarted
