@@ -47,9 +47,12 @@ build {
   provisioner "shell" {
     inline = [
       "echo 'Waiting for cloud-init to complete...'",
-      "cloud-init status --wait",
+      # Exit 2 means cloud-init finished with recoverable errors or
+      # deprecation warnings; only 1 is fatal. --long prints which ones.
+      # On 26.04 it can't rename the busy NIC ens18 to eth0; DHCP still works.
+      "cloud-init status --wait --long || [ $? -eq 2 ]",
       "sudo apt update",
-      "sudo apt upgrade",
+      "sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y",
       # cloud-init-base.yml.tftpl already installed qemu agent
       # redundant but harmless here. Act as a safety net in case the cloud-init fails
       "sudo apt install -y qemu-guest-agent",
