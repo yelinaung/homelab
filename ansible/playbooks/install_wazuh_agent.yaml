@@ -1,10 +1,11 @@
 ---
 # Install the Wazuh agent and enroll it with the wazuh manager.
 #   PLAYBOOK=install_wazuh_agent INVENTORY=linux_hosts mise run playbook
-# Defaults to every Proxmox VM except the manager itself and the UniFi
-# gateway appliance; set VM_HOSTS to target specific hosts.
+# Defaults to every host except the manager itself and the UniFi gateway
+# appliance; set VM_HOSTS to target specific hosts. Non-Debian hosts (the
+# Alpine and Fedora LXCs) are skipped, since this installs from the apt repo.
 - name: Install Wazuh agent
-  hosts: '{{ vm_hosts | default("vms_on_proxmox:!wazuh:!cloud-gateway-fiber") }}'
+  hosts: '{{ vm_hosts | default("all:!wazuh:!cloud-gateway-fiber") }}'
   become: true
   gather_facts: true
   vars:
@@ -13,6 +14,10 @@
     # Agents must not be newer than the manager (4.14.10), so pin and hold.
     wazuh_agent_version: 4.14.10-1
   tasks:
+    - name: Skip hosts without apt
+      ansible.builtin.meta: end_host
+      when: ansible_facts['os_family'] != "Debian"
+
     - name: Gather installed packages
       ansible.builtin.package_facts:
 
@@ -21,6 +26,15 @@
       ansible.builtin.assert:
         that: "'wazuh-manager' not in ansible_facts.packages"
         fail_msg: "{{ inventory_hostname }} runs wazuh-manager, which already includes an agent."
+
+    # deb822_repository needs python3-debian; some LXCs lack it.
+    - name: Install prerequisite packages
+      ansible.builtin.apt:
+        name:
+          - gnupg
+          - python3-debian
+        state: present
+        update_cache: true
 
     - name: Download Wazuh GPG key
       ansible.builtin.get_url:
