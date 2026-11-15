@@ -1,0 +1,7 @@
+---
+# Semaphore listens on loopback only; Caddy (install_caddy.yaml) serves it on
+# 443 with the Tailscale certificate for the MagicDNS name.
+caddy_caddyfile: |
+  semaphore.bengal-python.ts.net {
+    reverse_proxy 127.0.0.1:3000
+  }

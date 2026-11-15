@@ -74,6 +74,11 @@ all:
         wazuh:
           ansible_host: 192.168.1.81
           ansible_user: ubuntu
+        semaphore:
+          ansible_host: 192.168.1.79
+          ansible_user: ubuntu
+          compose_dirs:
+            - "/home/ubuntu/semaphore"
         # yla-jp-1:
         #   ansible_user: ubuntu
         # yla-jp-2:

@@ -1,0 +1,57 @@
+---
+# Semaphore UI (Docker Compose, SQLite). Needs Docker first
+# (install_docker.yaml), and Caddy + Tailscale for HTTPS (host_vars/semaphore).
+#   PLAYBOOK=install_semaphore INVENTORY=linux_hosts VM_HOSTS=semaphore mise run playbook
+#
+# The admin password and the access key encryption key are generated once
+# into {{ semaphore_dir }}/semaphore.env and never overwritten. Back that file
+# up: without the encryption key, every credential stored in Semaphore is lost.
+- name: Install Semaphore UI
+  hosts: '{{ vm_hosts | default("semaphore") }}'
+  become: true
+  gather_facts: false
+  vars:
+    semaphore_dir: "/home/{{ ansible_user }}/semaphore"
+  tasks:
+    - name: Create Semaphore directory
+      ansible.builtin.file:
+        path: "{{ semaphore_dir }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0750"
+
+    - name: Generate Semaphore secrets once
+      ansible.builtin.shell: |
+        set -o pipefail
+        umask 077
+        {
+          echo "SEMAPHORE_ADMIN_PASSWORD=$(head -c24 /dev/urandom | base64 | tr -d '/+=')"
+          echo "SEMAPHORE_ACCESS_KEY_ENCRYPTION=$(head -c32 /dev/urandom | base64)"
+        } > semaphore.env
+      args:
+        chdir: "{{ semaphore_dir }}"
+        creates: "{{ semaphore_dir }}/semaphore.env"
+        executable: /bin/bash
+
+    - name: Copy docker-compose file
+      ansible.builtin.copy:
+        src: configs/semaphore/docker-compose.yaml
+        dest: "{{ semaphore_dir }}/docker-compose.yaml"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0644"
+
+    - name: Start Semaphore
+      community.docker.docker_compose_v2:
+        project_src: "{{ semaphore_dir }}"
+        state: present
+
+    - name: Wait for Semaphore to answer
+      ansible.builtin.uri:
+        url: http://127.0.0.1:3000/api/ping
+        return_content: true
+      register: semaphore_ping
+      until: semaphore_ping.status == 200
+      retries: 30
+      delay: 2
