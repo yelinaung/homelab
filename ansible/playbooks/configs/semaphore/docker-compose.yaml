@@ -9,6 +9,10 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:3000:3000"
+    # Docker sets ndots:0, so musl never tries the search domains and short
+    # inventory names (grafana, immich) fail to resolve.
+    dns_opt:
+      - ndots:1
     env_file:
       - semaphore.env
     environment:
@@ -24,6 +28,8 @@ services:
     volumes:
       - semaphore-data:/var/lib/semaphore
       - semaphore-config:/etc/semaphore
+      # Host keys for the inventory, read by ssh whatever HOME Semaphore sets.
+      - ./known_hosts:/etc/ssh/ssh_known_hosts:ro
 
 volumes:
   semaphore-data:

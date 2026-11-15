@@ -34,6 +34,51 @@
         creates: "{{ semaphore_dir }}/semaphore.env"
         executable: /bin/bash
 
+    # Semaphore runs ansible with ANSIBLE_HOST_KEY_CHECKING=False, and the image's
+    # ssh_config.d sets StrictHostKeyChecking no. The HomeLab variable group
+    # overrides both (ANSIBLE_HOST_KEY_CHECKING=True and ANSIBLE_SSH_EXTRA_ARGS=
+    # -o StrictHostKeyChecking=yes), and these keys are what ssh then trusts.
+    # They come from this controller's known_hosts, so every inventory host
+    # must already be trusted here. Entries may be hashed, and a host on another
+    # port may be stored under its bare name, so look up both forms and write
+    # plain lines under both names.
+    - name: Read trusted host keys for the inventory
+      ansible.builtin.shell: |
+        set -o pipefail
+        { ssh-keygen -F "$TARGET" || ssh-keygen -F "$NAME"; } |
+          awk -v names="$NAMES" '!/^#/ { print names, $2, $3 }'
+      args:
+        executable: /bin/bash
+      environment:
+        NAME: "{{ semaphore_ssh_name }}"
+        TARGET: "{{ semaphore_ssh_target }}"
+        NAMES: >-
+          {{ semaphore_ssh_name if semaphore_ssh_target == semaphore_ssh_name
+             else semaphore_ssh_name ~ ',' ~ semaphore_ssh_target }}
+      vars:
+        semaphore_ssh_name: "{{ hostvars[item].ansible_host | default(item) }}"
+        semaphore_ssh_port: "{{ hostvars[item].ansible_port | default(22) }}"
+        semaphore_ssh_target: >-
+          {{ semaphore_ssh_name if semaphore_ssh_port | int == 22
+             else '[' ~ semaphore_ssh_name ~ ']:' ~ semaphore_ssh_port }}
+      loop: "{{ groups['all'] }}"
+      delegate_to: localhost
+      become: false
+      changed_when: false
+      check_mode: false
+      register: semaphore_host_keys
+
+    - name: Write known_hosts for Semaphore
+      ansible.builtin.copy:
+        # Double-quoted so YAML turns \n into real newlines before Jinja runs.
+        content: "{{ semaphore_host_keys.results | map(attribute='stdout_lines')
+          | flatten | unique | join('\n') }}\n"
+        dest: "{{ semaphore_dir }}/known_hosts"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart Semaphore
+
     - name: Copy docker-compose file
       ansible.builtin.copy:
         src: configs/semaphore/docker-compose.yaml
@@ -55,3 +100,11 @@
       until: semaphore_ping.status == 200
       retries: 30
       delay: 2
+
+  handlers:
+    # A restart remounts ./known_hosts; copy replaces the file, and a running
+    # container keeps reading the old one.
+    - name: Restart Semaphore
+      community.docker.docker_compose_v2:
+        project_src: "{{ semaphore_dir }}"
+        state: restarted
