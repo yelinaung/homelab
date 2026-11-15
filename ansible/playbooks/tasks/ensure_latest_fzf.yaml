@@ -23,6 +23,8 @@
     return_content: true
   become: false
   delegate_to: localhost
+  # Read-only GET; uri is skipped in --check, which breaks the set_facts below.
+  check_mode: false
   register: fzf_release_info
   run_once: true
 
@@ -54,11 +56,23 @@
   register: fzf_installed_version
   failed_when: false
   changed_when: false
+  check_mode: false
+
+- name: Set whether fzf needs an upgrade
+  ansible.builtin.set_fact:
+    fzf_needs_upgrade: >-
+      {{ fzf_installed_version.rc != 0 or
+         (fzf_installed_version.stdout | regex_search('^[^ ]+')) != fzf_release_version }}
+
+# tempfile and get_url do nothing in --check, so report the upgrade instead.
+- name: Report pending fzf upgrade (check mode)
+  ansible.builtin.debug:
+    msg: "fzf would be upgraded to {{ fzf_release_version }}"
+  changed_when: true
+  when: ansible_check_mode and fzf_needs_upgrade | bool
 
 - name: Install or upgrade fzf from GitHub releases
-  when:
-    - fzf_installed_version.rc != 0 or
-      (fzf_installed_version.stdout | regex_search('^[^ ]+')) != fzf_release_version
+  when: not ansible_check_mode and fzf_needs_upgrade | bool
   block:
     - name: Create temporary directory for fzf release
       ansible.builtin.tempfile:
