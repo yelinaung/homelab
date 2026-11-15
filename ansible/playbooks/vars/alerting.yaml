@@ -51,7 +51,7 @@ vmalert_rules:
   - name: homelab
     rules:
       - alert: ScrapeTargetDown
-        expr: up == 0
+        expr: up{instance!="ucg-fiber"} == 0
         for: 3m
         labels:
           severity: critical
@@ -62,7 +62,8 @@ vmalert_rules:
             Check the exporter and network; this does not prove the host is down.{% endraw %}
       - alert: HostDiskSpaceLow
         expr: >-
-          (node_filesystem_avail_bytes{job="nodes",fstype!~"tmpfs|devtmpfs|overlay|squashfs|ramfs|nsfs"}
+          (node_filesystem_avail_bytes{job="nodes",instance!="ucg-fiber",
+          fstype!~"tmpfs|devtmpfs|overlay|squashfs|ramfs|nsfs"}
           / node_filesystem_size_bytes{job="nodes"} < 0.15)
           and on(instance, job, device, mountpoint) (node_filesystem_readonly{job="nodes"} == 0)
         for: 15m
@@ -74,7 +75,8 @@ vmalert_rules:
             {% raw %}Available: {{ humanizePercentage $value }} (below 15% for 15 minutes).{% endraw %}
       - alert: HostDiskSpaceLow
         expr: >-
-          (node_filesystem_avail_bytes{job="nodes",fstype!~"tmpfs|devtmpfs|overlay|squashfs|ramfs|nsfs"}
+          (node_filesystem_avail_bytes{job="nodes",instance!="ucg-fiber",
+          fstype!~"tmpfs|devtmpfs|overlay|squashfs|ramfs|nsfs"}
           / node_filesystem_size_bytes{job="nodes"} < 0.05)
           and on(instance, job, device, mountpoint) (node_filesystem_readonly{job="nodes"} == 0)
         for: 5m
@@ -85,7 +87,9 @@ vmalert_rules:
           description: >-
             {% raw %}Available: {{ humanizePercentage $value }} (below 5% for 5 minutes).{% endraw %}
       - alert: HostMemoryPressure
-        expr: node_memory_MemAvailable_bytes{job="nodes"} / node_memory_MemTotal_bytes{job="nodes"} < 0.10
+        expr: >-
+          node_memory_MemAvailable_bytes{job="nodes",instance!="ucg-fiber"}
+          / node_memory_MemTotal_bytes{job="nodes"} < 0.10
         for: 10m
         labels:
           severity: warning
@@ -95,7 +99,8 @@ vmalert_rules:
             {% raw %}Available: {{ humanizePercentage $value }} (below 10% for 10 minutes).{% endraw %}
       - alert: HostHighCPUUsage
         expr: >-
-          (1 - avg by (instance, job) (rate(node_cpu_seconds_total{job="nodes",mode="idle"}[5m]))) > 0.90
+          (1 - avg by (instance, job)
+          (rate(node_cpu_seconds_total{job="nodes",instance!="ucg-fiber",mode="idle"}[5m]))) > 0.90
         for: 5m
         labels:
           severity: warning

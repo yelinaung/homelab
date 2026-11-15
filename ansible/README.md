@@ -72,6 +72,8 @@ evaluate these rules or send their notifications. Its existing data sources and
 dashboards are left unchanged.
 
 - Edit rules and Telegram routing in `playbooks/vars/alerting.yaml`.
+- All current alert rules exclude `instance="ucg-fiber"`; its metrics are still
+  scraped and displayed in charts. Preserve this exclusion when adding rules.
 - Edit the stable Tailscale address in `inventory/group_vars/all/alerting.yaml`.
 - vmalert listens on loopback port 9431. Alertmanager listens only on Vicky's
   Tailscale address, port 9093; clustering is disabled. Tailnet access policies
