@@ -1,6 +1,6 @@
 ---
 - name: Upgrade OS (Mainly for Proxmox)
-  hosts: '{{ vm_hosts | default("all")}}'
+  hosts: '{{ vm_hosts | default("all") }}:!no_os_upgrades'
   become: true
   tasks:
     - name: Upgrade the OS (apt-get dist-upgrade)

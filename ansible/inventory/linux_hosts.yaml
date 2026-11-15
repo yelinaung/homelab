@@ -85,3 +85,10 @@ all:
         #   ansible_user: ubuntu
         cloud-gateway-fiber:
           ansible_user: root
+    # Hosts whose OS packages are managed elsewhere. apt_update_upgrade and
+    # apt_dist_upgrade skip them even when vm_hosts names them directly.
+    no_os_upgrades:
+      hosts:
+        # UniFi OS: Ubiquiti manages its packages, and apt upgrade fails on
+        # its half-configured miniupnpd and wireshark packages.
+        cloud-gateway-fiber:
