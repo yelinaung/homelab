@@ -261,7 +261,7 @@ fi
 description = "Install ansible-core, collections and roles into .venv"
 run = '''
 uv venv --allow-existing --python 3.14
-uv pip install ansible-core ansible-lint yamllint mitogen
+uv pip install 'ansible-core<2.22' ansible-lint yamllint mitogen
 .venv/bin/ansible-galaxy collection install -v -r ansible/requirements.yml
 .venv/bin/ansible-galaxy role install -v -r ansible/requirements.yml
 '''
